@@ -13,10 +13,12 @@ in the move.
 **Copied from the vault at `9aca992`** (`~/Projects/avrg-site`, working
 tree clean at the time). That hash is the **port baseline** — see below.
 
-**The live site is still the VAULT's Pages deploy.** v1 is published (or
-about to be) as `bluechewbill/avrg-site-v1`, GH Pages serving `main` at
-root. Until cutover there are two public copies of the same page; the
-vault's is the one people have the link to.
+**The live site is still the VAULT's Pages deploy.** v1 is PUBLISHED at
+**https://bluechewbill.github.io/avrg-site-v1/** (verified 2026-08-16:
+zero 404s, zero console errors, all routes render, all 88 home images
+load, mobile costume correct — bay parked, ground forced white, intro
+runs, YOUR PICKS renders). Until cutover there are two public copies of
+the same page; the vault's is the one people have the link to.
 
 ## The porting recipe — vault edits come here
 

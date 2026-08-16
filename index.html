@@ -3927,21 +3927,17 @@
   /* (the count chip's bump retired with the chip, 2026-08-03 — the
      landing's answers are the seat-drop, the recoil and landBeat) */
 
-  /* ========= the takeover case (2026-07-24): the deck's phone form =========
-     Same organ, different door. No proximity motor, no emergence rails —
-     the receipt icon opens it, browsing closes it (modal presence, unlike
-     the desktop's stay-open case). It slides in as ONE piece over the
-     shop, which stays faintly visible through the left gutter (case-fade
-     = the desktop inspection faint, .22). openCase dresses #bay in the
-     full threshold-class outfit (.inked/.shadowed/.pulled/.fullish/
-     .locked) so all the desktop chrome — count chip, shelf shadows, the
-     ✕ arrow — reads "fully open" without the driver; the !importants
-     retire any stale inline pose the driver left behind (a resize across
-     940px mid-open). Sits UNDER the lightbox (4800 < 5000, the desktop
-     inverse): a case inspection floats the card IN FRONT of the case.
+  /* ========= the bay's phone costume (the deck's door is YOUR PICKS) =========
+     The takeover case — the deck's old phone form — retired react round 6
+     ("the deck drawer should away on mobile"); its history lives in the
+     vault repo. What stays here is load-bearing: at phone widths the bay
+     PARKS off-screen right (the resting translateX) so the desktop
+     drawer never shows, the !importants retire any stale inline pose the
+     desktop driver left behind (a resize across 940px mid-open), and the
+     #lb-card touch rules at the bottom are the mobile lightbox's.
      This block lives BELOW the desktop bay CSS on purpose — same-
-     specificity overrides (the ✕ reveal, the panel's border shorthand)
-     must come later in the sheet to win the cascade. */
+     specificity overrides must come later in the sheet to win the
+     cascade. */
   @media (max-width: 940px) {
     .bay {
       /* JUST PAST HALF the screen (Dylan, 2026-08-08 evening: "3/4 is to
@@ -3961,7 +3957,6 @@
       transform: translateX(calc(100% + 18px));   /* +18 clears the announce shadow */
       transition: transform .42s cubic-bezier(.3, .9, .3, 1);
     }
-    .bay.mopen { transform: translateX(0); }
     .bay .bay-panel, .bay .bay-inner, .bay .bay-drawer { transform: none !important; }
     /* the takeover fills its half-screen — the desktop content-height
        case (--caseH) and the stage-2 pull-out don't exist here (later in
@@ -3993,11 +3988,7 @@
     /* no pull-out on the phone: the MSG bar routes to #my-lisst (the
        visible twin — that page IS the long form) */
     .bay-dm { display: none; }
-    /* THE CLOSE ARROW IS GONE (2026-08-08, the case rework): the door is
-       swipe-to-close (the tracked-drag grammar — see the swc handlers by
-       openCase). The 48px chrome column existed FOR the arrow, so the
-       insets tighten with it; the face marks only need the dot's reach
-       (1.5px past the edge) plus air. */
+    /* the ✕ arrow is desktop chrome — nothing to close on the phone */
     .bay-close { display: none; }
     .bay-head { left: 14px; right: 10px; width: auto; }
     .bay-apron { left: 14px; right: 10px; width: auto; }   /* rides the head's takeover seat */
@@ -4052,7 +4043,6 @@
       -webkit-user-select: none; user-select: none; -webkit-touch-callout: none;
       touch-action: none;
     }
-    body.case-fade #home, body.case-fade #colpage { opacity: .22; pointer-events: none; }
   }
   @media (prefers-reduced-motion: reduce) { .bay, .bay-panel, .bay-dm { transition: none; } }
 
@@ -6182,19 +6172,9 @@
         '</div></div>'
     };
 
-    const cardInner = (b, k, dual, c) => {
-      if (CARD !== "photo" && c && JCARDS[CARD]) return JCARDS[CARD](jmeta(c, b, k));
-      const ref = refOf(b, k, c);
-      const alt = esc(b.name || ref);
-      const th = j => IMG((b.thumbs && b.thumbs[j]) || b.thumb);
-      const imgs = (dual && b.thumbs && b.thumbs.length > 1)
-        ? '<img loading="lazy" src="' + th(0) + '" alt="' + alt + ' — side one">' +
-          '<img loading="lazy" src="' + th(1) + '" alt="' + alt + ' — side two">'
-        : '<img loading="lazy" src="' + IMG(b.thumb) + '" alt="' + alt + '">';
-      return '<div class="frame' + ((dual && b.thumbs && b.thumbs.length > 1) ? " dual" : "") + '">' + imgs + '</div>' +
-        '<div class="cap"><span class="nm">' + esc(b.name || ref) + '</span>' +
-        (b.name ? '<span class="rf">' + esc(ref) + '</span>' : '') + '</div>';
-    };
+    /* every card is the framev3 treatment (the photo-card renderer this
+       used to dispatch between retired with the j-lab finals) */
+    const cardInner = (b, k, dual, c) => JCARDS[CARD](jmeta(c, b, k));
     const cleanDesc = s => (s || "").replace(/ Hover.*$/, "");
 
     /* ---- home: shelf bands (desktop) ---- */
@@ -8046,7 +8026,6 @@
       document.body.classList.remove("pxleave");
       if (!lb.hidden) closeLb(true);
       if (!vlb.hidden) closeVlb(true);
-      closeCase();   /* browsing dismisses the takeover (mobile modal law) */
       const id = (location.hash || "").replace(/^#/, "");
       const i = COLLECTIONS.findIndex(c => c.id === id);
       /* the picks page wears an opaque bar — see body.on-picks in the CSS */
@@ -9882,7 +9861,7 @@
         lbCard.classList.remove("tset", "blift", "hold", "stay", "dressed", "redress", "navdraw", "softout");
         document.body.classList.remove("softret");
         lbFlying = false;
-        if (!caseOpen) unlockScroll();   /* a case inspection closes back INTO the open case */
+        unlockScroll();
         cur = null;
         if (lbSrc) { lbSrc.el.style.visibility = ""; lbSrc = null; }
         if (backCard && !soft) landBeat(backCard);   /* touchdown: press + click — desktop only, the soft return lands silent */
@@ -11634,9 +11613,8 @@
        drawer-originated inspection re-opens the drawer to receive its
        card — see lbToShelfArc. */
     bayPanel.addEventListener("click", e => {
-      /* the takeover has no state machine: card taps have their own
-         handlers, the case background is inert (the ✕ and the gutter
-         close it) — mis-taps mid-reach must not shut the display */
+      /* the bay is desktop furniture — parked off-screen on the phone,
+         so its click machine stands down there */
       if (dockActive()) return;
       if (e.target.closest(".bay-head, .bay-dm")) return;   /* contact chrome owns its clicks */
       if (e.target.closest(".bay-item")) { openBay(); return; }
@@ -11653,7 +11631,7 @@
     });
     document.getElementById("bay-close").addEventListener("click", e => {
       e.stopPropagation();   /* the panel's own click would double-close */
-      if (dockActive()) closeCase(); else closeBay();
+      if (!dockActive()) closeBay();   /* phone: the bay is parked off-screen, nothing to close */
     });
     document.addEventListener("keydown", e => {
       /* !drag: Esc mid-carry cancels the DRAG (its own handler), and the
@@ -13451,104 +13429,20 @@
       barScript.addEventListener("pointerleave", () => { navLean = false; });
     }
 
-    /* ---- the takeover case (2026-07-24): the deck's phone form ----
-       #bay in its mobile costume (see the CSS block) — renderBay, the
-       FLIP re-stack, preseat and the ✕ all run unchanged; only the door
-       differs. Modal presence: the receipt icon toggles it, ANY browse
-       (route) dismisses it, a tap in the left gutter closes it. The
-       full-dress classes reuse the desktop chrome gates. */
-    let caseOpen = false;
-    const CASE_DRESS = ["mopen", "inked", "shadowed", "pulled", "fullish", "locked"];
-    function openCase() {
-      if (!dockActive() || caseOpen) return;
-      renderBay();
-      bayShelvesEl.scrollTop = 0;   /* the case opens at the top, same as the drawer */
-      caseOpen = true;
-      bay.classList.add(...CASE_DRESS);
-      document.body.classList.add("case-fade");
-      lockScroll();
-    }
-    function closeCase() {
-      if (!caseOpen) return;
-      caseOpen = false;
-      bay.classList.remove(...CASE_DRESS);
-      document.body.classList.remove("case-fade");
-      if (lb.hidden) unlockScroll();   /* an open sheet keeps its own lock */
-    }
-    /* THE PICON IS A PLAIN LINK AGAIN (react round 6, Dylan: "the deck
-       drawer should away on mobile"): no toggle handler — the anchor's own
-       #my-lisst href routes to YOUR PICKS for every card mode, empty deck
-       included (the blank card's tap lands on the empty page, which says
-       the same thing in words the angry-0 escalation used to mime). The
-       case's open doors are gone; openCase/closeCase remain below only so
-       the boundary crossing and route() can stand a stray state down. */
-    /* a tap outside the case (the gutter's faded shop, body) closes it —
-       capture phase so nothing under the faint can act on the same tap.
-       The lb rides above the case; its own scrim goes first. */
-    document.addEventListener("click", e => {
-      if (!caseOpen || !lb.hidden || drag) return;
-      if (e.target.closest("#bay, .picon, .gpick")) return;
-      e.preventDefault(); e.stopPropagation();
-      closeCase();
-    }, true);
-    document.addEventListener("keydown", e => {
-      if (e.key === "Escape" && caseOpen && lb.hidden && !drag) closeCase();
-    });
-    /* SWIPE-TO-CLOSE (2026-08-08, the case rework — the close arrow is
-       retired on the takeover): the door is the house tracked-drag
-       grammar (slideExchange's) — the case rides the finger rightward,
-       commits past SWC_TH from wherever the thumb parked it, rubber-
-       bands back under it; a leftward pull past the rest seat resists
-       at a third rate. Tracks on the panel and shelf AIR only — card
-       touches belong to the drag engine (.bay-item early-return), and a
-       vertical move hands back to the column scroll immediately (shelf
-       air is pan-y, so the browser fires pointercancel once it takes
-       the scroll — swcEnd cleans up on that path too). The commit's
-       release also fires a CLICK on whatever lands under the finger
-       once the case is gone — the document capture suppressor below
-       eats exactly that one (time-boxed so a stale flag can never eat a
-       real tap; it registers AFTER the gutter handler on purpose, so
-       the gutter's caseOpen guard has already passed on it). */
+    /* ---- the deck's phone door is YOUR PICKS (react round 6) ----
+       The takeover case — #bay as a slide-in phone modal (2026-07-24) —
+       is retired (Dylan: "the deck drawer should away on mobile"); its
+       machinery lives in the vault repo's history. THE PICON IS A PLAIN
+       LINK: the anchor's own #my-lisst href routes to YOUR PICKS for
+       every card mode, empty deck included (the blank card's tap lands
+       on the empty page, which says the same thing in words). What
+       survives of the case's gesture family is below: the swipe-to-open
+       (now the picks departure) and its ghost-click suppressor — a
+       committed swipe's release fires a CLICK on whatever lands under
+       the finger, and the capture suppressor eats exactly that one
+       (time-boxed so a stale flag can never eat a real tap). */
     const SWC_TH = 70, SWC_SLOP = 10;
-    let swc = null, swcAte = 0;
-    bayPanel.addEventListener("pointerdown", e => {
-      if (!dockActive() || !caseOpen || e.pointerType === "mouse") return;
-      if (!lb.hidden || drag) return;
-      if (e.target.closest(".bay-item")) return;   /* cards are the drag engine's */
-      swc = { x: e.clientX, y: e.clientY, id: e.pointerId, on: false, dx: 0 };
-    });
-    bayPanel.addEventListener("pointermove", e => {
-      if (!swc || e.pointerId !== swc.id) return;
-      const dx = e.clientX - swc.x, dy = e.clientY - swc.y;
-      if (!swc.on) {
-        if (Math.abs(dy) > SWC_SLOP && Math.abs(dy) > Math.abs(dx)) { swc = null; return; }
-        if (Math.abs(dx) <= SWC_SLOP || Math.abs(dx) <= Math.abs(dy)) return;
-        swc.on = true;
-        try { bayPanel.setPointerCapture(swc.id); } catch (err) {}
-        bay.style.transition = "none";
-      }
-      swc.dx = dx;
-      bay.style.transform = "translateX(" + (dx > 0 ? dx : dx / 3) + "px)";
-    });
-    function swcEnd(e) {
-      if (!swc || e.pointerId !== swc.id) return;
-      const s = swc; swc = null;
-      if (!s.on) return;
-      swcAte = performance.now();
-      bay.style.transition = "transform .34s cubic-bezier(.3, .9, .3, 1)";
-      if (s.dx > SWC_TH) {
-        bay.style.transform = "translateX(calc(100% + 18px))";
-        setTimeout(() => {
-          closeCase();
-          bay.style.transition = ""; bay.style.transform = "";
-        }, 360);
-      } else {
-        bay.style.transform = "translateX(0)";
-        setTimeout(() => { bay.style.transition = ""; bay.style.transform = ""; }, 360);
-      }
-    }
-    bayPanel.addEventListener("pointerup", swcEnd);
-    bayPanel.addEventListener("pointercancel", swcEnd);
+    let swcAte = 0;
     document.addEventListener("click", e => {
       if (!swcAte || performance.now() - swcAte > 400) return;
       swcAte = 0;
@@ -13573,13 +13467,13 @@
     let swo = null;
     document.addEventListener("pointerdown", e => {
       if (!dockActive() || e.pointerType === "mouse" || CARD !== "framev3") return;
-      if (caseOpen || !lb.hidden || drag || colpage.hidden) return;
+      if (!lb.hidden || drag || colpage.hidden) return;
       if (e.target.closest(".topbar, .drop, #bay, #lb")) return;
       swo = { x: e.clientX, y: e.clientY, id: e.pointerId, on: false, done: false };
     });
     document.addEventListener("pointermove", e => {
       if (!swo || e.pointerId !== swo.id || swo.done) return;
-      if (caseOpen || drag) { swo = null; return; }
+      if (drag) { swo = null; return; }
       const dx = e.clientX - swo.x, dy = e.clientY - swo.y;
       if (!swo.on) {
         if (Math.abs(dy) > SWC_SLOP && Math.abs(dy) >= Math.abs(dx)) { swo = null; return; }
@@ -13611,7 +13505,6 @@
         if (document.body.classList.contains("bay-room")) shopRoom(false);
         setGround("white", false);
       } else {
-        closeCase();
         let g = "black";
         try { g = localStorage.getItem(GROUND_KEY) || "black"; } catch (err) {}
         setGround(g === "white" ? "white" : "black", false);

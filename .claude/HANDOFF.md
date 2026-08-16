@@ -20,6 +20,32 @@ load, mobile costume correct — bay parked, ground forced white, intro
 runs, YOUR PICKS renders). Until cutover there are two public copies of
 the same page; the vault's is the one people have the link to.
 
+## THE A/B EXPERIMENT — this session may be its v1 half (seeded 2026-08-16)
+
+Dylan is firing ONE multi-item prompt at TWO sessions: one opened in
+the vault (`~/Projects/avrg-site`), one opened HERE. Same list,
+different repo memory — the test is whether this repo's scoped docs
+carry a real working session. **If your opening prompt is a list of
+site changes, this is that run.** The rules:
+
+1. **Branch first: `git checkout -b ab-run` before any edit.** All
+   work and commits land on the branch, never `main` — main must stay
+   at the port baseline so the compare (and whichever side is not
+   kept) unwinds clean. Push nothing; Dylan makes the push calls.
+2. **Agents are GREEN-LIT** — Dylan's explicit go-ahead to spawn
+   subagents / agent workflows for this run's work.
+3. **The vault may be consulted** (it is the archive, as these docs
+   already say) — **but LOG EVERY TRIP:** at wrap, list each thing
+   retrieved from outside this repo and whether it CHANGED the work.
+   That list is the experiment's real product — it tells Dylan what
+   belongs in these docs versus where the vault pointer is
+   over-inviting.
+4. One list item references `avrgbg-buttonflip.png` — staged at
+   `site/img/avrgbg-buttonflip.png`, a raw 3009×3375 / 5.2MB brand
+   export; web-size it before shipping it.
+5. Otherwise work the list like a normal session: desktop-first where
+   it applies, the sim for mobile verification, the same laws as ever.
+
 ## The porting recipe — vault edits come here
 
 Pre-cutover changes get made in the **vault working copy** (the page

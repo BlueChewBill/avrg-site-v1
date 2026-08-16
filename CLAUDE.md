@@ -79,6 +79,7 @@ The deep project memory — decisions, laws, mechanics, react history — lives 
 - The lb selected-state accent is deliberate — ask before removing.
 - **The scroll relay SLEEPS** — `RELAY_ON = false` in the relay IIFE; the one switch gates both the CSS (`body.relayon`) and the machine. Parked, not bailed on. Do not wake it without his word.
 - **Until cutover, the site is edited in the VAULT and PORTED here** — the porting recipe (with the current baseline hash) lives in [.claude/HANDOFF.md](.claude/HANDOFF.md).
+- **A session that OPENS with a multi-item list of site changes is the A/B run** — read [.claude/HANDOFF.md](.claude/HANDOFF.md) before touching anything; its experiment block governs (all work on the `ab-run` branch, never main; agents green-lit; vault trips allowed but logged).
 
 ## Where things stand
 

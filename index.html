@@ -1165,6 +1165,12 @@
        screenshot arrow: "move the decode up more towards the logo") — the
        desktop keeps the sits-low clamp */
     .tick { margin-top: 26px; }
+    /* the landed logo grows 25% on the phone (2026-08-16 react: "increase
+       the size it lands at on completion / sit on the home page by 25%")
+       — 188 = 150 × 1.25 whole-pixeled. The intro pose MEASURES this seat
+       (FLIP off the real rect), so the big pose is unchanged; only the
+       landing grows. Desktop keeps the 150 base — thread 1's open half. */
+    .masthead svg { width: 188px; }
 
     .video-wrap { display: none; }
     .tilegrid {
@@ -1482,6 +1488,46 @@
   /* the per-surface suppressions (belts, bay shelves, flights, lb neighbours)
      retired with the kick — the template no longer renders .find at all, so
      the only .find on the page is the lightbox card's own static markup. */
+  /* THE PHONE FLIP CHIP (2026-08-16, his spec: "the top right of the card
+     should show whichever side of the board is not currently centered on
+     the card with flip written above it") — the .find words' phone
+     translation: the hidden face ITSELF as a mini cutout, the verb above
+     it. Template-rendered wherever a canva pair exists (m.bot), but
+     display-gated: only grid .scards and the lb card show it, and only
+     ≤940 — so tiny renditions (header minis, band clones, bay items,
+     flights) stay silent per the proportion law, and the desktop keeps
+     its Top/Bottom words on the lb. The chip is the GRID's whole flip
+     door (a dedicated corner target — the board keeps its one tap-to-
+     inspect verb, the kick-retirement ruling stands). */
+  .d7f .fflipc {
+    position: absolute; top: 13px; right: 14px; z-index: 2;
+    top: 5.6034cqw; right: 6.0345cqw;
+    display: none; flex-direction: column; align-items: flex-end;
+    gap: 2px; gap: .8621cqw;
+    background: none; border: none; border-radius: 0; padding: 0;
+    font-family: var(--mono); font-size: 8.5px; font-weight: 700;
+    font-size: max(6px, 3.6638cqw);
+    letter-spacing: .2em; text-indent: .2em; text-transform: uppercase;
+    color: #000; cursor: pointer; text-align: right;
+  }
+  /* the builder's mark owns the top-right corner — the chip drops below
+     it, the .find precedent */
+  .d7f .tspark ~ .fflipc { top: 30px; top: 12.931cqw; }
+  /* the mini needs a REAL box pre-load (the lazy 0×0 law) — cutouts are
+     tall portraits; contain keeps every shape honest in one slot */
+  .d7f .fflipc .fface {
+    width: 22px; height: 58px; width: 9.4827cqw; height: 25cqw;
+    object-fit: contain; object-position: top right; display: block;
+  }
+  @media (max-width: 940px) {
+    /* .bay-fly too: a phone flight must fly the chip it will land
+       beside — rest == rest, no touchdown pop (desktop flights stay
+       chip-less with the rest of the desktop) */
+    .scard .d7f .fflipc, .bay-fly .d7f .fflipc, #lb-card.canflip .fflipc { display: flex; }
+    /* the words stand down where the chip speaks (id outranks the
+       .d7f.canflip .find show rule — no !important needed) */
+    #lb-card .find { display: none; }
+  }
   .d7f .corner {
     /* panel-anchored — the grid template and the lb card both put .corner
        directly in .panel now. 11px, not 12: the chip box tucks 1px (at
@@ -4877,6 +4923,19 @@
        veil, not the base rule's hidden one */
     body.intro .fveil { visibility: visible; opacity: 1; top: 0; background: rgba(255, 255, 255, 1); }
     body.intro.intro-shrink .fveil { background: rgba(255, 255, 255, .62); }
+    /* NOTHING PAINTS BELOW THE LOGO PRE-SHRINK (2026-08-16, his phone
+       screenshot: collection tiles bleeding through behind the iOS
+       address pill during the big draw). A fixed veil ends at the LAYOUT
+       viewport, and how far past it a device actually paints the -160
+       overscan is the device's business — his glass showed a band the
+       sim never did. So the intro empties the band at the source: the
+       page below the masthead holds visibility until the shrink beat,
+       where it appears BEHIND the frost — which was already that beat's
+       whole design. visibility, never display (layout must not move,
+       the pose is measured off the real seat). .shop is display:none on
+       the phone already; #colpage never renders under an intro (home
+       only). */
+    body.intro:not(.intro-shrink) .spine > :not(.masthead) { visibility: hidden; }
     body.intro .topbar {
       background-color: transparent;
       -webkit-backdrop-filter: none; backdrop-filter: none;
@@ -5204,25 +5263,39 @@
           <div class="brand" id="home-link" title="AVRG"><svg id="logo-draw" viewBox="-1 0 982.142857 1045" role="img" aria-label="AVRG">
             <circle cx="140" cy="522" r="10" fill="currentColor"/>
             <circle cx="800" cy="522" r="10" fill="currentColor"/>
+            <!-- clocks ×2 (2026-08-16 react: "speed up the logo draw
+                 animation x2") — every begin/dur is HALF the drawn
+                 original; keyTimes are fractions of dur so the per-segment
+                 hand pacing rides along. Draw ends ~2.28s (the intro's
+                 shrink beat is derived from this — see THE INTRO driver).
+                 Each path is opacity-gated until its own begin: WebKit
+                 paints a round line-cap as a dot at zero dash progress
+                 (the stray-speck gotcha — his catch at intro scale), so
+                 nothing may exist before its pen touches down. The <set>
+                 re-fires on playLogo's rewind and fill=freeze holds it
+                 through reduced-motion's jump-past-the-end. -->
             <path d="M335 754 L354 285 L505 787 L472 348 L640 315 L488 558 L659 754 L660 525 L243 605"
-                  pathLength="1" stroke-width="28" stroke-dasharray="1" stroke-dashoffset="1">
+                  pathLength="1" stroke-width="28" stroke-dasharray="1" stroke-dashoffset="1" opacity="0">
+              <set attributeName="opacity" to="1" begin="0.225s" fill="freeze"/>
               <animate attributeName="stroke-dashoffset"
                        values="1;0.832685;0.645824;0.488898;0.427869;0.325700;0.232982;0.151353;0"
                        keyTimes="0;0.167315;0.354176;0.511102;0.572131;0.674300;0.767018;0.848647;1"
                        keySplines="0.42 0 0.58 1;0.42 0 0.58 1;0.42 0 0.58 1;0.42 0 0.58 1;0.42 0 0.58 1;0.42 0 0.58 1;0.42 0 0.58 1;0.42 0 0.58 1"
-                       begin="0.45s" dur="4.10s" calcMode="spline" fill="freeze"/>
+                       begin="0.225s" dur="2.05s" calcMode="spline" fill="freeze"/>
             </path>
             <path d="M798 462 C766 305 630 190 470 190 C310 190 174 305 142 462"
-                  pathLength="1" stroke-width="10" stroke-dasharray="1" stroke-dashoffset="1">
+                  pathLength="1" stroke-width="10" stroke-dasharray="1" stroke-dashoffset="1" opacity="0">
+              <set attributeName="opacity" to="1" begin="0.568s" fill="freeze"/>
               <animate attributeName="stroke-dashoffset" values="1;0" keyTimes="0;1"
                        keySplines="0.42 0 0.58 1"
-                       begin="1.136s" dur="3.414s" calcMode="spline" fill="freeze"/>
+                       begin="0.568s" dur="1.707s" calcMode="spline" fill="freeze"/>
             </path>
             <path d="M142 584 C176 775 317 868 470 868 C623 868 764 775 798 584"
-                  pathLength="1" stroke-width="10" stroke-dasharray="1" stroke-dashoffset="1">
+                  pathLength="1" stroke-width="10" stroke-dasharray="1" stroke-dashoffset="1" opacity="0">
+              <set attributeName="opacity" to="1" begin="0.568s" fill="freeze"/>
               <animate attributeName="stroke-dashoffset" values="1;0" keyTimes="0;1"
                        keySplines="0.42 0 0.58 1"
-                       begin="1.136s" dur="3.414s" calcMode="spline" fill="freeze"/>
+                       begin="0.568s" dur="1.707s" calcMode="spline" fill="freeze"/>
             </path>
           </svg></div>
           <div class="tick label" id="tick"></div>
@@ -5288,6 +5361,10 @@
         <div class="inframe lb-fv3only" aria-hidden="true"><i class="ctl"></i><i class="cbr"></i><i class="dgl"></i><i class="dgr"></i></div>
         <div class="corner lb-fv3only"><span class="fchip fc-ref"><span class="ft" id="lb-fv3-ref"></span></span></div>
         <div class="find lb-fv3only" aria-hidden="true"><span class="ftop">Top</span><span class="fbot">Bottom</span></div>
+        <!-- the phone flip chip (2026-08-16): the find words' mobile
+             costume — populate feeds the mini whichever face is hidden;
+             no src attr at rest (src="" would request the page) -->
+        <button class="fflipc lb-fv3only" id="lb-flipc" type="button" aria-label="Flip the board"><span class="fw">flip</span><img class="fface" id="lb-fface" alt=""></button>
         <div class="frame"><div class="flipbox"><img id="lb-big" class="top" src="" alt="" title="View the whole collection" /><img id="lb-bot" class="bot" src="" alt="" aria-hidden="true" /></div></div>
         <div class="info lb-fv3only"><span class="nm"><span class="nmt" id="lb-fv3-nmt"></span></span></div>
         <button class="fchip fc-list d7f-cta lb-fv3only" id="lb-fv3-list" type="button"><span class="fl"><span class="ft"></span><svg class="fscript" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path fill-rule="evenodd" shape-rendering="crispEdges" d="M6 2.5h13v19H6V2.5Z M7.4 4.3v15.4h10.2V4.3H7.4Z"/><rect shape-rendering="crispEdges" x="9.8" y="6.5" width="1.4" height="3"/><rect shape-rendering="crispEdges" x="9.8" y="14.5" width="1.4" height="3"/><circle cx="10.5" cy="12" r="1.2"/><path class="sh" shape-rendering="crispEdges" d="M3.5 4.5V23.5H16.5V21H6.5V4.5Z"/></svg><span class="fmini" aria-hidden="true"></span></span></button>
@@ -5765,6 +5842,36 @@
         if (/✓/.test(lft.textContent)) lft.textContent = "Mine !";
       });
     }
+    /* THE MOBILE DIMS DECODE (2026-08-16, his spec: "cards need to decode
+       to board dims everywhere on the mobile site besides the collections
+       page"): the desktop's hover name→dims decode translated to touch —
+       a card with a real DIMS_MM row decodes its name line ONCE as it
+       scrolls into view (arrival is the phone's hover) and HOLDS the
+       dims; boards without a row keep their name, the desktop's own
+       asymmetry. Armed per render on the collection pages, SKIPPED on
+       #shop-all (the COLLECTIONS page — his exemption); the picks page
+       lands dims statically (rest IS the landed state, the deck's dress
+       law) and the lb joins via dockDress. Interval-driven by decodeInto,
+       so a frozen frame loop can't stall it (the timeout-pump law).
+       Re-arming disconnects the old observer; replaced renders detach
+       their targets, which then simply never fire. */
+    let dimsIO = null;
+    function armDimsDecode(root) {
+      if (dimsIO) { dimsIO.disconnect(); dimsIO = null; }
+      if (!dockActive()) return;
+      const nmts = [...root.querySelectorAll(".scard .nmt")].filter(n => n.dataset.dims);
+      if (!nmts.length) return;
+      dimsIO = new IntersectionObserver(ents => {
+        ents.forEach(en => {
+          if (!en.isIntersecting) return;
+          dimsIO.unobserve(en.target);
+          const n = en.target;
+          if (reduced) { clearInterval(n._t); n.textContent = n.dataset.dims; }
+          else decodeInto(n, n.dataset.dims);
+        });
+      }, { threshold: .5 });
+      nmts.forEach(n => dimsIO.observe(n));
+    }
     /* the four decode-able reads, carried card-to-card so a mid-decode pluck
        is seamless (buildFly's idiom, shared with the lb open and the deck
        exchange's demoting clone) */
@@ -6097,14 +6204,22 @@
       '<svg class="fscript" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path fill-rule="evenodd" shape-rendering="crispEdges" d="M6 2.5h13v19H6V2.5Z M7.4 4.3v15.4h10.2V4.3H7.4Z"/><rect shape-rendering="crispEdges" x="9.8" y="6.5" width="1.4" height="3"/><rect shape-rendering="crispEdges" x="9.8" y="14.5" width="1.4" height="3"/><circle cx="10.5" cy="12" r="1.2"/><path class="sh" shape-rendering="crispEdges" d="M3.5 4.5V23.5H16.5V21H6.5V4.5Z"/></svg>';
     const JCARDS = {
       framev3: m =>
-        /* no `canflip` and no second face: rendered cards (grids, belts, bay
-           shelves, flights, lb neighbours) do not flip since the kick retired
-           — only the lightbox card does, and it gets .canflip from JS. m.bot
-           is still resolved for the lb's carousel, just not rendered here. */
+        /* no `canflip` and no kick: rendered cards do not 3D-flip since the
+           kick retired — the lightbox keeps the carousel via JS .canflip.
+           The PHONE FLIP CHIP (2026-08-16) renders here for every board
+           with a canva pair: the hidden face as a mini + the flip verb,
+           top right. CSS keeps it display:none everywhere except mobile
+           .scards and the lb card, and the mini img stays lazy — hidden
+           chips are 0×0 boxes that never load (the lazy law working FOR
+           us; renderPicks' eager pass skips .fface for the same reason).
+           On grids its tap is an in-place squash-swap flip (flipStage);
+           the board itself keeps tap-to-inspect. */
         '<div class="d7f' + soldCls(m) + '" style="--acc:' + m.acc + '"><div class="panel">' +
           '<div class="inframe"><i class="ctl"></i><i class="cbr"></i><i class="dgl"></i><i class="dgr"></i></div>' +
           (m.spark ? '<span class="spark tspark" title="Builder\'s mark — this one came out perfect">✱</span>' : '') +
           '<div class="corner"><span class="fchip fc-ref"><span class="ft" data-ref="' + esc(m.ref) + '">' + esc(m.ref) + '</span></span></div>' +
+          (m.bot ? '<button class="fflipc" type="button" data-top="' + esc(m.img) + '" data-bot="' + esc(m.bot) +
+            '" aria-label="Flip the board"><span class="fw">flip</span><img class="fface" loading="lazy" src="' + esc(m.bot) + '" alt=""></button>' : '') +
           '<div class="stage"><img loading="lazy" src="' + m.img + '" alt="' + esc(m.nm) + '"></div>' +
           '<div class="info">' +
             '<span class="nm"><span class="nmt" data-nm="' + esc(m.nm) + '" data-dims="' + esc(m.dimsPh) + '">' + esc(m.nm) + '</span></span>' +
@@ -6933,6 +7048,7 @@
         '<section class="colpage-inner shopall-foot">' + colnavHtml() + '</section>';
       bindScards();
       landWants(colpage);   /* the phone chips speak (round 4) */
+      armDimsDecode(colpage);   /* the name lines decode to dims as they arrive (2026-08-16) */
     }
 
     /* shop all: every collection page stitched into one scroll */
@@ -6949,6 +7065,12 @@
         '<section class="colpage-inner shopall-foot">' + colnavHtml() + '</section>';
       bindScards();
       landWants(colpage);   /* the phone chips speak (round 4) */
+      /* NO armDimsDecode here — #shop-all is the COLLECTIONS page, his
+         exemption ("everywhere on the mobile site besides the collections
+         page"); these cards keep their resting names. armDimsDecode(null-
+         root) isn't called either, so a colpage's live observer would
+         survive a hop here — harmless, its targets detached with the
+         innerHTML swap. */
     }
 
     /* ========= the scroll relay — ASLEEP for v1 behind RELAY_ON ========= */
@@ -7372,6 +7494,13 @@
       if (M) colpage.querySelectorAll(".lisst-card .sttxt").forEach(st => {
         st.textContent = st.dataset.txt || "";
       });
+      /* dims land statically with the status word (2026-08-16, the mobile
+         dims pass): the picks cards sit fully decoded — no scramble
+         replay — and the deal's fly clones the text so the landing
+         matches (rest == rest) */
+      if (M) colpage.querySelectorAll(".lisst-card .nmt").forEach(n => {
+        if (n.dataset.dims) n.textContent = n.dataset.dims;
+      });
       landWants(colpage);   /* every pick prints Mine ! (round 4) */
       lockCardScale();
       /* THE ✕ IS TWO TAPS NOW (round 7: "on first tap the card should
@@ -7465,6 +7594,10 @@
           setTimeout(() => {
             img.setAttribute("src", toBot ? bot : img.dataset.top);
             if (toBot) img.dataset.flipped = "1"; else delete img.dataset.flipped;
+            /* the corner chip's mini swaps with the state (2026-08-16):
+               it shows whichever face the card is NOT showing */
+            const face = s.querySelector(".fflipc .fface");
+            if (face) face.src = toBot ? img.dataset.top : bot;
             img.style.transition = "scale .16s ease-out";
             img.style.scale = "1 1";
             setTimeout(() => {
@@ -8213,7 +8346,10 @@
          from the current page's own grid, which is exactly "only shows on
          its own collection". The bar is permanent chrome: always eager.
          (The .hpick img sizing rule is the belt — a real box pre-load.) */
-      hpicksEl.querySelectorAll("img[loading='lazy']").forEach(i => { i.loading = "eager"; });
+      /* :not(.fface) — the flip chip's mini is display:none at mini scale
+         (the proportion law); eager ignores visibility, so without the
+         guard every stack mini would download its board's OTHER face too */
+      hpicksEl.querySelectorAll("img[loading='lazy']:not(.fface)").forEach(i => { i.loading = "eager"; });
     }
     function lisstTab() {
       navLisst.textContent = "My Lisst" + (myLisst.length ? " (" + myLisst.length + ")" : "");
@@ -8597,6 +8733,17 @@
         if (/✓/.test(lft.textContent)) lft.textContent = "Mine !";
         else if (reduced) lft.textContent = "ADD";
         else decodeInto(lft, "ADD");
+      }
+      /* the name line decodes to real dims at the landing (2026-08-16,
+         the mobile dims pass — the lb is the inspection, it always
+         speaks; populate resets the print name, so every arrival plays).
+         Boards without a DIMS_MM row keep their name. The flipped guard
+         is belt: populate stands a flip down silently before any
+         landing, but a dress must never talk over UNDERSIDE. */
+      const dnm = document.getElementById("lb-fv3-nmt");
+      if (dnm && dnm.dataset.dims && !lbCard.classList.contains("flipped")) {
+        if (reduced) dnm.textContent = dnm.dataset.dims;
+        else decodeInto(dnm, dnm.dataset.dims);
       }
     }
     /* ...and its inverse: shed the previous inspection's dress as a SNAP,
@@ -9554,6 +9701,12 @@
         if (bp) lbBot.src = bp; else lbBot.removeAttribute("src");
         lbCard.classList.toggle("canflip", !!bp && j === 0);
         lbBig.title = (bp && j === 0) ? "Flip the board" : "View the whole collection";
+        /* the phone flip chip's mini shows the face you are NOT looking
+           at — populate always lands top-side-up, so it starts on the
+           bottom; setFlip swaps it with the state (clear by attribute,
+           the src="" law) */
+        const ffc = document.getElementById("lb-fface");
+        if (ffc) { if (bp && j === 0) ffc.src = bp; else ffc.removeAttribute("src"); }
         /* clones pre-load at populate so the first gesture never pays the
            decode (a first-flip stutter reads as chop) */
         [[".ctop", bp && lbBig.src], [".cbot", bp]].forEach(([sel, src]) => {
@@ -14166,6 +14319,12 @@
       card.classList.toggle("unflipped", !on && !silent);
       if (!on) card.classList.remove("fset");
       const nmt = card.querySelector(".nmt");
+      /* the phone chip's mini tracks the state — it shows the HIDDEN face
+         (2026-08-16): top while flipped, bottom while not. Before the
+         silent return on purpose: a populate reset re-writes it anyway,
+         but a mid-lb silent stand-down must not strand a stale face */
+      const ff = card === lbCard ? document.getElementById("lb-fface") : null;
+      if (ff && lbBig.src) ff.src = on ? lbBig.src : (lbBot.src || lbBig.src);
       if (silent) {
         card.classList.remove("unflipped", "flipping", "fset");
         if (nmt) { clearInterval(nmt._t); nmt.textContent = nmt.dataset.nm; }
@@ -14204,8 +14363,12 @@
         card.classList.add("flipping");
       }
       if (nmt) {
-        if (reduced) nmt.textContent = on ? "UNDERSIDE" : nmt.dataset.nm;
-        else decodeInto(nmt, on ? "UNDERSIDE" : nmt.dataset.nm);
+        /* the phone's resting name line is the DIMS decode (2026-08-16,
+           the mobile dims pass) — a flip-back restores it there; desktop
+           keeps the print name */
+        const back = (dockActive() && nmt.dataset.dims) || nmt.dataset.nm;
+        if (reduced) nmt.textContent = on ? "UNDERSIDE" : back;
+        else decodeInto(nmt, on ? "UNDERSIDE" : back);
       }
     }
     function flipLanded(card) {
@@ -14247,6 +14410,57 @@
       if (lbCard.classList.contains("flipping")) return;
       e.preventDefault(); e.stopPropagation();
       setFlip(lbCard, fw.classList.contains("fbot"));
+    }, true);
+    /* THE PHONE FLIP CHIP'S DOORS (2026-08-16). Grid cards: the chip is
+       the whole flip — a dedicated corner target, so the board keeps its
+       one tap-to-inspect verb (the kick-retirement ruling stands). The
+       flip itself is the picks page's squash-swap-expand generalized
+       (flipStage); the chip's mini always swaps to the face you are NOT
+       looking at, and it is already warm — the incoming face IS the img
+       the chip was showing. LB: the chip joins the words' own setFlip
+       door. Picks: no handler here — the card flips on ANY tap
+       (flipCaret), so the chip's tap just bubbles to it. */
+    function flipStage(card, chip) {
+      const img = card.querySelector(".stage img");
+      const top = chip.dataset.top, bot = chip.dataset.bot;
+      if (!img || !bot) return;
+      /* the self-expiring token (the slideT law) — a frozen timer must
+         never lock the card */
+      const now = performance.now();
+      if (now - (+img.dataset.flipT || 0) < 300) return;
+      img.dataset.flipT = now;
+      const toBot = !img.dataset.flipped;
+      const face = chip.querySelector(".fface");
+      img.style.transition = "scale .13s ease-in";
+      img.style.scale = "0 1";
+      setTimeout(() => {
+        img.src = toBot ? bot : top;
+        if (toBot) img.dataset.flipped = "1"; else delete img.dataset.flipped;
+        if (face) face.src = toBot ? top : bot;   /* the chip shows the OTHER face */
+        img.style.transition = "scale .16s ease-out";
+        img.style.scale = "1 1";
+        setTimeout(() => {
+          img.style.removeProperty("scale");
+          img.style.removeProperty("transition");
+        }, 180);
+      }, 140);
+    }
+    document.addEventListener("click", e => {
+      const chip = e.target.closest && e.target.closest(".fflipc");
+      if (!chip || !dockActive()) return;
+      const card = chip.closest(".d7f");
+      if (card === lbCard) {
+        e.preventDefault(); e.stopPropagation();
+        if (!lbCard.classList.contains("canflip") || lbCard.classList.contains("flipping")) return;
+        if (drag || dragStole) return;
+        setFlip(lbCard, !lbCard.classList.contains("flipped"));
+        return;
+      }
+      const scard = chip.closest(".scard");
+      if (!scard) return;                                  /* flights, minis: not a control */
+      if (scard.classList.contains("lisst-card")) return;  /* picks: bubble to flipCaret */
+      e.preventDefault(); e.stopPropagation();             /* the board tap stays the inspect */
+      flipStage(card, chip);
     }, true);
     /* the lb board: while the cutout is up the img click is the flip
        (the old departure to the collection page survives on photo views
@@ -14424,17 +14638,21 @@
         brand.style.transform = "translate(" + dx.toFixed(1) + "px," + dy.toFixed(1) + "px) scale(" + s.toFixed(3) + ")";
         document.body.classList.add("intro-pose");
         playLogo();   /* own the clock — the draw starts at the pose */
-        setTimeout(() => {   /* the draw is done (SMIL ends ~4.55s) — come home */
+        /* the beat map rides the draw's ×2 cut (2026-08-16): SMIL ends
+           ~2.28s now, shrink = draw end + the same 100ms hold, and the
+           post-draw offsets (+1000 / +750 / +950) are the approved
+           choreography untouched — only the draw got faster */
+        setTimeout(() => {   /* the draw is done (SMIL ends ~2.28s) — come home */
           document.body.classList.add("intro-shrink");
           void brand.offsetWidth;   /* commit the pose under the new transition, then release it */
           brand.style.transform = "";
-        }, 4650);
+        }, 2375);
         setTimeout(() => {   /* the decode's first run + the bar arrives */
           document.body.classList.add("intro-tick", "intro-bar");
           startTick();
-        }, 5650);
-        setTimeout(() => fveil.down(), 6400);   /* focus, top first */
-        setTimeout(clearIntro, 7350);
+        }, 3375);
+        setTimeout(() => fveil.down(), 4125);   /* focus, top first */
+        setTimeout(clearIntro, 5075);
       }, 0);
       setTimeout(() => { if (document.body.classList.contains("intro")) clearIntro(); }, 12000);
     })();

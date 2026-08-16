@@ -27,7 +27,7 @@ that is actually live) and ported into v1 at session end. Deliberate:
 it is the test of whether v1's structure survives real change.
 
 1. Get the delta:
-   `git -C ~/Projects/avrg-site diff 9aca992..HEAD -- redesign/k-home-dual.html`
+   `git -C ~/Projects/avrg-site diff 762f975..HEAD -- redesign/k-home-dual.html`
 2. Apply those hunks to `index.html` here. The two files are
    **identical modulo the path repoints**, so hunk context matches
    unless the hunk itself touches a path.
@@ -44,8 +44,18 @@ it is the test of whether v1's structure survives real change.
    inline-script syntax check in `gotchas.md` first, then the browser.
 6. **Update the baseline hash in this file** to the vault's new HEAD.
 
-**Baseline: `9aca992`.** Vault HEAD was the same commit at handoff time,
-so the delta is currently EMPTY — the first port has nothing to carry.
+**Baseline: `762f975`.**
+
+**Port log**
+- `9aca992 → 762f975` (2026-08-16) — intro react 3 + the dims/flip card
+  pass. 18 hunks, 17 clean and 1 at fuzz 1 (v1's own `RELAY_ON` marker
+  comment sits in that hunk's trailing context, in `renderShopAll`).
+  No path translation was needed: the flip chip rides the derived
+  `m.img`/`m.bot`, so v1's repoints flow through. **The recipe held** —
+  v1's divergence from the vault came out byte-identical before and
+  after, which is the check worth repeating: diff v1 against the OLD
+  vault commit, port, diff against the NEW one, and the two divergences
+  must match.
 
 ## The cutover checklist — parked, on Dylan's word, in order
 

@@ -133,10 +133,6 @@
       min-width: calc(2ch + 2.8px); text-align: center;
     }
     body.light .topbar .picon .pcnt { background: none; color: #000; }
-    /* the angry-0 escalation SURVIVES — it just speaks in ink now instead of
-       a red pill, since there is no pill left to fill */
-    .topbar .picon .pcnt.angry { background: none; color: #b5231d; }
-    body.light .topbar .picon .pcnt.angry { background: none; color: #b5231d; }
   }
   /* Home and DM are MOBILE-ONLY rows: on desktop the logo still goes home
      by itself and the drawn bar carries its own DM organ, so both would be
@@ -4034,9 +4030,7 @@
   }
   body.light .picon svg { stroke: #000; }
   body.light .picon .pcnt { background: #000; color: #fff; }
-  /* empty-case escalation: the first tap turns the count an angry red 0,
-     a second tap while still empty gets the shake. An add forgives. */
-  .picon .pcnt.angry { background: #b5231d; color: #fff; }
+  /* the add's ping on the receipt icon (dockPing rides .shake + .bump) */
   .picon.shake { animation: kpshake .45s ease; }
   @keyframes kpshake {
     20% { transform: translateX(-2.5px) rotate(-4deg); }

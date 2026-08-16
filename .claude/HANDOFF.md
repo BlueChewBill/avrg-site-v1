@@ -104,11 +104,12 @@ it is the test of whether v1's structure survives real change.
 
 ## Parked / later (from the vault's threads)
 
-- His named next tasks, in his order: **(1) slight INTRO TWEAKS —
-  timing and size** (every clock is a named knob in the intro driver);
-  **(2) the BOARD-DIMENSION DECODE + decode timing across the site** —
-  he said he'll consult an already-built lab for that one, so let HIM
-  name it (the labs are in the vault).
+- ~~His named next tasks (1) intro tweaks (2) the board-dimension
+  decode~~ — **BOTH LANDED 2026-08-16 and were PORTED here** (the
+  `762f975` port: draw ×2 + seat + specks + bleed, the mobile dims
+  decode, the flip chip — records in mobile.md + k-core.md). Awaiting
+  his react; decode TIMING/feel tuning may still follow (the lab he
+  named is in the vault).
 - Thread 1's desktop half (the landing around the draw), thread 2 (home
   collection cards redesign), thread 3's desktop half (drop-row
   navigations still teleport above 941).

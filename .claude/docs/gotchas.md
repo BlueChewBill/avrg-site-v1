@@ -92,9 +92,11 @@ The drawn logo's `begin="0.45s"` counts from DOCUMENT LOAD on a wall clock that 
 
 The intro's full-screen veil (`position:fixed; inset:0`-style) verified clean in the pane and showed a band of RAW PAGE at the bottom of the 15 Pro sim: fixed boxes end at the layout viewport's bottom, and iOS Safari happily paints the document in the bezel band behind/around the floating URL pill. Anything meant to COVER the screen needs bottom overscan (the veil carries `bottom: -160px`; a translateY exit in % rides the taller box and still clears). Same family as the round-7 "html painted white" hardening and the dvh case anchor — the layout viewport is not the glass.
 
+**AMENDED 2026-08-16 (his real-phone screenshot): overscan is NOT a guarantee — how far past the layout viewport a device actually paints a fixed box is the device's business.** The −160 veil verified clean on the iOS 27 sim and his glass still showed collection tiles behind the address pill during the intro's opaque phase. When a cover MUST be total, don't fight the viewport model — **empty the band at the source**: the intro holds the page below the masthead at `visibility: hidden` until the shrink beat (`body.intro:not(.intro-shrink) .spine > :not(.masthead)`), so whatever the device paints down there is blank html ground. A fixed cover is a costume; content-hiding is a fact.
+
 ## WebKit paints a round line-cap at zero dash progress (2026-08-16)
 
-A path armed for stroke-draw (`stroke-dasharray: 1; stroke-dashoffset: 1` — nothing drawn yet) with `stroke-linecap: round` renders its START CAP as a dot in WebKit before the draw begins. The drawn logo's two circle arcs each park a ~1px speck near the anchor dots at rest scale — invisible — but the load intro scales the logo ~2.4× and the specks read as two stray dots during the big draw's first seconds (sim-caught). Live with it, or gate the arc paths' opacity until their `begin` fires; the caps belong to the hand-stroke look once drawing. Chrome does not paint them.
+A path armed for stroke-draw (`stroke-dasharray: 1; stroke-dashoffset: 1` — nothing drawn yet) with `stroke-linecap: round` renders its START CAP as a dot in WebKit before the draw begins. The drawn logo's two circle arcs each park a ~1px speck near the anchor dots at rest scale — invisible — but the load intro scales the logo ~2.4× and the specks read as two stray dots during the big draw's first seconds (sim-caught; Dylan caught it on glass). **FIXED 2026-08-16: every animated path carries `opacity="0"` + an SMIL `<set to="1" begin=<its draw begin> fill="freeze"/>`** — nothing exists before its pen touches down, the set re-fires on the rewind, and freeze survives reduced-motion's jump-past-end. The pattern is the fix for any future stroke-draw art with round caps.
 
 ## The pane's rAF wedge came back — design ceremony pumps on timeouts (2026-08-16)
 
@@ -107,6 +109,10 @@ The ONE CARD SPEC's stage img is absolute + auto-sized (`inset:0; margin:auto; m
 ## A state's `transition` REPLACES the base list — a dropped property snaps (2026-08-16)
 
 `.fveil.on` carried its own shorter `transition` (to dodge a visibility delay) and that list REPLACES the base declaration's — so while `.on` held, `transform` had NO transition and the veil's top-down reveal SNAPPED in one frame on every real device (Dylan's "weird pop… flash a frame"; the pane's frozen transitions could never show it, and the flash frame itself photographed as torn fonts/blank images via iPhone Mirroring's video stream). THE LAW: one transition list on the base rule, states only flip VALUES — and if some property must not transition, handle it in JS (fveil.clear() snaps under `transition: none` + reflow) rather than forking per-state lists that will drift.
+
+## IntersectionObserver never delivers in the pane — the ResizeObserver law's sibling (2026-08-16)
+
+The mobile dims decode (IO-armed, fires as cards scroll into view) never fired in the pane — scrolls, waits, nothing; the same build decoded instantly on the sim and in real headless Chrome. Intersections are computed in the rendering steps, and the pane's frame loop is dead (the rAF wedge), so IO callbacks starve exactly like ResizeObserver's. **Anything IO-gated verifies on the sim or real Chrome only**; in the pane you can prove the observer ARMED (code state) but never that it FIRES. Third member of the family: rAF, RO, IO — if it rides the render loop, the pane can't run it. Related: the picks-deal ceremony also can't complete in the pane (its card flights are bayFlight/glide, rAF per-frame work) — always sim-verify it; don't mistake its pane stall for a regression.
 
 ---
 

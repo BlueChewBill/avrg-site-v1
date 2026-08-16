@@ -83,7 +83,7 @@
     display: flex; align-items: center; cursor: pointer;
   }
   .bar-brand img { width: 38px; height: 38px; border-radius: 50%; }
-  /* ---- THE MOBILE BAR IS TWO ANCHORS (2026-08-06, ported from bar-lab) ----
+  /* ---- THE MOBILE BAR IS TWO ANCHORS (2026-08-06, ported from bar-lab — vault repo) ----
      The pill tab row is retired. It could not fit — ALL/ORIGINAL/SHAPED/
      ROUTED/CONTACT ME needs more width than a phone has, so the bar scrolled
      sideways and the DECK AND ITS COUNT sat off-screen on arrival. Confirmed
@@ -103,10 +103,9 @@
        underneath it (Dylan's call — the mobile site is one long scroll) */
     .topbar { border-bottom: 0; }
     /* the deck mark takes the receipt glyph's seat. #picon KEEPS ITS ID AND
-       EVERY HANDLER — the angry-0 escalation, the count bump, the takeover
-       case door — because this is a change of costume, not of job. Re-wiring
-       the phone's only deck door two days before the event would be the one
-       risk not worth taking. */
+       ITS HANDLERS — the count bump, the picks departure — because this is
+       a change of costume, not of job. Re-wiring the phone's only deck door
+       two days before the event would be the one risk not worth taking. */
     /* margin-left auto, not the old 14px gap-from-DM: the phone bar's DM
        seat retired 2026-08-12 (the tidy react) and IT carried the bar's
        right-push — the picks stack inherits the job with the seat */
@@ -152,7 +151,7 @@
      branch centres on #nbar — so it shares the desktop's translateX(-50%)
      parking and the flush-off-the-logo special case is gone.) */
 
-  /* ---- the drawn bar (2026-07-25, ported from header-lab: the locked
+  /* ---- the drawn bar (2026-07-25, ported from header-lab — vault repo: the locked
      header — BAR drawn · DRAW engulf · TAG on). Full-width rails top and
      bottom, naked words between structural dots at rest. Hover: button-width
      horizontals peel off the INTACT rails and slide in, THE FLANKING DOTS
@@ -338,8 +337,8 @@
      leaving it gated meant a phone could open a menu that could not paint. */
 
     /* the shop mini-bay (the collections live here now) — bar-anchored, not
-       organ-anchored. THE DROP-LAB DRESS (2026-08-14, drop-lab.html — the
-       lab born in claude.design and moved local): the 2px border draws
+       organ-anchored. THE DROP-LAB DRESS (2026-08-14, drop-lab.html —
+       vault repo; the lab born in claude.design and moved local): the 2px border draws
        (rails down, face halves close at the foot) fading 0→100%, the white
        body inks in, rows chip in as CENTRED BARE WORDS. Inside: the fv3
        inner card edge — two vertical lines, each split by a gap, whose
@@ -901,7 +900,7 @@
   .topbar, #home, #colpage { transition: opacity .45s ease; }
   /* THE ROOM DIMS WITH THE PULL (2026-08-03): the open deck fades the
      ground toward BAY_TUNE.fade — the inspection read at the deck's own
-     intensity (.22, the case-fade family value), tied to the animation
+     intensity (.22, the house faint), tied to the animation
      because it rides the drawer's master p (driver-written --bayFade).
      A VAR on the base rule on purpose: the lb/drag/case rules below win
      by specificity, so an inspection's .08 owns the ground while it's
@@ -1238,7 +1237,7 @@
   }
 
   /* ================= card treatments (j finalists on the live engine) =================
-     Ported from j-cards-white (.paper, .d7f frame v3) and j-cards-black
+     Ported from j-cards-white (.paper, .d7f frame v3) and j-cards-black (both vault repo)
      (.d5 slab base + .d6z zoned), then made fluid — width 100%, square
      stage — so one card rides both the belt slots (--cardW) and the shelf
      grids. Treatments keep their own ground (paper/frame are white cards,
@@ -1452,29 +1451,19 @@
     filter: drop-shadow(11px 14px 0 rgba(0, 0, 0, .3));
     filter: drop-shadow(4.7414cqw 6.0345cqw 0 rgba(0, 0, 0, .3));
   } }
-  /* ---- UNDERSIDES (flip-lab port, 2026-07-25) ----
+  /* ---- UNDERSIDES (flip-lab port — vault repo, 2026-07-25) ----
      Board click flips to the underside — the object is the control.
-     Grid/shelf cards run KICK: the skate-true roll around the long axis
-     (flipbox transition; each face img carries its own drop-shadow, so
-     edge-on the shadow thins to a blade for free). The fv3 LIGHTBOX card
-     runs the CAROUSEL instead — see the #lb.fv3 block; the .stage scope
-     here is what keeps the two physics apart (the lb card has .frame).
-     Only .canflip cards flip (BOT() resolves a canva pair's other face;
-     originals ride the interim no-flip until their reshoot). */
-  /* KICK RETIRED 2026-07-26 (Dylan): "i dont think kick belongs on a
-     collections board click. it gets in the way of the lightbox / could
-     inadvertently hide a card click to inspect." The whole `.stage`-scoped
-     kick apparatus is gone with it — the perspective/preserve-3d gesture
-     context, the .fset 2D re-expression, the flipland press, the two-face
-     flipbox itself (rendered cards now use the template's plain-img branch,
-     so they carry ONE image instead of two), and the boardHit() alpha probe
-     on grids. The FLIP LIVES IN THE LIGHTBOX ONLY, as the carousel — see the
-     #lb.fv3 block, which is `.frame`-scoped and never shared a rule with
-     this. That stage/frame split is what made this a clean removal.
-     Note what else this retires: the resting-3D compositor hazard (78
-     preserve-3d contexts once wedged a screen to black) cannot recur on
-     grids, and the click-routing ambiguity Dylan names above is gone at the
-     source rather than being managed by a pixel probe. */
+     THE FLIP LIVES IN THE LIGHTBOX ONLY, as the carousel — see the
+     #lb.fv3 block, which is `.frame`-scoped. Only .canflip cards flip
+     (BOT() resolves a canva pair's other face; originals ride the interim
+     no-flip until their reshoot).
+     GRID/SHELF CARDS DO NOT FLIP (Dylan, 2026-07-26): "i dont think kick
+     belongs on a collections board click. it gets in the way of the
+     lightbox / could inadvertently hide a card click to inspect." So
+     rendered cards use the template's plain-img branch and carry ONE
+     image instead of two, and every collection surface is plainly
+     click-to-inspect rather than a pixel probe managing two verbs on the
+     same pixels. */
   /* words indicator (Dylan's sketch): Top/Bottom stacked top-right, the
      shown face at full ink, the hidden one at the .22 faint; the words
      are controls too. State-driven, not hover — no .tset/.hold mirror. */
@@ -1494,9 +1483,6 @@
   .d7f.flipped .find .fbot { opacity: 1; }
   /* the builder's mark owns the top-right corner — words drop below it */
   .d7f .tspark ~ .find { top: 30px; top: 12.931cqw; }
-  /* belts stay inspect-only (moving targets, the recycler) and the case
-     keeps its click ecology; flights carry no flip chrome — no indicator
-     where the flip isn't offered */
   /* the per-surface suppressions (belts, bay shelves, flights, lb neighbours)
      retired with the kick — the template no longer renders .find at all, so
      the only .find on the page is the lightbox card's own static markup. */
@@ -1506,8 +1492,7 @@
        reference) UNDER the 2px frame line — exactly flush edges round to
        different device pixels at fractional widths and leak a white seam
        between fill and frame; chips paint above the frame, so the overlap
-       is invisible. fc-ref's padding puts the glyphs back at the 12px spot.
-       (Stage-anchoring + negative-top compensation retired 2026-07-22.) */
+       is invisible. fc-ref's padding puts the glyphs back at the 12px spot. */
     position: absolute; top: 11px; left: 11px; z-index: 2;
     top: 4.7414cqw; left: 4.7414cqw;
     display: flex; align-items: center; gap: 7px; gap: 3.0172cqw;
@@ -1651,7 +1636,7 @@
     :is(.d7f:hover, .d7f.lit) .fc-ref::before { transform-origin: left center; animation: chipwipe .44s ease forwards; }
     :is(.d7f:hover, .d7f.lit) .fc-list::before { transform-origin: right center; animation: chipwipe .44s ease forwards; }
   }
-  /* the tag glyph (2026-07-25, header-lab pick: TAG on) — a stroke-drawn
+  /* the tag glyph (2026-07-25, header-lab pick: TAG on — vault repo) — a stroke-drawn
      price-shape ahead of the label: says FOR SALE without promising a
      number ($ would). Its space is reserved at rest — the chip box must
      never resize mid-interaction — and it draws in with the chipwipe.
@@ -1981,8 +1966,6 @@
      a live button (a neighbour add is undesigned). The click is the wrapper's,
      and it means "step to this board". */
   .lbnb > * { pointer-events: none; }
-  /* the Top/Bottom words are suppressed with the other quiet-card surfaces —
-     see the .card/.bay-item/.bay-fly group up at .d7f.canflip .find */
   @media (hover: hover) {
     /* the lean answers the hover by pointing at the hero seat */
     #lb.fv3 .lbnb.live:hover {
@@ -2004,7 +1987,7 @@
   /* ---- THE COLLECTION STRIP (2026-08-12, the strip-lab port) --------------
      Every board in the collection strung as mini cards above the counter —
      the deck header's wayfinding done graphically (Dylan's mockup, built in
-     redesign/strip-lab.html; knobs + legend at STRIP_TUNE in the JS).
+     redesign/strip-lab.html — vault repo; knobs + legend at STRIP_TUNE in the JS).
      Minis are the REAL fv3 template rendered at the 232 REFERENCE width and
      transform-scaled down — lockCardScale's trick (true reductions that duck
      minimum-font clamps), and the one-spec law: a second mini card spec
@@ -2046,7 +2029,8 @@
      look: at 46px BOTH chip bars show on every card — the lab's clean
      one-bar-per-flank read needed more overlap than the site has — so the
      minis rest UNDRESSED, matching the flanking cards' rest state. The
-     rest-dress pass lives at git 6d42983 if the marker idea returns. */
+     rest-dress pass lives in vault repo history, 6d42983, if the marker
+     idea returns. */
   /* SITE-SCALE LEGIBILITY (2026-08-12, Dylan vs the lab side by side: "the
      tops of the cards are hard to see ... increase the board to card size
      ratio, make the borders a little stronger"): a pure photographic
@@ -2682,7 +2666,7 @@
      24px centered on the dot sits FLUSH to the face — left: 0 on the
      panel. The button never moves with the rails (they travel at their
      own rate mid-open); it only EXISTS at .shadowed — the connection
-     beat, alongside the count chip — scaling up FROM the dot it then
+     beat — scaling up FROM the dot it then
      covers. The drain fades it and the dot re-emerges beneath: the
      swap is occlusion, both ways.
      top round(50%) = the even-box-on-odd-panel parity snap (see
@@ -3085,8 +3069,6 @@
      that comes back on its own as a WIDER dealt card. */
   .bdm-slot .d7f :is(.fc-list, .fst) { display: none; }
   .bdm-slot .d7f .info { padding-bottom: 19.5px; padding-bottom: 8.4cqw; }
-  /* (the per-board control is the CARD itself now — the .bdm-ask split
-     button retired 2026-08-09, see THE CARD IS THE OFFER above) */
   /* the deal clones: absolute in the PANEL (its transform is the
      containing context), posed by transform only, house flight ease.
      RIGHT-anchored (2026-08-03): the climbs run WHILE the width is
@@ -3214,7 +3196,6 @@
      future body child must be added to this list deliberately: the default
      is now "survives the fold", which is the wrong default for content. */
   .bdm-prev.folding .bdm-sheet { opacity: 0; pointer-events: none; transition: opacity .34s ease .18s; }
-  /* (the form's draw-in and its .pform beat retired with the tray) */
   /* the composer's inner body: the form over the message, both inside the
      drawn inner frame. Everything in here scales off --envk, a plain
      number bdmShape writes from the envelope's own width (610 = 1), so
@@ -3360,10 +3341,8 @@
      them" — so past four this stops being the design target and starts being
      a case that only has to stay legible. */
   .bay-dm.deck-many .bdm-sheet .ln[data-key="greet"] .lnb { margin-bottom: calc(8px * var(--envk, 1)); }
-  /* (the free block itself retired 2026-08-11 — see the note at the old
-     .ln[data-key="free"] seat above) */
   .bay-dm.deck-many .bdm-sheet { row-gap: calc(4px * var(--envk, 1)); }
-  /* the empty-state hint (the goofy board line + the free lines' prompt). A
+  /* the empty-state hint (the goofy board line). A
      PSEUDO on purpose: it can never reach textContent, so it cannot be sent,
      selected or copied — which is the only reason it is safe to put "$3.50"
      in a field that mails a real person. */
@@ -3672,7 +3651,6 @@
     line-height: 1;
     transition: color .16s ease;
   }
-  /* (.bs-to — the destination caption — retired 2026-08-09 with the tray) */
   /* THE ENGULF, INVERTED (2026-08-11, Dylan: the '· collections ·'
      treatment on the black button). Rest = naked word between white
      structural dots, the bar organ's own grammar. Hover assembles the
@@ -3924,8 +3902,7 @@
     30% { transform: translateX(3px); }
     100% { transform: none; }
   }
-  /* (the count chip's bump retired with the chip, 2026-08-03 — the
-     landing's answers are the seat-drop, the recoil and landBeat) */
+  /* the landing's answers are the seat-drop, the recoil and landBeat */
 
   /* ========= the bay's phone costume (the deck's door is YOUR PICKS) =========
      The takeover case — the deck's old phone form — retired react round 6
@@ -3958,13 +3935,14 @@
       transition: transform .42s cubic-bezier(.3, .9, .3, 1);
     }
     .bay .bay-panel, .bay .bay-inner, .bay .bay-drawer { transform: none !important; }
-    /* the takeover fills its half-screen — the desktop content-height
-       case (--caseH) and the stage-2 pull-out don't exist here (later in
-       source at equal specificity, so these win the cascade) */
+    /* the phone costume fills its half-screen — the desktop
+       content-height case (--caseH) and the stage-2 pull-out don't exist
+       here (later in source at equal specificity, so these win the
+       cascade) */
     .bay-panel, .bay.out .bay-panel { top: 0; bottom: 0; height: auto; width: 100%; }
     .bay-panel { touch-action: none; }   /* the case owns its touches — no scroll-chain to the page */
     /* THE FACE IS LINE—DOT—LINE (2026-08-08, the case rework): the solid
-       border-left is gone — the case's left edge wears the fv3 rail—dot—
+       border-left is gone — the phone bay's left edge wears the fv3 rail—dot—
        rail grammar, the desktop bay's own resting marks re-homed onto the
        face. .bay-inner is that organ: re-shown, pulled from the desktop's
        --inner-rest seat to the edge itself, spanning the borders' outer
@@ -3991,13 +3969,13 @@
     /* the ✕ arrow is desktop chrome — nothing to close on the phone */
     .bay-close { display: none; }
     .bay-head { left: 14px; right: 10px; width: auto; }
-    .bay-apron { left: 14px; right: 10px; width: auto; }   /* rides the head's takeover seat */
+    .bay-apron { left: 14px; right: 10px; width: auto; }   /* rides the head's phone seat */
     .bay-shelves { left: 14px; right: 10px; width: auto; }
-    /* head = the MSG bar alone (2026-08-08): the board tags come off the
-       takeover — the manifest is desktop furniture, the shelf cards ARE
+    /* head = the MSG bar alone (2026-08-08): the board tags come off on
+       the phone — the manifest is desktop furniture, the shelf cards ARE
        the manifest here */
     .bay-tags { display: none; }
-    /* the head PHRASE comes off on the takeover (2026-08-07, the 15 Pro
+    /* the head PHRASE comes off on the phone (2026-08-07, the 15 Pro
        audit): at half-screen width "INTERESTED" clipped to "INTE" and
        MAKE UM YOURS is longer still — a clipped word on the money button
        reads broken. Dylan's pick of the offered cuts: msg icon + count +
@@ -4008,8 +3986,8 @@
     /* shelf-air touches scroll the column; card touches stay the drag's
        (.bay-item keeps touch-action none below) */
     .bay-shelves, .bay-shelf { touch-action: pan-y; }
-    /* the hugging strip's vars are desktop-bayW numbers — the takeover
-       keeps the full-width strip until the mobile pass */
+    /* the hugging strip's vars are desktop-bayW numbers — the phone
+       costume keeps the full-width strip until the mobile pass */
     .bay-shelf::after { left: 0; right: 0; width: auto; }
     /* CARDS SIT ON THEIR STRIPS (2026-08-08, the case rework): the
        desktop --shelfPad is a bayGeom number (4px air + strip + the cqw
@@ -4046,12 +4024,7 @@
   }
   @media (prefers-reduced-motion: reduce) { .bay, .bay-panel, .bay-dm { transition: none; } }
 
-  /* DOCK-LITE IS RETIRED (2026-08-08, the one-body pass): the #kdock
-     sliver, its mini-card and the dock-add-lab spline predated the
-     takeover case and could never match it — the mobile add rides the
-     shared engine now (buildFly + seatFly into the REAL case, which
-     catches and shuts — see caseCatch). The receipt icon below is the
-     confirmation organ and stays. */
+  /* the receipt icon below is the phone's confirmation organ */
   /* topbar receipt icon: replaces the lisst text tab on mobile */
   .picon { display: none; position: relative; align-items: center; gap: 7px; padding: 8px 8px; flex: 0 0 auto; cursor: pointer; }
   .picon svg { display: block; }
@@ -5521,7 +5494,8 @@
     const esc = s => String(s == null ? "" : s).replace(/[&<>"]/g, m => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" }[m]));
     const reduced = matchMedia("(prefers-reduced-motion: reduce)").matches;
 
-    /* ---- ground switch: black (h-blackout baseline) <-> white (j-cards
+    /* ========= the ground machine =========
+       ground switch: black (h-blackout baseline) <-> white (j-cards
        idiom). Persisted so reloads keep the ground under comparison. The
        bar logo swaps assets (white line art on black, circle sticker on
        white); the masthead line logo flips via CSS invert instead. */
@@ -5561,7 +5535,7 @@
        in. Pinned rather than read from storage on purpose — a stale
        `avrg-k-paper` in someone's browser would otherwise strand them on a
        treatment with no control left to escape it. The other treatments'
-       CSS survives for now and goes at the port (PORT.md). ---- */
+       CSS survives for now and goes at the port (PORT.md, vault repo). ---- */
     const CARD = "framev3";
     document.body.dataset.card = CARD;
 
@@ -5970,7 +5944,8 @@
        numbering is the CANONICAL inventory ID (covers all boards, not just the site subset),
        so card refs are derived from it below — data.js's site-ordinal refs are the fallback.
        Face = the one that pixel-matched the current thumb, so the swap changes edge quality,
-       not the look. Mapping derivation + confidence per row: card-lab/canva-review.html.
+       not the look. Mapping derivation + confidence per row:
+       card-lab/canva-review.html (vault repo).
        Originals have no canva batch — they fall through to Vision cuts + data.js refs. */
     const CANVA = {
       "classic-01":"cl3-top","classic-02":"cl4-top","classic-03":"cl5-top","classic-04":"cl6-top",
@@ -6020,8 +5995,9 @@
     /* dual: collections whose grid cards show both sides of the board at once */
     const DUAL = { "hand-shaped": true, classic: true };
 
-    /* ---- j-card treatments: meta + renderers (from j-cards-white/black).
-       Demo states and placeholder dims ride along, same as the j pages. */
+    /* ========= the j-cards: meta + renderers =========
+       from j-cards-white/black (vault repo). Demo states and placeholder
+       dims ride along, same as the j pages. */
     const CUT = b => {
       const cv = CANVA[STEM(b)];
       return cv ? "site/img/cards/canva/" + cv + ".png"
@@ -6177,7 +6153,9 @@
     const cardInner = (b, k, dual, c) => JCARDS[CARD](jmeta(c, b, k));
     const cleanDesc = s => (s || "").replace(/ Hover.*$/, "");
 
-    /* ---- home: shelf bands (desktop) ---- */
+    /* ========= home bands: the shelf bands (desktop) =========
+       the belts they carry are built by the conveyor engine further
+       down; this is the section list they hang off. */
     const HOME = COLLECTIONS.map((c, i) => ({ c, i })).filter(x => x.c.boards.length);
 
     /* top bar tabs, one per section */
@@ -6188,7 +6166,9 @@
       ).join("") +
       '<a class="tab" href="#my-lisst" id="nav-lisst"></a>';
 
-    /* ---- the drawn bar (2026-07-25, header-lab port) ------------------
+    /* ========= the header: the drawn bar + the drop =========
+       the drawn bar (2026-07-25, header-lab port — the lab lives in the
+       vault repo).
        Organs are class-driven (.on/.left armed by pointerenter/leave),
        NOT :hover — the k lesson about FX that mutate the hit target.
        buildSeatFx measures each organ against its flanking dots and
@@ -6783,10 +6763,11 @@
     /* iOS Safari ignores body overflow:hidden for touch scrolling — the
        mobile lock PINS the body (position:fixed at -scrollY) and the
        unlock restores the exact spot, so nothing moves on screen either
-       way (Dylan's phone react, 2026-07-24: the page scrolled under the
-       open case). Desktop keeps the overflow+gutter-pad lock. The fixed
-       guard makes re-entrant locks (case open → sheet opens) keep the
-       FIRST scroll position instead of clobbering it with 0. */
+       way (Dylan's phone react, 2026-07-24: the page scrolled under an
+       open overlay). Desktop keeps the overflow+gutter-pad lock. The
+       fixed guard makes re-entrant locks (one overlay opening over
+       another) keep the FIRST scroll position instead of clobbering it
+       with 0. */
     let lockY = 0;
     function lockScroll() {
       const sbw = window.innerWidth - document.documentElement.clientWidth;
@@ -6854,10 +6835,11 @@
       if (!vlb.hidden && e.key === "Escape") closeVlb();
     });
 
-    /* ---- routing: home <-> collection page ---- */
+    /* ========= routing: home <-> collection page ========= */
     const home = document.getElementById("home");
     const colpage = document.getElementById("colpage");
 
+    /* ========= the foot ========= */
     /* THE FOOT GOES HOME (2026-08-15, Dylan: "remove the old buttons from
        the bottom of the collections scroll... change that to the same logo
        as our top left page header, and give it '· home ·' underneath it") —
@@ -6975,6 +6957,7 @@
       landWants(colpage);   /* the phone chips speak (round 4) */
     }
 
+    /* ========= the scroll relay — ASLEEP for v1 behind RELAY_ON ========= */
     /* ================= THE SCROLL RELAY (2026-08-14) =================
        See the CSS block for the design; this is the machine. p is PURE
        GEOMETRY per section — how far the wrapper has carried its pinned
@@ -7219,11 +7202,13 @@
       document.body.style.top = "";
     }
 
-    /* ---- my lisst page: picked boards + one inquiry about all of them ---- */
+    /* ========= YOUR PICKS / my lisst — the page =========
+       picked boards + one inquiry about all of them. The deal ceremony
+       that fills it is the block below. */
     function renderLisst() {
-      /* YOUR PICKS (react round 6): on the dock side this page is the
-         DECK now — the takeover case retired, so this is where the phone
-         holds, prices and sends its picks. Collections-style masthead +
+      /* YOUR PICKS (react round 6): on the dock side this page IS the
+         DECK — where the phone holds, prices and sends its picks.
+         Collections-style masthead +
          the same 2-wide shelfgrid, an OFFER row under each card, and the
          copied-send flow at the bottom. The offer input and the desktop
          composer's letter line share ONE string (bdmComments — the
@@ -7362,7 +7347,7 @@
             '<h3 class="inq-head label" style="font-size:12px">Send one message about ' + (refs.length ? "the lisst" : "anything") + '</h3>' +
             '<p class="inq-sub">' + (refs.length ? "your picks ride along automatically: " + esc(refs.join(", ")) : "no picks attached — just say hi") + '</p>' +
             '<form id="inq-form">' +
-              /* same voice as the composer's tray — this is the long form of
+              /* same voice as the composer's letter — this is the long form of
                  the identical message, so it cannot ask in a different one */
               '<label for="inq-name">my name / alias</label>' +
               '<input id="inq-name" name="name" type="text" autocomplete="name" placeholder="optional">' +
@@ -8012,6 +7997,7 @@
       if (!logoDraw || !logoDraw.setCurrentTime) return;
       try { logoDraw.setCurrentTime(reduced ? 9 : 0); } catch (e) {}
     }
+    /* ========= the router: every hash lands here ========= */
     let picksArriving = false;
     function route() {
       sendUnlock();
@@ -8108,7 +8094,7 @@
       });
     });
 
-    /* ---- lightbox: the pull-forward ---- */
+    /* ========= the lightbox: the pull-forward ========= */
     const lb = document.getElementById("lb");
     const lbScrim = document.getElementById("lb-scrim");
     const lbCard = document.getElementById("lb-card");
@@ -8697,8 +8683,8 @@
        nearest board and the landing is the slide's own law — populate,
        arrive clean, dress AT the settle. Silent throughout (phone dialect).
        The momentum half — flick, coast, catch-the-train, wall exit — and
-       round 3's arc pose (edgeScale/edgeDrop grow-shrink) live at git
-       d25ee4a if either is ever wanted back; "the spacing between LB cards
+       round 3's arc pose (edgeScale/edgeDrop grow-shrink) live in vault
+       repo history, d25ee4a, if either is ever wanted back; "the spacing between LB cards
        can stay" kept the widened gap. Clones ride .lbnb.xact with
        transitions MUTED inline: the base .lbnb transition is deckActor's
        tween, and a per-frame pose written through a live transition is
@@ -9096,7 +9082,7 @@
     });
     addEventListener("resize", placeDeck);
 
-    /* ---- THE COLLECTION STRIP (2026-08-12, the strip-lab port) ------------
+    /* ========= THE COLLECTION STRIP (2026-08-12, the strip-lab port) =========
        Knobs, all at the 232-reference scale except the clocks:
          mini 46    rest slot width px
          gap  -8    shingle overlap; a too-wide collection auto-compresses
@@ -9871,7 +9857,8 @@
       }, (reduced || instant) ? 0 : soft ? 930 : 430);
     }
 
-    /* ---- deck ↔ lightbox arcs (2026-07-24, Dylan) ----
+    /* ========= flights: the deck ↔ lightbox arcs =========
+       (2026-07-24, Dylan.)
        Grid ↔ lightbox keeps the straight flip zoom; anything between
        the DECK and the lightbox rides the same bayFlight arc as the
        add, in both directions — out of the case with the peak hanging
@@ -10513,7 +10500,7 @@
     lb.addEventListener("touchend", pzEnd, { passive: true });
     lb.addEventListener("touchcancel", pzEnd, { passive: true });
 
-    /* ---- conveyor engine ---- */
+    /* ========= the shop conveyor: the home belts ========= */
     const rails = [];
     const BASE_V = -26;
 
@@ -10676,20 +10663,13 @@
     }
     requestAnimationFrame(frame);
 
-    /* card switch: rebuild the belts in the new treatment and re-render
-       whatever page the hash currently shows */
     /* setCard and the Card row went with the switcher (2026-08-01) — frame
        v3 is pinned at boot, so nothing rebuilds the rails mid-session now. */
-
-    /* DOCK-LITE RETIRED (2026-08-08): the DOCK_TUNE spline, its ramp/toss/
-       swoop pick (`avrg-k-dock` — settled by deletion) and the #kdock
-       sliver are gone; the mobile add rides the shared engine (caseCatch,
-       below dockPing). */
 
     /* ---- the landing (2026-07-22): the close flight ends like a button
        press. The slot card's panel presses in and releases (one transform
        = card + board + both shadows compress together) and a click answers.
-       That is the whole beat — see the note inside for what retired. ---- */
+       That is the whole beat. ---- */
     function landBeat(card) {
       if (reduced) return;
       const el = card.querySelector(".panel, .frame") || card;
@@ -10701,12 +10681,8 @@
       el.addEventListener("animationend", () => el.classList.remove("landpress"), { once: true });
       setTimeout(() => el.classList.remove("landpress"), 600);
       kclick();
-      /* NO flourish (Dylan's pick 2026-07-26): the landing is the press and the
-         click, felt rather than annotated. The LAND comparison row and both its
-         one-shots (pad = a line flashed under the slot, flash = the panel border
-         redrawn) retired with the pick — which also retires the whole
-         measured-off-live-rects + animationend-with-timeout-fallback dance that
-         only existed to keep those fixed-position one-shots from stranding. */
+      /* NO flourish (Dylan's pick 2026-07-26): the landing is the press and
+         the click, felt rather than annotated. */
     }
     const dockActive = () => matchMedia("(max-width: 940px)").matches;
     /* ---- sound kit: one shared context, tiny synthesized voices, no
@@ -10816,8 +10792,8 @@
       pc.classList.add("bump"); pi.classList.add("shake");
       setTimeout(() => { pc.classList.remove("bump"); pi.classList.remove("shake"); }, 500);
     }
-    /* THE BAR CATCHES THE CARD (react round 6 — caseCatch retired with the
-       takeover case, lives at git 473b4bc): the mobile add flies the REAL
+    /* THE BAR CATCHES THE CARD (react round 6; the phone's old catch lives
+       in vault repo history, 473b4bc): the mobile add flies the REAL
        fv3 card from its source box up into the header's mini stack — the
        same bayFlight arc every desktop add rides, negative hook so the
        swing reads up-and-right toward the seat. The bar sits ABOVE the
@@ -10864,7 +10840,8 @@
       });
     }
 
-    /* ---- cart bay: right-edge card sliver (sprint item 2) ----
+    /* ========= the deck drawer (the cart bay) =========
+       a right-edge card sliver (sprint item 2).
        Driven by one master progress value (bayP) posed per frame — see
        the BAY_TUNE block below for the motor. Threshold classes on #bay
        (.inked/.shadowed/.pulled/.fullish/.locked) gate the CSS as p
@@ -10920,7 +10897,8 @@
        fit-four era's sizing, and with the static case + scroll the deck
        no longer needs to fit rows — low columns were shrinking cards
        for a constraint that no longer exists ("squeezed" at 1200).
-       Tune in bay-lab: its card slider edits the active screen's stop. */
+       Tune in bay-lab (vault repo): its card slider edits the active
+       screen's stop. */
     const BAY_SIZES = [[894, 162], [992, 205], [1112, 225], [1352, 250], [2072, 280]];   /* Dylan's lab bake (280 rides the 270 capW at the top) */
     /* THE SHOP DRAWS BIGGER ON BIG DISPLAYS TOO (round 8, his reframe:
        not a whole-site zoom — a max-draw ramp for the collection card).
@@ -11199,15 +11177,13 @@
     /* deck holes (2026-07-22): one card per board — in the DECK or in the
        SHOP, never both (the lightbox lift-out idiom made persistent).
        Adds hide the shop slot behind the departing fly; removes keep the
-       hole (pendingHole) until the return flight lands. Desktop-bay only:
-       the mobile dock keeps cards in place until the takeover case is
-       designed. Lisst-page cards (.lisst-card) are exempt — that page IS
-       the deck's paper form. */
+       hole (pendingHole) until the return flight lands. Lisst-page cards
+       (.lisst-card) are exempt — that page IS the deck's paper form. */
     const pendingHole = new Set();
     function applyDeckHoles() {
       /* universal since 2026-07-24 (Dylan's call): the one-card law runs
-         on mobile too now that the takeover case exists — in the deck OR
-         in the shop, never both, on every screen. */
+         on the phone too — in the deck OR in the shop, never both, on
+         every screen. */
       const on = true;
       document.querySelectorAll(".fc-list[data-id]").forEach(ch => {
         const slot = ch.closest(".card, .scard");
@@ -11429,8 +11405,8 @@
       bay.classList.toggle("fullish", bayP >= BAY_TUNE.at.fullish);
       bay.classList.toggle("locked", bayLocked);
       /* the room dims with the pull — the fade is one more channel on
-         the master p (see the --bayFade CSS note); the desktop drawer
-         only, the takeover has case-fade (this driver bails there) */
+         the master p (see the --bayFade CSS note); desktop only, since
+         on the phone the bay is parked and this driver bails above */
       document.body.style.setProperty("--bayFade", (1 - (1 - BAY_TUNE.fade) * ssBay(bayP)).toFixed(3));
       document.body.classList.toggle("bay-fading", bayP > 0 && bayP < 1);
     }
@@ -11450,9 +11426,9 @@
     bayMeasure();
     let bayLast = performance.now();
     function bayTick(now) {
-      /* the takeover case (mobile) drives itself on CSS transitions — no
-         motor, no pose. Bailing also keeps bayPose's class toggles from
-         undressing openCase's full-dress outfit (bayP is 0 here). */
+      /* no motor on the phone: the bay is parked off-screen there and the
+         park rules own it outright, so the driver idles — no pose, no
+         class toggles (bayP stays 0). */
       if (dockActive()) { bayLast = now; requestAnimationFrame(bayTick); return; }
       const dt = Math.min(.05, (now - bayLast) / 1000);
       bayLast = now;
@@ -11677,7 +11653,8 @@
       closeBay();
     });
 
-    /* ---- stage 2, REBUILT 2026-08-03 (Dylan's contact spec, skeleton
+    /* ========= the contact composer (the bdm family) =========
+       stage 2, REBUILT 2026-08-03 (Dylan's contact spec, skeleton
        pass): the pull goes to most of the screen, the shelved cards
        GATHER into a staggered stack and DEAL out across the top of the
        stage, and the message is a live BUILDER — a complete, sendable
@@ -13318,7 +13295,7 @@
     document.getElementById("bay-msg").addEventListener("click", e => {
       e.stopPropagation();   /* the panel's state machine must not see it */
       /* phone: no room to pull — the lisst page IS the long form (the
-         visible twin; route() closes the case on the way, modal law) */
+         visible twin) */
       if (dockActive()) { leaveToPicks(); return; }   /* the same departure as the stack */
       if (bay.classList.contains("out")) unOut(); else bayOut();
     });
@@ -13429,7 +13406,8 @@
       barScript.addEventListener("pointerleave", () => { navLean = false; });
     }
 
-    /* ---- the deck's phone door is YOUR PICKS (react round 6) ----
+    /* ========= mobile gestures: the deck's phone door is YOUR PICKS =========
+       (react round 6.)
        The takeover case — #bay as a slide-in phone modal (2026-07-24) —
        is retired (Dylan: "the deck drawer should away on mobile"); its
        machinery lives in the vault repo's history. THE PICON IS A PLAIN
@@ -13448,11 +13426,11 @@
       swcAte = 0;
       e.preventDefault(); e.stopPropagation();
     }, true);
-    /* SWIPE-TO-OPEN (2026-08-08 evening, Dylan: "right to left swipe on
-       collections page should open the deck also") — the close door's
-       mirror, one gesture family. A leftward horizontal swipe on the
-       browse pulls the case in; the commit fires the moment the pull
-       crosses SWC_TH MID-MOVE, not at release, so the case starts
+    /* SWIPE-TO-THE-DECK (2026-08-08 evening, Dylan: "right to left swipe on
+       collections page should open the deck also") — one gesture family
+       with the stack's own tap. A leftward horizontal swipe on the
+       browse departs to YOUR PICKS; the commit fires the moment the pull
+       crosses SWC_TH MID-MOVE, not at release, so the page starts
        arriving under the still-down finger and the open reads as the
        swipe being caught. Rightward is never claimed (Safari's edge nav
        owns that direction), vertical dominance stands down immediately
@@ -13481,8 +13459,8 @@
         if (Math.abs(dx) <= SWC_SLOP || Math.abs(dx) <= Math.abs(dy)) return;
         swo.on = true;
       }
-      /* the commit opens YOUR PICKS now (react round 6 — the case retired;
-         same mid-move commit beat, the page arriving IS the catch) */
+      /* the commit opens YOUR PICKS (react round 6 — same mid-move commit
+         beat, the page arriving IS the catch) */
       if (dx < -SWC_TH) { swo.done = true; leaveToPicks(); buzz(); }   /* the departure, same as the stack */
     });
     document.addEventListener("pointerup", e => {
@@ -13494,7 +13472,8 @@
       if (swo && e.pointerId === swo.id) swo = null;
     });
     /* crossing the 940/hover boundary hands the deck between its two
-       bodies: the drawer stands down going in, the case going out.
+       bodies: the drawer stands down going in (the phone's deck is YOUR
+       PICKS), and takes the job back going out.
        The GROUND crosses with it (2026-08-08): mobile is forced white
        (unpersisted — see the boot comment at GROUND_KEY), desktop takes
        the stored pick back. */
@@ -13515,7 +13494,8 @@
       if (location.hash.replace(/^#/, "") === "my-lisst") renderLisst();
     });
 
-    /* the flight (2026-07-22, card payload): the WHOLE CARD flies — a
+    /* ========= flights: the bay flight engine =========
+       (2026-07-22, card payload): the WHOLE CARD flies — a
        fresh card off the one template, its own board + panel shadows,
        chip fills held from the pluck, drained mid-air (.left) so it
        touches down at rest — and the hidden shelf item it lands on IS
@@ -13523,7 +13503,7 @@
        one progress value; the TARGET is re-measured every frame because
        every add now OPENS the deck (openBay + lock — it stays open
        until the arrow / a non-card click / Esc shuts it), so the shelf
-       is still sliding out under the early flight. The count chip holds until touchdown.
+       is still sliding out under the early flight.
        The closed-drawer dot flight is gone with the always-open rule.
        The seat is DROP (Dylan's pick 2026-07-26, the SEAT comparison row and
        its skid/seatdraw variants retired with it): the arc's peak hangs over
@@ -13599,7 +13579,7 @@
         setTimeout(() => bayShelvesEl.classList.remove("recoil"), 250);
         updateBayCount();
         landBeat(seated);   /* the button press: panel press + click */
-        if (opts.after) opts.after(seated);   /* the catch-and-shut's hook (caseCatch) */
+        if (opts.after) opts.after(seated);   /* the catch-and-shut's landing hook */
       });
       return true;
     }
@@ -13674,7 +13654,8 @@
       } else renderBay();   /* lisst-page chips: membership only, no shelf card to fly */
     }, true);
 
-    /* ---- drag-to-deck (2026-07-24, Dylan): pick a card up and move it.
+    /* ========= the drag engine (drag-to-deck) =========
+       (2026-07-24, Dylan): pick a card up and move it.
        The site taught cards as physical objects — this answers the
        invitation. Live from the FIRST touch (no earned gate: a live
        affordance that plays dead is worse than a skipped ceremony); the
@@ -13689,8 +13670,8 @@
        quiet. Shelf (.bay-item) cards drag OUT — release away from the
        drawer, or a leftward throw, = the remove via homeFly, landing
        beat and all; back in the zone re-shelves quiet. Belt clicks
-       inspect (law), lisst-page cards are the paper form, mobile has
-       its own organ (the dock), and no pickups under an open lightbox.
+       inspect (law), lisst-page cards are the paper form, the phone has
+       its own organ (YOUR PICKS), and no pickups under an open lightbox.
        ============ DRAG TUNING LEGEND ============
        threshold  6    px of travel before a press becomes a pickup
                        (under it, the press is the normal click)
@@ -13880,10 +13861,8 @@
       bayDragging = true; bayRearm = false;   /* pickup renews the invitation;
         a deck lift HOLDS the case open while the card is in hand */
       if (d.mobLb) {
-        /* the sliver peek retired with dock-lite (2026-08-08) — the case
-           arrives WITH the catch at release. Whether the lift should wake
-           the case early (the desktop pickup-wakes-the-case dialect) is
-           open for Dylan's thumb pass. */
+        /* the sheet lift's own tap under the thumb — nothing else on the
+           phone answers the grab, so the buzz carries it alone */
         try { navigator.vibrate && navigator.vibrate(8); } catch (err) {}
       }
       const pose = now => {
@@ -13983,7 +13962,7 @@
       d.fly.style.left = vr.left + "px"; d.fly.style.top = vr.top + "px";
       d.fly.style.width = vr.width + "px";
       d.fly.style.transform = "none";
-      /* ---- the dock's release rules (mobile, 2026-07-24) ---- */
+      /* ---- the phone's release rules (mobile, 2026-07-24) ---- */
       if (dockActive()) {
         if (d.kind === "deck") {
           /* OUT of the case: throw LEFT or release past the case's own
@@ -14012,9 +13991,9 @@
           return;
         }
         /* INTO the deck: throw RIGHT or release in the catch zone = the
-           add — the case comes to catch the in-hand card (caseCatch:
-           real shelf seat, press, ping, shut), and the SHEET RELEASES
-           with it (Dylan's phone react, 2026-07-24: an lb add must not
+           add — the in-hand card flies up into the header's mini stack
+           (pickCatch: the bar catches it, then pings), and the SHEET
+           RELEASES with it (Dylan's phone react, 2026-07-24: an lb add must not
            leave a board behind in the lightbox — the card in hand IS
            the card, there is no second one to show). Anywhere else
            springs back to the sheet, quiet — a cancel keeps the
@@ -14031,9 +14010,9 @@
             lbCard.style.visibility = "";  /* the lift hid the sheet card — the
               hidden lb must not inherit that into its next open */
           }
-          /* the in-hand fv3 card IS the fly — the case comes to catch it
-             (no drain: a sheet-lifted card rides dressed onto the dressed
-             shelf rest, the dress grammar's zero-churn landing) */
+          /* the in-hand fv3 card IS the fly — the bar comes to catch it
+             (no drain: a sheet-lifted card rides dressed all the way into
+             the stack, the dress grammar's zero-churn landing) */
           pickCatch(d.id, null, d.fly, vr);
         } else if (d.mobLb) springToSheet(d, vr);
         else { d.fly.remove(); d.src.style.visibility = ""; }
@@ -14155,14 +14134,14 @@
       if (dragStole) { dragStole = false; e.stopPropagation(); e.preventDefault(); }
     }, true);
 
-    /* ================== undersides (flip-lab port, 2026-07-25) ==================
-       Board click flips: KICK on grid/shelf cards (flipbox transition,
-       lands on transitionend), CAROUSEL on the fv3 lightbox card (face
-       animations, lands on carIn's animationend). The pixel test keeps
-       Dylan's split honest — only the board's own silhouette flips; the
-       cutout's transparent corners fall through to inspect. Belts and the
-       case stay inspect-only; touch grids stay tap-to-inspect (the flip
-       on touch lives on the lightbox sheet card). */
+    /* ========= undersides (flip-lab port — vault repo, 2026-07-25) =========
+       Board click flips the fv3 LIGHTBOX card, and only it: the CAROUSEL
+       (face animations, lands on carIn's animationend). The pixel test
+       keeps Dylan's split honest — only the board's own silhouette flips;
+       the cutout's transparent corners fall through to inspect. Belts and
+       the deck's shelves stay inspect-only; touch grids stay
+       tap-to-inspect (the flip on touch lives on the lightbox sheet
+       card). */
     let hitCv = null;
     function boardHit(img, e) {
       if (!img || !img.complete || !img.naturalWidth) return true;   /* undecodable: the board wins */

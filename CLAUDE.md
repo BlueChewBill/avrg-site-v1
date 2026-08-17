@@ -78,8 +78,7 @@ The deep project memory — decisions, laws, mechanics, react history — lives 
 - Board dimensions: `DIMS_MM` in `index.html` is **hand-authored**, keyed by padded ref, and feeds the hover dims-decode — all 14 hand-shaped boards + 12 of 19 classics. Tail/nose widths print in the lightbox `#lb-dims` line only ("too much noise on a card decode"). Still unmeasured: CL 03/06/08/12/16/19/26, originals, resale.
 - The lb selected-state accent is deliberate — ask before removing.
 - **The scroll relay SLEEPS** — `RELAY_ON = false` in the relay IIFE; the one switch gates both the CSS (`body.relayon`) and the machine. Parked, not bailed on. Do not wake it without his word.
-- **Until cutover, the site is edited in the VAULT and PORTED here** — the porting recipe (with the current baseline hash) lives in [.claude/HANDOFF.md](.claude/HANDOFF.md).
-- **A session that OPENS with a multi-item list of site changes is the A/B run** — read [.claude/HANDOFF.md](.claude/HANDOFF.md) before touching anything; its experiment block governs (all work on the `ab-run` branch, never main; agents green-lit; vault trips allowed but logged).
+- **Until cutover, the site is edited in the VAULT and PORTED here** — the porting recipe (with the current baseline hash) lives in [.claude/HANDOFF.md](.claude/HANDOFF.md). (The 2026-08-16 A/B experiment is CLOSED — its record + trip log live in the HANDOFF; multi-item lists are just lists again.)
 
 ## Where things stand
 

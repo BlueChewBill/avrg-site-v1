@@ -20,31 +20,40 @@ load, mobile costume correct — bay parked, ground forced white, intro
 runs, YOUR PICKS renders). Until cutover there are two public copies of
 the same page; the vault's is the one people have the link to.
 
-## THE A/B EXPERIMENT — this session may be its v1 half (seeded 2026-08-16)
+## THE A/B EXPERIMENT — RAN AND CLOSED (2026-08-16)
 
-Dylan is firing ONE multi-item prompt at TWO sessions: one opened in
-the vault (`~/Projects/avrg-site`), one opened HERE. Same list,
-different repo memory — the test is whether this repo's scoped docs
-carry a real working session. **If your opening prompt is a list of
-site changes, this is that run.** The rules:
+The same 12-item prompt ran in both repos on parallel `ab-run`
+branches. **The vault's implementation won** ("vaults changes win by
+some pixels") and was ported here whole (the port-log entry below);
+this repo's losing branch is DELETED, its record preserved here.
 
-1. **Branch first: `git checkout -b ab-run` before any edit.** All
-   work and commits land on the branch, never `main` — main must stay
-   at the port baseline so the compare (and whichever side is not
-   kept) unwinds clean. Push nothing; Dylan makes the push calls.
-2. **Agents are GREEN-LIT** — Dylan's explicit go-ahead to spawn
-   subagents / agent workflows for this run's work.
-3. **The vault may be consulted** (it is the archive, as these docs
-   already say) — **but LOG EVERY TRIP:** at wrap, list each thing
-   retrieved from outside this repo and whether it CHANGED the work.
-   That list is the experiment's real product — it tells Dylan what
-   belongs in these docs versus where the vault pointer is
-   over-inviting.
-4. One list item references `avrgbg-buttonflip.png` — staged at
-   `site/img/avrgbg-buttonflip.png`, a raw 3009×3375 / 5.2MB brand
-   export; web-size it before shipping it.
-5. Otherwise work the list like a normal session: desktop-first where
-   it applies, the sim for mobile verification, the same laws as ever.
+**What this repo's run proved:** the scoped docs carried **11 of 12
+items without leaving the repo**. The one exception was item 2 — the
+decode-lab knob grammar was unimplementable without reading the
+vault's `redesign/decode-slowmo.html` end to end, and the cure is now
+a permanent pointer in lightbox.md (the lab is the authority for the
+collapse decode's dials). Also surfaced: the VAULT's own labs.md never
+catalogued that lab — the lean repo's scout found a hole in the rich
+repo's docs.
+
+**The trip log (everything the run retrieved from outside this repo):**
+- `vault redesign/` (ls) — located the decode lab. CHANGED THE WORK.
+- `vault redesign/decode-slowmo.html` (read end to end) — THE trip:
+  every phrase in item 2 is a dial there. Item 2 was UNIMPLEMENTABLE
+  without it. The prescribed doc line now exists (lightbox.md).
+- `vault .claude/docs/labs.md` (grep) — no decode-slowmo entry;
+  confirmed the lab file is the sole authority. Did not change work.
+- `vault .claude/docs/open-threads.md` (grep) — context only.
+Nothing else left the repo.
+
+**The losing run, for the record** (10 commits, deleted branch): all
+12 implemented; its distinctive answers were three collideable tile
+variants behind a `?tiles=` switch (the vault's single fv3 re-dress
+won), a scrollspy it called "the spy inside the sleeping relay"
+(convergent with the vault's watcher — BOTH independently refused to
+wake RELAY_ON), and an identical 80vw call on item 6. Its four
+verification-trap gotchas were harvested into gotchas.md; the rest
+retired with the branch.
 
 ## The porting recipe — vault edits come here
 
@@ -91,8 +100,10 @@ it is the test of whether v1's structure survives real change.
   1440×790 lightbox measured **byte-for-byte the same as the vault's own
   served page** — card 265px, dims line identical, both chevrons seated
   18×30 at top 402 / left 525·896.
-  **Note:** main is no longer at the A/B baseline — the winner lives here
-  now. `ab-run` (the losing half) is untouched and still awaits harvest.
+  **Note:** main carries the winner now; the losing `ab-run` was
+  harvested (trip log + verification gotchas above/in gotchas.md) and
+  deleted. The winner's surface laws are appended to cards / contact-
+  composer / header-bar / lightbox / mobile / home-shop docs.
 - `9aca992 → 762f975` (2026-08-16) — intro react 3 + the dims/flip card
   pass. 18 hunks, 17 clean and 1 at fuzz 1 (v1's own `RELAY_ON` marker
   comment sits in that hunk's trailing context, in `renderShopAll`).

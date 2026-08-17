@@ -150,3 +150,13 @@ Note the collapse: the vault's `redesign/media/` (cover card + story clamps) and
 ## `site/` is build output for the images — but not for everything in it
 
 `build_site.py` writes `site/img/thumb`, `site/img/full` and `site/data.js` and nothing else. `site/media/`, `site/fonts/`, `site/img/cards/` and the two logo PNGs are **committed assets** the build never touches — deleting `site/` and rebuilding does not bring them back. Re-run the build freely; just don't treat the whole folder as regenerable.
+
+## Two sessions cannot share the chrome-devtools MCP profile — bring your own Chrome (2026-08-16)
+
+When two sessions verify at once, the chrome-devtools MCP's one fixed profile becomes a tug-of-war ("browser is already running" on every second call) — and pkilling through it kills the OTHER session's verification. THE ESCAPE: launch a PRIVATE headless Chrome (`--headless=new --remote-debugging-port=<own port> --user-data-dir=<scratchpad>/chrome-x`) and drive it with a ~40-line node CDP script — node ≥22 has WebSocket built in (`fetch /json/list → new WebSocket(target) → Runtime.evaluate {awaitPromise, returnByValue}`), zero dependencies, full rAF/IO/localStorage support — everything the pane can't do. Both A/B ports verified this way.
+
+## Verification traps from the A/B run (2026-08-16)
+
+- **`getComputedStyle` returns a LIVE object — capture values BEFORE mutating class state in a probe.** A check read `cs.color` after `classList.remove(...)` and "proved" CSS dead that was fine. Copy primitives out at read time, then mutate.
+- **Chrome won't shrink its window below ~500px** — a resize to 393 lands at innerWidth 500, so "phone" checks in real Chrome run at 500×N. Fine for structure/geometry ratios; exact phone pixels are the sim's job.
+- **A synthetic click on a just-re-rendered node is a click on a DETACHED node.** Grabbing an element and clicking it in one eval across a render boundary hits the node the re-render replaced — handlers gone, nothing happens. Re-query at click time after any render boundary.

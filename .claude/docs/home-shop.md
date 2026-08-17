@@ -41,3 +41,7 @@ Everything that isn't an inspection, a deck or a message: the landing you arrive
 ## Where this surface stands
 
 Desktop home + collections are v1-settled and pushed. **Open on Dylan's list, in his order:** the home landing's intro TIMING + SIZE tweaks (the ~7.4s ride is all knobs and his phone is the venue — un-reacted as motion), the home collection-cards redesign (the `#tilegrid` tiles), and the board-dimension decode + site-wide decode timing. Parked: waking the scroll relay and its `--colAir`/approach feel pass. The bands' own conveyor has not been touched since the frame-v3 pin and no react has ever asked it to change.
+
+## THE TILES SPEAK fv3 (2026-08-16, ported from the winning vault run — supersedes the ab-run ?tiles variant switch, retired with that branch)
+
+The mobile home tiles re-dressed in the ONE CARD SPEC's own marks at tile scale: 1.5px ink border, the HARD slab `5px 7px 0 -1px rgba(0,0,0,.85)` on BOTH grounds (the collision law — the light-ground softener deleted), a real `.tinframe` div in the template (split rails, 5px structural mid dots, ctl + cbr corner marks — the `.d7f .inframe` child names, tile-scoped WHOLE-PIXEL CSS per the DPR-3 law: tiles are unscaled furniture), the count as a WHITE corner chip on the frame (the fc-ref read), the board cutout's shadow now a hard throw (4px 5px 0), and the boards line in the `.fst` seat (bottom-left + accent dot). `.vtile` keeps the photo frame; taps unchanged.

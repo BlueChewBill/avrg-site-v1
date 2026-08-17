@@ -1185,46 +1185,63 @@
       box-shadow: 0 0 0 2px var(--ink), 6px 8px 0 -1px rgba(32, 26, 21, .34);
     }
     .tile .tframe video { width: 100%; height: 100%; object-fit: cover; }
-    /* collection card, frame-idiom lite: white ground on both page grounds
-       (the collision is the point, same as the product cards) */
+    /* THE TILES SPEAK fv3 (2026-08-16 A/B, supersedes the frame-idiom
+       lite): the collection card wears the ONE CARD SPEC's own marks at
+       tile scale — 1.5px ink border, the HARD black slab (rgba(0,0,0,.85)
+       on BOTH grounds, the collision law), split side rails with the 5px
+       structural mid dots, ctl/cbr corner marks, the count as a white
+       corner chip seated on the frame (the fc-ref read), the boards line
+       in the .fst seat (bottom-left, accent dot). Whole-px strokes — the
+       tile is UNSCALED furniture (the DPR-3 law); values are the 232-ref
+       numbers at the tile's ~.73 factor. */
     .tile .tcard {
       position: relative; aspect-ratio: 3/4;
-      background: #fff; border-radius: 8px;
-      box-shadow: 6px 8px 0 -1px rgba(32, 26, 21, .34);
+      background: #fff; border: 1.5px solid #000; border-radius: 5px;
+      box-shadow: 5px 7px 0 -1px rgba(0, 0, 0, .85);
       display: flex; align-items: center; justify-content: center;
     }
-    .tile .tcard::before {
-      content: ""; position: absolute; inset: 9px;
-      border: 1.5px solid #000; pointer-events: none;
+    .tile .tinframe { position: absolute; inset: 7px; pointer-events: none; }
+    .tile .tinframe::before, .tile .tinframe::after {
+      content: ""; position: absolute; left: 0; width: calc(100% - 3px);
+      height: 41%; border: 1.5px solid #000;
     }
+    .tile .tinframe::before { top: 0; border-bottom: 0; }
+    .tile .tinframe::after { bottom: 0; border-top: 0; }
+    .tile .tinframe .dgl, .tile .tinframe .dgr {
+      position: absolute; top: 50%; width: 5px; height: 5px; border-radius: 50%;
+      background: #000; transform: translateY(-50%);
+    }
+    .tile .tinframe .dgl { left: -1px; }
+    .tile .tinframe .dgr { right: -1px; }
+    .tile .tinframe .ctl { position: absolute; width: 3px; height: 3px; top: -1px; left: -1px; background: #000; }
+    .tile .tinframe .cbr { position: absolute; width: 4px; height: 4px; bottom: -1px; right: -1px; background: #FF4655; }
     .tile .tcard img {
       position: absolute; inset: 0; margin: auto;   /* iOS: see .d7f .stage img */
       width: 58%; height: 72%; object-fit: contain;
-      filter: drop-shadow(5px 7px 5px rgba(0, 0, 0, .38));
+      filter: drop-shadow(4px 5px 0 rgba(0, 0, 0, .3));   /* the board's hard throw, not a blur */
     }
     .tile .tcount {
-      position: absolute; top: 9px; left: 9px;
+      position: absolute; top: 7px; left: 7px; z-index: 1;
       font-family: var(--mono); font-size: 9px; font-weight: 700;
-      letter-spacing: .1em; color: #fff; background: #000;
-      padding: 4px 7px;
+      letter-spacing: .1em; color: #000; background: #fff;
+      padding: 3px 6px;   /* the fc-ref read: white seat on the frame line */
     }
     .tile .tnm {
       position: absolute; left: 0; right: 0; top: 50%; transform: translateY(-50%);
       text-align: center;
-      font-size: 19px; font-weight: 800; letter-spacing: .14em; text-transform: uppercase;
+      font-size: 19px; font-weight: 800; letter-spacing: .13em; text-transform: uppercase;
       color: #000;
     }
     .tile .tsub {
-      position: absolute; left: 0; right: 0; bottom: 16px;
-      text-align: center;
+      position: absolute; left: 15px; bottom: 13px;
+      text-align: left;
       font-family: var(--mono); font-size: 8.5px; font-weight: 700;
       letter-spacing: .18em; text-transform: uppercase; color: #000;
     }
     .tile .tsub .tdot {
-      display: inline-block; width: 6px; height: 6px; border-radius: 50%;
-      background: var(--tacc); margin-right: 7px; vertical-align: 1px;
+      display: inline-block; width: 5px; height: 5px; border-radius: 50%;
+      background: var(--tacc); margin-right: 6px; vertical-align: 1px;
     }
-    body.light .tile .tcard { box-shadow: 6px 8px 0 -1px rgba(32, 26, 21, .18); }
     .pitch { max-width: 44ch; }
 
     /* collection pages: boards surface two across instead of one.
@@ -1503,12 +1520,8 @@
     position: absolute; top: 13px; right: 14px; z-index: 2;
     top: 5.6034cqw; right: 6.0345cqw;
     display: none; flex-direction: column; align-items: flex-end;
-    gap: 2px; gap: .8621cqw;
     background: none; border: none; border-radius: 0; padding: 0;
-    font-family: var(--mono); font-size: 8.5px; font-weight: 700;
-    font-size: max(6px, 3.6638cqw);
-    letter-spacing: .2em; text-indent: .2em; text-transform: uppercase;
-    color: #000; cursor: pointer; text-align: right;
+    cursor: pointer;
   }
   /* the builder's mark owns the top-right corner — the chip drops below
      it, the .find precedent */
@@ -1541,6 +1554,9 @@
   }
   .d7f .info { position: relative; z-index: 0; text-align: center; padding: 8px 28px 44px; padding: 3.4483cqw 12.069cqw 18.9655cqw; color: #000; }
   .d7f .nm { display: block; font-size: 11.5px; font-size: max(6px, 4.9569cqw); font-weight: 800; letter-spacing: .13em; text-transform: uppercase; }
+  /* the collapse decode's position-lock cells (decodeCollapse) — each
+     char frozen at its measured width so the churn never shoves the line */
+  .nmt .dcell { display: inline-block; text-align: center; white-space: pre; }
   .d7f .tspark { position: absolute; top: 13px; right: 14px; top: 5.6034cqw; right: 6.0345cqw; font-size: 12px; font-size: 5.1724cqw; z-index: 2; }
   .d7f .fchip {
     position: relative; overflow: hidden;
@@ -1750,13 +1766,24 @@
   /* geometry comes from the shared .d7f cqw spec (JS puts .d7f on the
      card) — this block only carries what is genuinely lightbox-specific:
      the ambient throw, the frame-chrome kill, nav, and product slimming */
-  #lb.fv3 .lb-card { width: min(430px, 84vw); }
+  /* 84vw → 80vw (2026-08-16 A/B): the phone lb card shrinks very slightly
+     — this base rule only rules ≤720 (the ≥721 media below overrides) */
+  #lb.fv3 .lb-card { width: min(430px, 80vw); }
   @media (min-width: 721px) {
     /* the one-spec card is taller (~1.52:1): the height term keeps the
-       CARD itself (plus a breath) inside a short window — the sheet
-       scrolls for whatever hangs below — and the cqw spec shrinks the
-       whole card with the width. Floored so it never dwindles. */
-    #lb.fv3 .lb-card { width: max(300px, min(430px, calc((100dvh - var(--tbh, 0px) - 120px) / 1.53))); }
+       WHOLE INSPECTION inside the window (2026-08-16 A/B — "at 1440x790
+       the lightbox view should hold all its components comfortably").
+       The old 120px budget predated the strip: the head stack above the
+       card is headClr 12 + drop 26 + band ~119 + clr 26 + counter ~24 +
+       gapB 46 ≈ 253, plus the card's 24px bottom pad and the dims line
+       (~39 with its margin — a first-class component now that the desc
+       retired) — 320 is that stack stated once (re-derive if STRIP_TUNE
+       or the dims spec moves). Assets come down on short displays by
+       construction: 790-tall ≈ a 268px card with the dims line inside
+       the fold, 900-tall ≈ 337, the 430 cap binds from ~1012px windows.
+       Floor 260 so it never dwindles (280 was binding at exactly 790 and
+       pushing the dims line back out); past the floor the sheet scrolls. */
+    #lb.fv3 .lb-card { width: max(260px, min(430px, calc((100dvh - var(--tbh, 0px) - 320px) / 1.53))); }
   }
   #lb.fv3 .lb-card .panel {
     /* base shadow restated (id-specificity) + the lightbox ambient throw */
@@ -1791,6 +1818,14 @@
      want-path; the stock lightbox keeps its cta untouched. */
   #lb.fv3 .lb-cta { display: none; }
   #lb.fv3 .lb-product { background: none; border: none; padding: 4px 0 0; }
+  /* the descriptive text under the card retires (2026-08-16 A/B) — the
+     dims line is the one read down there now, grown out of the 10px spec
+     register into a stated line. Real data only (populate never prints a
+     placeholder; :empty collapses boards without a DIMS_MM row), and the
+     detailed tail/nose suffix already rides where measured. fv3-scoped:
+     #vlb's hardcoded desc line and the stock lb keep theirs. */
+  #lb.fv3 .lb-desc { display: none; }
+  #lb.fv3 .lb-dims { font-size: 15px; margin-top: 20px; }
 
   /* ---- LB DECK (2026-07-26, Dylan's lightbox rework) ----------------------
      The thumb strip retires: the board flip does face-switching now, and the
@@ -2020,11 +2055,10 @@
      they are inert (the real elements own every interaction). */
   .lbnb.xact { transform-origin: 0 0; pointer-events: none; }
   /* end of the collection: the arrow drops to the house .22 faint and stops
-     taking clicks. It reads as spent rather than absent — the seat and its
-     drawn rails stay, so the card's geometry doesn't change at the ends. Must
-     outrank the card-hover reveal, hence the extra class on the same shape. */
-  #lb.fv3 .lb-fv3nav.off,
-  #lb.fv3 .lb-card:hover .lb-fv3nav.off { opacity: .22; pointer-events: none; }
+     taking clicks. It reads as spent rather than absent (a live affordance
+     never plays dead, the end is STATED). Three classes so it outranks the
+     #lb.in reveal at any source order. */
+  #lb.fv3 .lb-deknav.off { opacity: .22; pointer-events: none; }
 
   /* ---- THE COLLECTION STRIP (2026-08-12, the strip-lab port) --------------
      Every board in the collection strung as mini cards above the counter —
@@ -2107,104 +2141,30 @@
     .lbsmini { transition: none; }
   }
 
-  /* ---- fv3 nav: the ‹ › arrows live ON the card, facing the mid-rail dots.
-     Square seat (decided 2026-07-20; empty circles clashed with the card's
-     angular language). One gesture on card hover: rails close onto the dots,
-     the line grows from each dot (.34s in), the seat draws as two
-     half-rectangles splitting off the line and meeting at the far side
-     (.46s in), then the seat fills LIKE A CHIP — black wipes in
-     horizontally from the rail toward the card middle (chipwipe, .64s in)
-     and the arrow flips white. On exit the fill drains vertically into the
-     frame (chipdrop, armed by the same .left class the chips use; prev
-     drains up, next drains down, keeping the card's diagonal pattern).
-     Board + shadow growth spans the full ~.94s. Hovering the arrow itself
-     inverts it (white fill, ink ring + glyph) — the +List answer. */
-  #lb.fv3 .navfx {
-    /* cqw like the card (430-reference: N px at 430 = N × 0.232558cqw) —
-       the height guard makes the desktop card fluid, so px would drift
-       off the rail dots. Scaled ×1.5 from the old 62×40 box to keep pace
-       with the bigger chips; the line start lands on the dot center
-       (inset 4.31cqw + dot offset ≈ 4.74cqw) at any width, and viewBox
-       strokes/dashes scale with the box on their own. */
-    position: absolute; top: 50%; left: 18px; width: 93px; height: 60px;
-    left: 4.186cqw; width: 21.6279cqw; height: 13.9535cqw;
-    transform: translateY(-50%); z-index: 2; pointer-events: none;
-    fill: none; stroke: #000; stroke-width: 2;
+  /* ---- THE DECK NAV (2026-08-16 A/B, supersedes the on-card build;
+     re-seated same day on his react) ---------
+     Plain chevrons perched just ABOVE each flanker's inner top corner —
+     no seat, no fill, no gesture: the chevron IS the control, and it
+     answers ITS card (the diagonal deck means the two ride at different
+     heights). Boxes written by placeDeck off deckGeom (the flanks' own
+     source, so a knob change moves both). Ink per ground: white on the
+     dark ground, ink on light — the .lbh-chip law. z 1 with the card:
+     they sit in the flanks' own air, never on the hero, and #carfront
+     (z 2, later in source) keeps the flip legs riding over everything. */
+  .lb-deknav {
+    position: absolute; z-index: 1;
+    background: none; border: 0; padding: 0; margin: 0;
+    color: #fff; cursor: pointer;
+    opacity: 0; transition: opacity .25s ease .12s;
   }
-  #lb.fv3 .navfx.rt { left: auto; right: 18px; right: 4.186cqw; transform: translateY(-50%) scaleX(-1); }
-  /* the CONNECTOR only — the seat's drawn outline retired with the glyph
-     (2026-08-01): the black chip is the seat now, so an outline around it
-     was a box around a box, the same reason .bay-navfx went. Dylan kept
-     this line deliberately: "the only slight difference being the line
-     still connects the box to the inner card frame." */
-  #lb.fv3 .navfx .ln-s { stroke-dasharray: 15; stroke-dashoffset: 15; transition: stroke-dashoffset .12s ease; }
-  #lb.fv3 .lb-card:hover .navfx .ln-s { stroke-dashoffset: 0; transition: stroke-dashoffset .14s ease .34s; }
-  /* THE NAV SEAT IS THE DRAWER CHIP NOW (2026-08-01, Dylan: "the same sq
-     boxed arrow as the drawer... same black box breathe on hover"). The
-     `‹ ›` mono glyphs are gone for lucide square-chevron-left/right, and
-     `.bxi` is shared with the drawer so the two controls cannot drift.
-     CORNERS SOFTEN HERE TOO, which REVERSES the earlier square-seat note —
-     that reasoning was "no rounded icon to match", and now there is one.
-     The disc rejection still stands: this is a soft square, not a circle.
-     Radius and icon are the drawer's PROPORTIONS, not its pixels, because
-     this seat is cqw and scales with the card: 5/32 of the box for the
-     radius, 24px (1:1 with the 24-unit viewBox, so strokes land crisp at
-     the reference) for the icon. px line first per the ONE CARD SPEC. */
-  #lb.fv3 .lb-fv3nav {
-    position: absolute; top: 50%; z-index: 3;
-    display: grid; place-items: center; overflow: hidden;
-    width: 39px; height: 39px; margin-top: -19.5px; border-radius: 6px;
-    width: 9.0698cqw; height: 9.0698cqw; margin-top: -4.5349cqw; border-radius: 1.4186cqw;
-    /* NO PRE-DRAW (Dylan, 2026-08-01: "remove the icon pre draw (the faded
-       state)"). Rest is nothing at all — opacity 0, fill unwiped, chevron
-       undrawn — so the control has no ghost sitting on the card waiting to
-       be used. It is BUILT by the hover gesture instead, in the order the
-       eye follows: line reaches in, box grows out of where it landed,
-       chevron draws inside the box.
-       Colour is FLAT WHITE, no longer a transition from black: the chevron
-       only ever exists on top of the black fill, so there is no state where
-       it needs to be dark. That also removes a timing dependency — the old
-       colour ramp had to finish before the glyph appeared. */
-    color: #fff; opacity: 0;
-    transition: opacity .2s ease;
-  }
-  #lb.fv3 .lb-fv3nav .bxi { width: 24px; height: 24px; width: 5.5814cqw; height: 5.5814cqw; }
-  #lb.fv3 .lb-fv3nav .bxs { stroke-dasharray: 1.05; stroke-dashoffset: 1.05; }
-  #lb.fv3 .lb-fv3nav.prev { left: 42px; left: 9.7674cqw; }   /* navfx left + seat left edge 16u, both ×1.5 */
-  #lb.fv3 .lb-fv3nav.next { right: 42px; right: 9.7674cqw; }
-  #lb.fv3 .lb-fv3nav::before {
-    content: ""; position: absolute; inset: 0; background: #000;
-    transform: scaleY(0);
-    /* the grow-back half of the tighten (see the :hover rule near the end of
-       this file) — declared on the RESTING rule because that is the state
-       being returned to; in :hover alone it would animate in and snap out */
-    transition: top .24s ease, right .24s ease, bottom .24s ease, left .24s ease,
-                border-radius .24s ease;
-  }
-  /* colour rides the BUTTON now, not a glyph span: `.bxi` strokes with
-     currentColor, so one property drives the icon the way it used to drive
-     the `‹ ›` text. Same .78s beat as before — the icon turns white as the
-     chipwipe finishes under it, not as it starts. */
-  /* THE ARRIVAL, retimed so the line HANDS OFF to the box (2026-08-01).
-     Beats: line draws .34→.48s · fill wipes .48→.78s, starting the instant
-     the line lands and growing from the rail side, so the box reads as
-     coming out of the line rather than appearing beside it · chevron draws
-     .76→.96s, once there is black under it. That lands the whole gesture at
-     ~.96s, still inside the ~.94s board-and-shadow growth it rides with.
-     Opacity is a fast early ramp (done by .42s) rather than the old .46s
-     fade: it must be finished BEFORE the fill starts, or the wipe plays out
-     at partial alpha. Nothing is visible during it — the fill is unwiped
-     and the chevron undrawn — so it costs no visible beat. */
-  #lb.fv3 .lb-card:hover .lb-fv3nav { opacity: 1; transition: opacity .12s ease .3s; }
-  #lb.fv3 .lb-card:hover .lb-fv3nav.prev::before { transform-origin: left center; animation: chipwipe .3s ease .48s forwards; }
-  #lb.fv3 .lb-card:hover .lb-fv3nav.next::before { transform-origin: right center; animation: chipwipe .3s ease .48s forwards; }
-  #lb.fv3 .lb-card:hover .lb-fv3nav .bxs { stroke-dashoffset: 0; transition: stroke-dashoffset .2s ease .76s; }
-  /* the drain keeps the chevron DRAWN, like the header engulf freezes its
-     children: the whole assembled chip drops as one object, and a glyph
-     un-drawing itself mid-fall would read as a second gesture */
-  #lb.fv3 .lb-card.left .lb-fv3nav .bxs { stroke-dashoffset: 0; }
-  #lb.fv3 .lb-card.left .lb-fv3nav.prev::before { transform-origin: center top; animation: chipdrop .36s ease; }
-  #lb.fv3 .lb-card.left .lb-fv3nav.next::before { transform-origin: center bottom; animation: chipdrop .36s ease; }
+  body.light .lb-deknav { color: #000; }
+  #lb.in .lb-deknav { opacity: 1; }
+  .lb-deknav svg { display: block; width: 100%; height: 100%; overflow: visible; }
+  .lb-deknav path { fill: none; stroke: currentColor; stroke-width: 3px;
+                    stroke-linecap: butt; stroke-linejoin: miter; }
+  /* the hover thickens the stroke — the tighten's quiet cousin; a
+     hover-without-click must not answer as loudly as a click */
+  @media (hover: hover) { .lb-deknav:hover path { stroke-width: 4.5px; } }
   /* touch arrival (.tset, applied by openLb under the dock gate): the tap IS
      the hover — chip fills wipe in and the rails close while the card zooms,
      so it settles into the decoded state instead of arriving unfilled */
@@ -2336,23 +2296,8 @@
        the grid's) — the lb chip answers the aim like every chip: shadow
        flip + the ADD+ decode. The delegated chip handlers reach
        #lb-fv3-list because the lb card is a .d7f like any other. */
-    /* nav: the build is its own re-triggerable state (.navdraw — Dylan,
-       2026-08-01: "the arrows should still leave with the card on light box
-       rotate and get redrawn when a new card enters"). Applied WITH .stay at
-       open, so the line-hands-off-to-box gesture rides the open flight;
-       SHED when an exchange hides the card (the arrows leave with it) and
-       re-applied at each landing, so every new hero redraws its arrows the
-       way its fill boxes drew and its frame connected. Values are VERBATIM
-       the :hover mirrors above so a hover toggle changes no computed
-       shorthand and the forwards-held build can never restart mid-stay. */
-    #lb.fv3 .lb-card.navdraw .navfx .ln-s { stroke-dashoffset: 0; transition: stroke-dashoffset .14s ease .34s; }
-    #lb.fv3 .lb-card.navdraw .lb-fv3nav { opacity: 1; transition: opacity .12s ease .3s; }
-    #lb.fv3 .lb-card.navdraw .lb-fv3nav.prev::before { transform-origin: left center; animation: chipwipe .3s ease .48s forwards; }
-    #lb.fv3 .lb-card.navdraw .lb-fv3nav.next::before { transform-origin: right center; animation: chipwipe .3s ease .48s forwards; }
-    #lb.fv3 .lb-card.navdraw .lb-fv3nav .bxs { stroke-dashoffset: 0; transition: stroke-dashoffset .2s ease .76s; }
-    /* the ends still clamp: .off outranks the navdraw reveal exactly as it
-       outranks the hover reveal (the extra class on the same shape) */
-    #lb.fv3 .lb-card.navdraw .lb-fv3nav.off { opacity: .22; pointer-events: none; }
+    /* (.navdraw retired with the on-card nav build, 2026-08-16 A/B — the
+       deck nav is standing chrome; the class adds in JS stay, inert) */
   }
 
   /* the landing: the close flight ends like a button press. .landpress rides
@@ -2374,36 +2319,12 @@
     100% { transform: scale(1); }
   }
   .reseat .panel { animation: reseatpress .18s ease; }
-  /* THE ARROW TIGHTENS, IT NO LONGER FLIPS (Dylan, 2026-08-01, carrying the
-     bay-close react onto the card: "the fill unfil on those arrows were
-     always going to get tweaked or replaced"). Same law as the drawer chip —
-     a hover-without-click must not answer as loudly as a click — so the black
-     seat shrinks in around the glyph and the glyph never moves or changes
-     colour. The white fill, black glyph and inset ring are all gone.
-     `inset` AGAIN, NOT A TRANSFORM, and here it is not merely tidier: the
-     seat's transform belongs to chipwipe/chipdrop with `forwards`, and a
-     filling animation outranks anything a transition could write there. The
-     shrink would simply not happen.
-     PROPORTIONAL, not the drawer's flat 2.5px: this seat is cqw and scales
-     with the card, so the shrink is the same FRACTION of the box (3px at the
-     430 reference = .6977cqw) with the px line first as the pre-cqw fallback,
-     per the ONE CARD SPEC.
-     THE SEAT STAYS SQUARE. The drawer chip's corners were softened to match
-     a rounded lucide rect; there is no icon here, and `border-radius: 0` on
-     this seat is a recorded decision — the disc variant was built and
-     rejected because circles clash with the card's angular language. */
-  #lb.fv3 .lb-card .lb-fv3nav:hover { opacity: 1; box-shadow: none; }
-  #lb.fv3 .lb-card .lb-fv3nav:hover::before {
-    background: #000;
-    inset: 3px; inset: .6977cqw;
-    /* once inset, the fill stops meeting the seat's overflow clip and needs
-       its own corners — the drawer chip's 4.5/32 ratio at this box size */
-    border-radius: 5.5px; border-radius: 1.2791cqw;
-    transition: top .18s ease, right .18s ease, bottom .18s ease, left .18s ease,
-                border-radius .18s ease;
-  }
   #lb.fv3 .lb-prev, #lb.fv3 .lb-next { display: none; }
-  @media (hover: none), (max-width: 720px) { #lb.fv3 .lb-fv3nav, #lb.fv3 .navfx { display: none; } }
+  /* width-only per the WIDTH RULING: ≤940 has no flanks (renderNeighbors
+     stands down under dockActive) so there are no gaps to seat arrows in —
+     the phone keeps the swipe. Wide-touch iPads KEEP these: unlike the old
+     hover-built nav they are visible at rest, so tappable is honest. */
+  @media (max-width: 940px) { #lb.fv3 .lb-deknav { display: none; } }
   #lb.fv3 .lb-card .frame img { transition: transform .3s ease, filter .3s ease; }
   @media (hover: hover) { #lb.fv3 .lb-card:hover .frame img {
     transform: scale(1.08);
@@ -3645,6 +3566,25 @@
     transition: inset .18s ease, border-radius .18s ease;
   }
   .bb-chan:hover .bbq::before { inset: calc(2.5px * var(--envk, 1)); border-radius: calc(6px * var(--envk, 1)); }
+  /* THE CHIPS LAND WITH A BOUNCE (2026-08-16 A/B): the back face used to
+     just BE there at the flip — now each chip overshoots and settles
+     (the paStamp grammar at chip scale). display:none → flex restarts
+     the animation exactly at the face swap, so this costs zero JS; the
+     re-flip guard in bdmFlip means it can never replay mid-ceremony.
+     Transform is a TRANSIENT here and ends at identity — the pixel-grid
+     law binds the .bdm-prev box, not its children; the press stays the
+     inset breathe. Pure scale, so no --envk term needed. */
+  .bdm-prev.flipped .bb-chan .bbq { animation: bbLand .5s cubic-bezier(.2, .8, .3, 1) backwards; }
+  .bdm-prev.flipped #bb-mail .bbq { animation-delay: .08s; }
+  @keyframes bbLand {
+    0% { opacity: 0; transform: scale(.55); }
+    55% { opacity: 1; transform: scale(1.09); }
+    78% { transform: scale(.97); }
+    100% { opacity: 1; transform: scale(1); }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .bdm-prev.flipped .bb-chan .bbq { animation: none; }
+  }
   .bb-chan svg { position: relative; z-index: 1; width: calc(24px * var(--envk, 1)); height: calc(24px * var(--envk, 1)); }
   .bb-chan .bbrand { fill: #fff; }
   .bb-chan .bstroke { fill: none; stroke: #fff; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
@@ -3827,10 +3767,28 @@
     transition: clip-path .32s ease-in;
   }
   /* deck-held boards: ONE card per board — in the deck OR in the shop,
-     never both. The shop slot becomes a hole (the lightbox lift-out
-     idiom made persistent). Class-based on purpose: the lb close
-     restores INLINE visibility, which must not resurrect a deck hole. */
-  .card.indeck, .scard.indeck { visibility: hidden; }
+     never both. Class-based on purpose: the lb close restores INLINE
+     visibility, which must not resurrect a deck hole. BELTS stay true
+     holes (the recycler stomps inline visibility per frame, .indeck-
+     guarded — a costume would fight that write); GRID slots wear the
+     BLANK CARD instead (2026-08-16 A/B): panel + inframe stay drawn,
+     board/texts/chips hidden, NO shadow, the buttonflip art centered
+     at half ink. visibility/opacity only — lockCardScale measures the
+     .d7f's offsetHeight and display:none collapses the row. The flight
+     guards (frameFor, closeLb, drag) are all class-checks, costume-safe;
+     pointer-events:none keeps a visible blank from catching the taps
+     the hidden hole never could. */
+  .card.indeck { visibility: hidden; }
+  .scard.indeck { pointer-events: none; }
+  .scard.indeck .stage img, .scard.indeck .info, .scard.indeck .corner,
+  .scard.indeck .fflipc, .scard.indeck .fc-list, .scard.indeck .fst,
+  .scard.indeck .tspark { visibility: hidden; }
+  .scard.indeck .panel { box-shadow: none; }
+  .scard.indeck .panel::after {
+    content: ""; position: absolute; inset: 0;
+    background: url(site/img/avrgbg-buttonflip.png) center / 58% auto no-repeat;
+    opacity: .5;
+  }
   .bay-item {
     /* a CARD slot now (2026-07-22), not a cutout: the deck is a display
        case for the cards. ONE per shelf, centered — Dylan sized it by
@@ -4551,10 +4509,29 @@
      translateX(-50%) through the flight — a bare translateX would drop it. */
   .sendmode #pd-reddit .pd-l { animation: pdlInL .6s cubic-bezier(.2, .8, .3, 1) backwards; }
   .sendmode #pd-mail .pd-l { animation: pdlInR .6s cubic-bezier(.2, .8, .3, 1) backwards; }
-  .sendmode #pd-reddit .pdq { animation: pdInL .6s cubic-bezier(.2, .8, .3, 1) .6s backwards; }
-  .sendmode #pd-mail .pdq { animation: pdInR .6s cubic-bezier(.2, .8, .3, 1) .6s backwards; }
-  @keyframes pdInL { from { opacity: 0; transform: translateX(-70vw); } }
-  @keyframes pdInR { from { opacity: 0; transform: translateX(70vw); } }
+  /* THE DOORS BOUNCE (2026-08-16 A/B): the chips overshoot past the seat
+     and settle — the overshoot is baked INTO the arrival keyframes (one
+     animation, no fill fight; a chained second one-shot would steal the
+     transform mid-flight). .75s total so the bounce breathes; the .6s
+     DELAY is the handle-flight pairing and does not move. Opacity lands
+     at 55% so the bounce plays at full ink. No forwards fill — the doors
+     end transform-free, keeping the :active inset press honest. */
+  .sendmode #pd-reddit .pdq { animation: pdInL .75s cubic-bezier(.2, .8, .3, 1) .6s backwards; }
+  .sendmode #pd-mail .pdq { animation: pdInR .75s cubic-bezier(.2, .8, .3, 1) .6s backwards; }
+  @keyframes pdInL {
+    0% { opacity: 0; transform: translateX(-70vw); }
+    55% { opacity: 1; }
+    68% { transform: translateX(2.4vw); }
+    86% { transform: translateX(-.8vw); }
+    100% { opacity: 1; transform: translateX(0); }
+  }
+  @keyframes pdInR {
+    0% { opacity: 0; transform: translateX(70vw); }
+    55% { opacity: 1; }
+    68% { transform: translateX(-2.4vw); }
+    86% { transform: translateX(.8vw); }
+    100% { opacity: 1; transform: translateX(0); }
+  }
   @keyframes pdlInL { from { opacity: 0; transform: translateX(calc(-50% - 70vw)); } to { transform: translateX(-50%); } }
   @keyframes pdlInR { from { opacity: 0; transform: translateX(calc(-50% + 70vw)); } to { transform: translateX(-50%); } }
   .picks-done {
@@ -4945,9 +4922,14 @@
     body.light.intro.intro-bar .topbar { background-color: rgba(255, 255, 255, .88); }
     body.intro .bar-brand { transform: translateX(-70vw); }
     body.intro .picon { transform: translateX(70vw); }
+    /* the home word (AVRG, 2026-08-16 A/B) holds back through the draw and
+       fades in with the bar pieces — a third flyer would crowd the two-edge
+       entrance, so the centre seat simply arrives */
+    body.intro .nbar { opacity: 0; }
     body.intro.intro-bar .bar-brand,
     body.intro.intro-bar .picon { transform: none; transition: transform .6s cubic-bezier(.22, 1, .36, 1); }
     body.intro.intro-bar .picon { transition-delay: .07s; }
+    body.intro.intro-bar .nbar { opacity: 1; transition: opacity .55s ease .18s; }
     /* the masthead rides above the veil (logo + tick are the intro's only
        actors); the pose flash gate hides it until the big transform lands */
     body.intro .masthead { position: relative; z-index: 6450; }
@@ -5138,7 +5120,6 @@
 
   /* mobile tiles */
   body.light .tile .tframe { background: #eee9df; }
-  body.light .tile .tcap .sub { color: #000; }
 </style>
 </head>
 <body>
@@ -5340,6 +5321,14 @@
          swallowed by the card's own body). Never move them past carback. -->
     <div class="lbnb prev" id="lbnb-prev" role="button" tabindex="-1"></div>
     <div class="lbnb next" id="lbnb-next" role="button" tabindex="-1"></div>
+    <!-- THE DECK NAV (2026-08-16 A/B): plain tall arrows OFF the card,
+         seated in the hero↔flanker gaps at 5/8 the hero's height —
+         placeDeck writes their boxes off the same deckGeom the flanks
+         ride, so they cannot drift. The on-card assembled chips (line →
+         box → chevron gesture) retired this pass; the build lives in git
+         history. Ids kept: NAVS + the step() click wiring bind by id. -->
+    <button class="lb-deknav prev lb-fv3only" id="lb-fv3-prev" type="button" aria-label="Previous deck"><svg viewBox="0 0 24 60" preserveAspectRatio="none" aria-hidden="true"><path d="M19 3 5 30l14 27" vector-effect="non-scaling-stroke"/></svg></button>
+    <button class="lb-deknav next lb-fv3only" id="lb-fv3-next" type="button" aria-label="Next deck"><svg viewBox="0 0 24 60" preserveAspectRatio="none" aria-hidden="true"><path d="m5 3 14 27L5 57" vector-effect="non-scaling-stroke"/></svg></button>
     <div class="lbhead label" id="lbhead" aria-hidden="true">
       <!-- the digits carry their own spans: the next pass animates the two
            NUMBERS from board to board, and they need something to grab -->
@@ -5364,28 +5353,11 @@
         <!-- the phone flip chip (2026-08-16): the find words' mobile
              costume — populate feeds the mini whichever face is hidden;
              no src attr at rest (src="" would request the page) -->
-        <button class="fflipc lb-fv3only" id="lb-flipc" type="button" aria-label="Flip the board"><span class="fw">flip</span><img class="fface" id="lb-fface" alt=""></button>
+        <button class="fflipc lb-fv3only" id="lb-flipc" type="button" aria-label="Flip the board"><img class="fface" id="lb-fface" alt=""></button>
         <div class="frame"><div class="flipbox"><img id="lb-big" class="top" src="" alt="" title="View the whole collection" /><img id="lb-bot" class="bot" src="" alt="" aria-hidden="true" /></div></div>
         <div class="info lb-fv3only"><span class="nm"><span class="nmt" id="lb-fv3-nmt"></span></span></div>
         <button class="fchip fc-list d7f-cta lb-fv3only" id="lb-fv3-list" type="button"><span class="fl"><span class="ft"></span><svg class="fscript" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path fill-rule="evenodd" shape-rendering="crispEdges" d="M6 2.5h13v19H6V2.5Z M7.4 4.3v15.4h10.2V4.3H7.4Z"/><rect shape-rendering="crispEdges" x="9.8" y="6.5" width="1.4" height="3"/><rect shape-rendering="crispEdges" x="9.8" y="14.5" width="1.4" height="3"/><circle cx="10.5" cy="12" r="1.2"/><path class="sh" shape-rendering="crispEdges" d="M3.5 4.5V23.5H16.5V21H6.5V4.5Z"/></svg><span class="fmini" aria-hidden="true"></span></span></button>
         <span class="fst lb-fv3only avail" id="lb-fv3-st"><span class="dot"></span><span class="sttxt" id="lb-fv3-sttxt"></span></span>
-        <!-- only the CONNECTOR survives (the seat's drawn outline retired with
-             the glyph). x2 stops 1.5086cqw shy of the seat: that is the card's
-             OWN rail-to-dot clearance — rails end 2.5862cqw short of centre
-             around a 2.1552cqw dot — so the line meets the box the way the
-             card's rails meet their dots. 1 viewBox unit = .348837cqw here, so
-             the gap is 4.32 units back from 16. -->
-        <svg class="navfx lb-fv3only" viewBox="0 0 62 40" aria-hidden="true">
-          <line class="ln-s" x1="1.5" y1="20" x2="11.68" y2="20"/>
-        </svg>
-        <svg class="navfx rt lb-fv3only" viewBox="0 0 62 40" aria-hidden="true">
-          <line class="ln-s" x1="1.5" y1="20" x2="11.68" y2="20"/>
-        </svg>
-        <!-- CHEVRON ONLY — the lucide rect is gone: "no black border, but a
-             black inside", so the box is the ::before fill and the chevron is
-             knocked out of it in white. pathLength=1 normalizes the draw. -->
-        <button class="lb-fv3nav prev lb-fv3only" id="lb-fv3-prev" type="button" aria-label="Previous deck"><svg class="bxi" viewBox="0 0 24 24" aria-hidden="true"><path class="bxs" d="m14 16-4-4 4-4" pathLength="1"/></svg></button>
-        <button class="lb-fv3nav next lb-fv3only" id="lb-fv3-next" type="button" aria-label="Next deck"><svg class="bxi" viewBox="0 0 24 24" aria-hidden="true"><path class="bxs" d="m10 8 4 4-4 4" pathLength="1"/></svg></button>
       </div>
       <div class="lb-rest">
         <div class="lb-thumbs" id="lb-thumbs"></div>
@@ -5434,14 +5406,16 @@
       <div class="bay-head" id="bay-head">
         <!-- the drawn outline: two legs, right-center → left-center; d + viewBox by bayGeom -->
         <svg class="bay-hline" id="bay-hline" aria-hidden="true"><path pathLength="1" d=""/><path pathLength="1" d=""/></svg>
-        <!-- the announce bar (2026-08-03, Dylan's spec): msg icon (rotates
-             between draws) · decode phrase · settled count · skateboard.
-             bay-mic paths are JS-applied (BAY_MICONS); phrase decodes in
-             at every full open (the tagline recipe). -->
+        <!-- the announce bar: SEND · msg icon (rotates between draws) ·
+             settled count · skateboard. The rotating phrases retired
+             2026-08-16 A/B ("losing the rotating text phrases") — the verb
+             is static markup in the phrase's old span (id kept: the ≤940
+             block hides it and the phone head stays icon+count+skateboard).
+             bay-mic paths are JS-applied (BAY_MICONS). -->
         <button class="bay-msg" id="bay-msg" type="button" aria-label="Message about your deck">
           <span class="bay-msg-l">
+            <span id="bay-msg-t">SEND</span>
             <svg class="bay-mic" id="bay-mic" viewBox="0 0 24 24" aria-hidden="true"></svg>
-            <span id="bay-msg-t"></span>
           </span>
           <span class="bay-msg-r" aria-hidden="true">
             <span id="bay-msg-n">0</span>
@@ -5812,6 +5786,62 @@
         if (done) clearInterval(el._t);
       }, 30);
     }
+    /* THE LB COLLAPSE (2026-08-16 A/B, decode-slowmo's clps grammar at his
+       dials: flicker 90ms · swap 1.5s · position lock ON · collapse).
+       Two phases: the current text corrupts ends→center over 45% of the
+       swap, then the new text resolves center→out over 55%. POSITION LOCK:
+       each phase renders its chars as .dcell spans frozen at their own
+       measured widths, so a wide churn glyph never shoves the line; the
+       cells rebuild once at the phase boundary (name-widths → dims-widths,
+       symmetric about the centred .info — the lab-approved breath, not a
+       bug). Handle is el._t, NULLED on every clear (decodeEl's lesson) —
+       any existing clearInterval(el._t) + textContent write kills a
+       running collapse and flattens the spans, so every external reset
+       path (cardDressOff, setFlip, populate, the shelf-switch kill) works
+       unchanged. Interval-driven, never rAF (the timeout-pump law).
+       LB-ONLY caller set: stayLand's name land + dockDress's arrival —
+       grid hovers keep decodeInto's quick house scramble. */
+    const CLPS_TICK = 90, CLPS_MS = 1500;
+    function decodeCollapse(el, text) {
+      clearInterval(el._t); el._t = null;
+      if (reduced) { el.textContent = text; return; }
+      const from = el.textContent;
+      const w = (len, i) => { const x = len === 1 ? 0 : i / (len - 1); return Math.min(x, 1 - x) * 2; };
+      /* the lab's schedule: 12% base delay + 70% directional spread + 18% jitter */
+      const sched = (chars, inward, ms) =>
+        chars.map((c, i) => (0.12 + 0.7 * (inward ? w(chars.length, i) : 1 - w(chars.length, i)) + Math.random() * 0.18) * ms);
+      const cells = str => {
+        el.textContent = "";
+        [...str].forEach(ch => {
+          const s = document.createElement("span");
+          s.className = "dcell"; s.textContent = ch; el.appendChild(s);
+        });
+        const ws = [...el.children].map(s => s.getBoundingClientRect().width);
+        [...el.children].forEach((s, i) => { s.style.width = ws[i] + "px"; });
+      };
+      const paint = (chars, showReal) => {
+        for (let i = 0; i < chars.length; i++) {
+          if (!/\S/.test(chars[i])) continue;
+          el.children[i].textContent = showReal(i) ? chars[i] : GLYPHS[(Math.random() * GLYPHS.length) | 0];
+        }
+      };
+      const phase = (chars, at, corrupt, done) => {
+        let f = 0;
+        el._t = setInterval(() => {
+          f++; const t = f * CLPS_TICK;
+          paint(chars, corrupt ? (i => t < at[i]) : (i => t >= at[i]));
+          if (chars.every((c, i) => !/\S/.test(c) || t >= at[i])) {
+            clearInterval(el._t); el._t = null; done();
+          }
+        }, CLPS_TICK);
+      };
+      const A = [...from], B = [...text];
+      cells(from);
+      phase(A, sched(A, true, CLPS_MS * 0.45), true, () => {
+        cells(text);
+        phase(B, sched(B, false, CLPS_MS * 0.55), false, () => { el.textContent = text; });
+      });
+    }
     /* the chip joins the card-hover decode family: at rest it is the bare
        deck mark (the + retired 2026-08-05, same react as the tag); the
        dress scrambles a random want-word in beside it — inflected, no
@@ -5842,36 +5872,11 @@
         if (/✓/.test(lft.textContent)) lft.textContent = "Mine !";
       });
     }
-    /* THE MOBILE DIMS DECODE (2026-08-16, his spec: "cards need to decode
-       to board dims everywhere on the mobile site besides the collections
-       page"): the desktop's hover name→dims decode translated to touch —
-       a card with a real DIMS_MM row decodes its name line ONCE as it
-       scrolls into view (arrival is the phone's hover) and HOLDS the
-       dims; boards without a row keep their name, the desktop's own
-       asymmetry. Armed per render on the collection pages, SKIPPED on
-       #shop-all (the COLLECTIONS page — his exemption); the picks page
-       lands dims statically (rest IS the landed state, the deck's dress
-       law) and the lb joins via dockDress. Interval-driven by decodeInto,
-       so a frozen frame loop can't stall it (the timeout-pump law).
-       Re-arming disconnects the old observer; replaced renders detach
-       their targets, which then simply never fire. */
-    let dimsIO = null;
-    function armDimsDecode(root) {
-      if (dimsIO) { dimsIO.disconnect(); dimsIO = null; }
-      if (!dockActive()) return;
-      const nmts = [...root.querySelectorAll(".scard .nmt")].filter(n => n.dataset.dims);
-      if (!nmts.length) return;
-      dimsIO = new IntersectionObserver(ents => {
-        ents.forEach(en => {
-          if (!en.isIntersecting) return;
-          dimsIO.unobserve(en.target);
-          const n = en.target;
-          if (reduced) { clearInterval(n._t); n.textContent = n.dataset.dims; }
-          else decodeInto(n, n.dataset.dims);
-        });
-      }, { threshold: .5 });
-      nmts.forEach(n => dimsIO.observe(n));
-    }
+    /* THE MOBILE DIMS DECODE NARROWED (2026-08-16 A/B react, supersedes
+       the same-day in-view IO decode): grid cards rest on their names —
+       dims decode only where there's no hover to earn them: the lb view
+       (dockDress) and YOUR PICKS (static land). Desktop keeps the hover
+       decode. The IO armer lives at git 762f975 if in-view ever returns. */
     /* the four decode-able reads, carried card-to-card so a mid-decode pluck
        is seamless (buildFly's idiom, shared with the lb open and the deck
        exchange's demoting clone) */
@@ -5896,7 +5901,11 @@
       };
       land(document.getElementById("lb-fv3-ref"), "AVRG");
       const nmt = document.getElementById("lb-fv3-nmt");
-      land(nmt, nmt.dataset.dims || nmt.dataset.nm);
+      /* the name→dims land rides THE COLLAPSE (item 2's grammar; reduced
+         short-circuits inside it) — the changed-only guard stays, so a
+         carried dims read never re-plays */
+      const ntxt = nmt.dataset.dims || nmt.dataset.nm;
+      if (nmt && ntxt && nmt.textContent !== ntxt) decodeCollapse(nmt, ntxt);
       const stx = document.getElementById("lb-fv3-sttxt");
       land(stx, stx.dataset.txt);
       /* a want word that rode over from the source stays put — re-rolling it
@@ -6219,7 +6228,7 @@
           (m.spark ? '<span class="spark tspark" title="Builder\'s mark — this one came out perfect">✱</span>' : '') +
           '<div class="corner"><span class="fchip fc-ref"><span class="ft" data-ref="' + esc(m.ref) + '">' + esc(m.ref) + '</span></span></div>' +
           (m.bot ? '<button class="fflipc" type="button" data-top="' + esc(m.img) + '" data-bot="' + esc(m.bot) +
-            '" aria-label="Flip the board"><span class="fw">flip</span><img class="fface" loading="lazy" src="' + esc(m.bot) + '" alt=""></button>' : '') +
+            '" aria-label="Flip the board"><img class="fface" loading="lazy" src="' + esc(m.bot) + '" alt=""></button>' : '') +
           '<div class="stage"><img loading="lazy" src="' + m.img + '" alt="' + esc(m.nm) + '"></div>' +
           '<div class="info">' +
             '<span class="nm"><span class="nmt" data-nm="' + esc(m.nm) + '" data-dims="' + esc(m.dimsPh) + '">' + esc(m.nm) + '</span></span>' +
@@ -6300,7 +6309,7 @@
     /* rows are CENTRED BARE WORDS since the drop-lab dress (2026-08-14) —
        the rdots and counts retired with the old mini-bay furniture */
     document.getElementById("dlist").innerHTML =
-      '<a class="drow home" style="--r:0" href="#"><span class="rt">Home</span></a>' +
+      '<a class="drow home" style="--r:0" href="#"><span class="rt">AVRG</span></a>' +   /* the home row speaks the brand (2026-08-16 A/B) */
       /* the ALL row retired (2026-08-15, Dylan's launch-day trim): the menu
          is the four collections, one word each. #shop-all still routes —
          only its door left the drop. */
@@ -6787,6 +6796,11 @@
     tilegrid.insertAdjacentHTML("beforeend", HOME.map(({ c, i }) =>
       '<div class="tile" data-col="' + i + '" role="link" tabindex="0" style="--tacc:' + accOf(c) + '">' +
         '<div class="tcard">' +
+          /* the fv3 inner-frame anatomy at tile scale (2026-08-16 A/B —
+             "more closely resemble our v3 cards"): split rails, mid dots,
+             corner marks — same child names as .d7f .inframe, tile-scoped
+             CSS (unscaled furniture, whole-px strokes) */
+          '<div class="tinframe" aria-hidden="true"><i class="ctl"></i><i class="cbr"></i><i class="dgl"></i><i class="dgr"></i></div>' +
           '<span class="tcount">' + c.boards.length + '</span>' +
           '<img loading="lazy" src="' + CUT(c.boards[0]) + '" alt="">' +
           '<span class="tnm">' + esc(SHORT[c.id] || c.title) + '</span>' +
@@ -7048,7 +7062,6 @@
         '<section class="colpage-inner shopall-foot">' + colnavHtml() + '</section>';
       bindScards();
       landWants(colpage);   /* the phone chips speak (round 4) */
-      armDimsDecode(colpage);   /* the name lines decode to dims as they arrive (2026-08-16) */
     }
 
     /* shop all: every collection page stitched into one scroll */
@@ -7065,12 +7078,6 @@
         '<section class="colpage-inner shopall-foot">' + colnavHtml() + '</section>';
       bindScards();
       landWants(colpage);   /* the phone chips speak (round 4) */
-      /* NO armDimsDecode here — #shop-all is the COLLECTIONS page, his
-         exemption ("everywhere on the mobile site besides the collections
-         page"); these cards keep their resting names. armDimsDecode(null-
-         root) isn't called either, so a colpage's live observer would
-         survive a hop here — harmless, its targets detached with the
-         innerHTML swap. */
     }
 
     /* ========= the scroll relay — ASLEEP for v1 behind RELAY_ON ========= */
@@ -7127,10 +7134,11 @@
         wlab.dataset.w = t;
         wlab.style.width = wlab.style.transition = "";
         /* the phone door's presence rides the word (2026-08-16): no word =
-           no dots, no tap target (#nbar.noword — home, where the mark is
-           the name). Stamped HERE because this is the word's one writer;
-           :empty could not carry it (the measuring ghost is a second,
-           usually-empty .wlab in the same orb). */
+           no dots, no tap target (#nbar.noword). Home wears AVRG since the
+           A/B pass, so this is a BELT now, not home's costume. Stamped HERE
+           because this is the word's one writer; :empty could not carry it
+           (the measuring ghost is a second, usually-empty .wlab in the
+           same orb). */
         const nb = document.getElementById("nbar");
         if (nb) nb.classList.toggle("noword", !t);
         buildSeatFx();
@@ -7257,7 +7265,9 @@
 
       function frame() {
         raf = 0;
-        if (colpage.hidden || !drawnBarOn() || !secs.length) return;
+        if (colpage.hidden) return;
+        if (!drawnBarOn()) { mframe(); return; }
+        if (!secs.length) return;
         for (const s of secs) {
           const wr = s.sec.getBoundingClientRect();
           const pr = ((tbh - s.off) - wr.top) / R;
@@ -7266,7 +7276,47 @@
       }
       addEventListener("scroll", () => { if (!raf) raf = requestAnimationFrame(frame); }, { passive: true });
 
+      /* THE PHONE WATCHER (2026-08-16 A/B — "the header on the mobile site
+         needs to reflect where you are in collections. right now you can
+         select 'hand shaped' and then scroll the entire collection"). The
+         relay's mobile half woken as a WATCHER only: no pin, no runway, no
+         masthead ceremony — those stay asleep behind RELAY_ON with their
+         unrun feel pass. The one-writer law holds: the routed page's name
+         is the RESTING word (mrest, stamped by routeReset) and the last
+         masthead to duck under the bar overrides it; drySwap animates the
+         change on the relay's own clock (its 300ms clearWord timeout is
+         the frozen-frame belt, so a stalled rAF still lands the word).
+         Words derive from the drop's own rows via barWordFor — the menu
+         is where Dylan named these, so bar and menu cannot drift. Runs on
+         #shop-all too (its sections carry data-col); YOUR PICKS has no
+         data-col sections, so the word rests there by construction. */
+      let msecs = [], mrest = "";
+      function mbind() {
+        msecs = [];
+        if (drawnBarOn() || colpage.hidden) return;
+        msecs = [...colpage.querySelectorAll("section[data-col]")].map(sec => {
+          const h2 = sec.querySelector("h2");
+          const word = barWordFor((COLLECTIONS[+sec.dataset.col] || {}).id);
+          return (h2 && word) ? { h2, word } : null;
+        }).filter(Boolean);
+      }
+      function mframe() {
+        if (!msecs.length) return;
+        const bar = parseFloat(getComputedStyle(document.body).getPropertyValue("--tbh")) || 64;
+        let w = mrest;
+        for (const s of msecs)
+          if (s.h2.getBoundingClientRect().bottom <= bar + 4) w = s.word;
+        const cur = label();
+        if (!w || w === cur) return;
+        /* direction mirrors the desktop grammar: earning a later section
+           rides up, giving back toward the top rides down. mrest (not a
+           section word on shop-all) indexes as -1 — above everything. */
+        const idx = t => msecs.findIndex(s => s.word === t);
+        drySwap(w, idx(w) < idx(cur));
+      }
+
       function bind() {
+        mbind();
         if (!RELAY_ON) { secs = []; return; }
         tbh = parseFloat(getComputedStyle(document.body).getPropertyValue("--tbh")) || 64;
         secs = [...colpage.querySelectorAll("section[data-col]")].map(sec => {
@@ -7303,6 +7353,7 @@
       function routeReset(word) {
         bind();
         const w = (word === null || word === undefined) ? DOOR : word;
+        mrest = w;   /* the phone watcher's resting word — the routed page's own */
         if (label() !== w) clearWord(w);
       }
       addEventListener("resize", () => { if (!colpage.hidden) bind(); });
@@ -7878,6 +7929,14 @@
          the picks page. Any of them false and it stands down silently. */
       const alive = () => n === dealN && inner.isConnected &&
                           location.hash.replace(/^#/, "") === "my-lisst";
+      /* a stand-down WITHOUT a route must drop its own shield (2026-08-16
+         A/B verify catch): route() removes body.dealing on every routed
+         exit, but an inner DETACHED by a same-page re-render (closeLb's
+         landing belt, a 940 boundary re-dress) stands the ceremony down
+         with the z-6700 shield still up — the page reads frozen until the
+         next route. Newest-deal-guarded so a successor ceremony's shield
+         can never be stripped by its predecessor's bail. */
+      const bail = () => { if (n === dealN) document.body.classList.remove("dealing"); };
       /* THE CEREMONY'S SCROLLS ARE DRIVEN, NOT DELEGATED (round 2 built
          glide for the ride home; round 4 widened it; round 5 settled the
          shape: TWO rides total — the deal's single page-down, timed to
@@ -7994,10 +8053,10 @@
 
       (async () => {
         await wait(30);
-        if (!alive()) return;
+        if (!alive()) return bail();
         if (mast) mast.classList.add("in");
         await wait(PX.mast);
-        if (!alive()) return;
+        if (!alive()) return bail();
         if (empty) {
           empty.classList.add("in");
           inner.classList.remove("picks-deal");
@@ -8026,7 +8085,7 @@
           if (target > scrollY + 6) ride = glide(target, dealTotal * PX.rideX);
         }
         for (let i = 0; i < cells.length; i++) {
-          if (!alive()) { clearMinis(); return; }
+          if (!alive()) { clearMinis(); return bail(); }
           await dealCard(cells[i], i);
         }
         /* the bar is empty now and the page holds every pick — from here
@@ -8039,7 +8098,7 @@
            had been re-rendered since showed nothing at all. */
         stackDealt = true;
         renderPicks();
-        if (!alive()) return;
+        if (!alive()) return bail();
         /* THE CLOSING ARC (re-sequenced round 6: "its okay if the
            message box gets drawn [as the deal ends], pulses should
            still fire around [the parked seat]") — the ride outlasts the
@@ -8050,9 +8109,9 @@
            waits for the parked seat plus the full tail. */
         if (msg) msg.classList.add("in");     /* — here's the message */
         if (ride) await ride;
-        if (!alive()) return;
+        if (!alive()) return bail();
         await wait(PX.tail);
-        if (!alive()) return;
+        if (!alive()) return bail();
         if (send) send.classList.add("in");   /* — and here's how you send it */
         /* the page is YOURS the moment SEND appears (round 5's lock law);
            its pop plays on an unlocked page */
@@ -8061,9 +8120,9 @@
            first offer box: the last thing the reader is shown is the
            thing they are meant to do next */
         await wait(PX.rest);
-        if (!alive()) return;
+        if (!alive()) return bail();
         await glide(0, PX.home);
-        if (!alive()) return;
+        if (!alive()) return bail();
         showOfferCaret(inner);
         /* the gate comes off at the end: every held state drops with it,
            so an interrupted or mis-stepped ceremony can never strand a
@@ -8107,7 +8166,9 @@
     function barWordFor(id) {
       if (id === "my-lisst") return "YOUR PICKS";
       if (id === "shop-all") return "COLLECTIONS";
-      if (!id) return "";   /* home: the mark is the name */
+      if (!id) return "AVRG";   /* home wears the brand word (2026-08-16 A/B —
+                                   supersedes the noword/mark-is-the-name rule;
+                                   the word is the door on home too) */
       const row = document.querySelector('#drop .drow[href="#' + id + '"]');
       return row ? row.textContent.trim().toUpperCase() : "";
     }
@@ -8438,6 +8499,7 @@
       let o = offsetIn(panel, lb);
       lbCard.style.paddingTop = "";
       lbCard.style.maxWidth = "";   /* the phone fold cap below — reset per pass */
+      lbCard.style.paddingBottom = "";   /* the phone band reserve below — same law */
       /* THE HEADER IS PLACED PROPORTIONALLY (2026-08-01): its centre sits at
          headAt of the gap between the sheet top (= the topbar's underside)
          and the card's top edge. So the gap has to be big enough to hold it
@@ -8482,15 +8544,23 @@
       const mst = ST();
       const need = H ? (SB ? fixedHead + H + STRIP_TUNE.gapB
                            : (T.headClr + H / 2) / (1 - T.headAt))
-                     : (SB ? mst.chrome + mst.drop + SB + mst.clr : 0);
-      /* THE FOLD LAW (phone, strip-live): the band's room must NOT push the
-         card's bottom row back below the fold — the exact 852pt bug the
-         header-room retire fixed on 2026-08-07. The card SHRINKS instead:
-         width-capped so band + card fit the sheet (the desktop height
-         guard's job done phone-side; cqw makes the reduction photographic).
-         o is re-measured after — the cap moves the panel's box. */
+                     : (SB ? mst.chrome + mst.drop : 0);
+      /* THE BAND MOVED BELOW THE CARD (2026-08-16 A/B — "move the mini
+         cards on mobile to below the lightbox card"): the phone's top seat
+         is the chrome row alone now, and the band's whole room (clr air +
+         popped band + 12 bottom air) rides as the CARD'S OWN paddingBottom
+         — in-flow, so margin:auto centres card+band as one block and the
+         out-of-flow band can never be sunk into by the centring (the band
+         itself is abs-positioned off g.stripLine below). THE FOLD LAW
+         stands: the card width-caps so chrome + card + band fit the sheet
+         (avail measured against the dvh-tracking height — the layout
+         viewport runs behind iOS's floating bar and an INTERACTIVE band
+         must not live back there; the card may, the 08-08 ruling). */
       if (!H && SB) {
-        const avail = lb.clientHeight - need - 16;
+        const reserve = mst.clr + SB + 12;
+        lbCard.style.paddingBottom = (24 + reserve) + "px";
+        const shH = Math.min(lb.clientHeight, innerHeight - lb.offsetTop);
+        const avail = shH - need - reserve - 16;
         const r = panel.offsetHeight / panel.offsetWidth;
         if (avail > 0 && r > 0)
           lbCard.style.maxWidth =
@@ -8553,6 +8623,15 @@
          to hide — the neighbours paint under the card, so the card itself is the
          occluder. Sliding out from under it is the deal. */
       g.behind = { x: o.x + (hw - w) / 2, y: top, w: w };
+      /* THE BAND'S BELOW-CARD SEAT (2026-08-16 A/B): the minis' rest-bottom
+         line in sheet coords — the card's SHADOW edge (the shadow law:
+         3.8793% of card width, the .d7f panel spec's vertical throw) + clr
+         air to the POPPED band top + the pop's rise + the mini itself.
+         placeStrip consumes it; null everywhere the band isn't phone-live. */
+      g.stripLine = (!H && SB)
+        ? oy + panel.offsetHeight + panel.offsetWidth * .038793 + mst.clr
+          + (mst.mini * 1.51) * (mst.pop - 1) + mst.lift + mst.mini * 1.51
+        : null;
       return g;
     }
 
@@ -8567,7 +8646,7 @@
          inline top, and inline beats the phone block's fixed seat */
       if (g.headTop !== null) lbHead.style.top = g.headTop + "px";
       else lbHead.style.top = "";
-      placeStrip(g.headTop);   /* the strip seats off the same line (self-gated) */
+      placeStrip(g.headTop, g.stripLine);   /* the strip seats off the same geometry (self-gated) */
       NBS.forEach(([el, dir]) => {
         if (!el.classList.contains("live")) return;
         const seat = dir < 0 ? g.L : g.R;
@@ -8576,6 +8655,23 @@
         el.style.left = seat.x + "px";
         el.style.setProperty("--nbx", (-dir * g.T.lean) + "px");
         el.style.setProperty("--nby", (-g.T.lean * .6) + "px");
+      });
+      /* THE DECK NAV seats (2026-08-16 A/B; RE-SEATED same day on his
+         react — "place them just above the flanking cards top corner
+         closest to the lb card". The corridor-centred 5/8 build is
+         superseded: each chevron PERCHES above its own flanker's inner
+         top corner, inner edges flush, at a plain glyph size. It rides
+         that flank's measured seat, so the diagonal deck's two arrows
+         sit at DIFFERENT heights — correct, each answers its card.
+         Runs on mobile too (display:none there) — harmless writes,
+         one code path. */
+      const nw = 18, nh = 30, npad = 10;
+      NAVS.forEach(([nav, nd]) => {
+        const f = nd < 0 ? g.L : g.R;
+        nav.style.width = nw + "px";
+        nav.style.height = nh + "px";
+        nav.style.top = Math.round(f.y - nh - npad) + "px";
+        nav.style.left = Math.round(nd < 0 ? f.x + f.w - nw : f.x) + "px";
       });
     }
 
@@ -8743,7 +8839,7 @@
       const dnm = document.getElementById("lb-fv3-nmt");
       if (dnm && dnm.dataset.dims && !lbCard.classList.contains("flipped")) {
         if (reduced) dnm.textContent = dnm.dataset.dims;
-        else decodeInto(dnm, dnm.dataset.dims);
+        else decodeCollapse(dnm, dnm.dataset.dims);   /* the lb dims read rides THE COLLAPSE (item 2) */
       }
     }
     /* ...and its inverse: shed the previous inspection's dress as a SNAP,
@@ -9251,16 +9347,17 @@
     const STRIP_TUNE = { mini: 46, gap: -8, pop: 1.45, lift: 18, foff: .015,
       fade: .03, maxw: .86, dur: 900, hdur: 400, sit: 250, stag: 50,
       drop: 26, clr: 26, gapB: 46, scoot: 60,
-      /* THE PHONE COSTUME (2026-08-12 evening, "the minis up top" — the
-         NB_TUNE.mob idiom): smaller minis (46 puts 14 boards into a
-         >2:1 shingle at 393), tighter airs, wider lane. chrome is the
-         fixed CLOSE row's underside in SHEET coords — the phone band
-         hangs from it because there is no header line up there (and the
-         counter is gone on phones since the round-2 react — CLOSE alone
-         holds the row). REACT ROUND 2 (Dylan): minis smaller, pop down to
-         the desktop 1.45, NO falloffs (every mini full-size, full-ink —
-         the taper read as fade at 30px), band scooted up (drop) with real
-         air to the card below (clr). */
+      /* THE PHONE COSTUME (2026-08-12 evening — the NB_TUNE.mob idiom):
+         smaller minis (46 puts 14 boards into a >2:1 shingle at 393),
+         tighter airs, wider lane, NO falloffs (every mini full-size,
+         full-ink — the taper read as fade at 30px; round-2 react).
+         RESEATED BELOW THE CARD 2026-08-16 A/B ("move the mini cards on
+         mobile to below the lightbox card"): chrome is the fixed CLOSE
+         row's underside in SHEET coords and now bounds only the CARD's
+         top seat (chrome + drop = the phone `need`); clr re-reads as the
+         air between the card's shadow edge and the POPPED band top —
+         the band's own line comes from deckGeom's g.stripLine and its
+         room rides the card's paddingBottom. */
       mob: { mini: 30, gap: -6, pop: 1.45, lift: 12, maxw: .94,
              foff: 0, fade: 0, drop: 4, clr: 24, chrome: 34 } };
     /* ONE tune, two costumes — every strip read goes through ST() so a
@@ -9315,15 +9412,16 @@
     }
     /* seats the strip off the header line placeDeck computed; measures its
        own geometry (slot pitch, the lane's box) and poses every mini */
-    function placeStrip(headTop) {
+    function placeStrip(headTop, stripLine) {
       const T = ST();
-      /* THE PHONE SEAT (2026-08-12 evening): deckGeom hands no header line
-         under 720 (the counter is fixed chrome), so the band hangs from the
-         chrome row's underside instead — same sB arithmetic, synthesized
-         headTop, so everything below this line is one code path. */
-      if (headTop == null && dockActive() && stripLive() && !lb.hidden) {
-        const h0 = T.mini * 1.51;
-        headTop = T.chrome + T.drop + h0 * (T.pop - 1) + T.lift + h0 + T.clr;
+      /* THE PHONE SEAT — BELOW THE CARD (2026-08-16 A/B, supersedes the
+         chrome-hung band): deckGeom hands the below-card rest-bottom line
+         (g.stripLine — shadow edge + clr + pop room) and the card reserves
+         that room in its own paddingBottom, so the two travel together.
+         Synthesized headTop keeps everything below this line one code
+         path (sB = headTop − clr = stripLine exactly). */
+      if (headTop == null && stripLine != null && dockActive() && stripLive() && !lb.hidden) {
+        headTop = stripLine + T.clr;
       }
       if (!stripLive() || lb.hidden || headTop == null || !lbStrip.children.length) {
         lbSLane.style.display = "none"; sGm = null;
@@ -9999,8 +10097,15 @@
         if (lbSrc) { lbSrc.el.style.visibility = ""; lbSrc = null; }
         if (backCard && !soft) landBeat(backCard);   /* touchdown: press + click — desktop only, the soft return lands silent */
         rails.forEach(r => { r.frozen = false; });   /* the line moves on once the card is home */
-        /* lisst membership may have changed while the lightbox was open */
-        if (location.hash.replace(/^#/, "") === "my-lisst") renderLisst();
+        /* lisst membership may have changed while the lightbox was open —
+           but NEVER under a live picks ceremony (2026-08-16 A/B verify
+           catch): tapping the stack from an open inspection routes to
+           my-lisst, route's own renderLisst is 2ms fresher than this belt,
+           and this re-render was DETACHING the ceremony's DOM — the deal
+           stood down with the shield stranded up. Membership cannot have
+           changed between route's render and this timeout. */
+        if (location.hash.replace(/^#/, "") === "my-lisst" &&
+            !document.querySelector(".picks-deal")) renderLisst();
       }, (reduced || instant) ? 0 : soft ? 930 : 430);
     }
 
@@ -10349,7 +10454,7 @@
            board 14, or in a 2-board collection the same card on both flanks —
            while "a live affordance must never play dead" means the arrow
            can't silently no-op instead. So the end is STATED: the flank stays
-           empty and the arrow goes to the .22 faint (see .lb-fv3nav.off). */
+           empty and the arrow goes to the .22 faint (see .lb-deknav.off). */
         /* deck-held boards are skipped in the press's direction (2026-08-12,
            the strip ruling: "close that gap … and just number jump") — the
            counter's jump from 5/14 to 8/14 IS the "spoken for" tell */
@@ -11001,7 +11106,6 @@
     const bayHline = document.getElementById("bay-hline");
     const bayShelvesEl = document.getElementById("bay-shelves");
     const bayHead = document.getElementById("bay-head");
-    const bayMsgT = document.getElementById("bay-msg-t");
     const bayMsgN = document.getElementById("bay-msg-n");
     const bayTags = document.getElementById("bay-tags");
     /* the manifest points at the column (2026-08-04, same law as the
@@ -13458,42 +13562,24 @@
     const MSGFX = new URLSearchParams(location.search).get("msgfx") || "";
     const bayMsgBtn = document.getElementById("bay-msg");
     if (MSGFX === "wipe" && !reduced && canHover) bay.classList.add("msgfx-wipe");
-    /* ---- the bar's ANNOUNCE (Dylan's spec, 2026-08-03): every full
-       open, the phrase decodes in — the home taglines' own recipe
-       (decodeTo's constants), scoped to the bar. The msg ICON rotates
-       between draws: advanced at DRAIN completion, so the swap happens
-       while the head is invisible and the next draw wears the next
-       glyph. Phrases rotate at each arrival. Both lists are design-pass
-       candidates — edit freely. Runs on every platform (the announce is
-       an arrival gesture, not hover dress); ?msgfx= stays desktop. */
-    const BAY_PHRASES = ["INTERESTED", "CONTACT ME", "MAKE UM YOURS", "GET IN TOUCH"];
+    /* ---- the bar's ANNOUNCE — the rotating phrases RETIRED 2026-08-16
+       A/B (Dylan: "read 'send' infront of the existing msg icon...
+       losing the rotating text phrases"): the bar prints a static SEND
+       from markup now (BAY_PHRASES + bayPhraseDecode live at git a3c9d14
+       if the rotation ever returns). The msg ICON still rotates between
+       draws — advanced at DRAIN completion, so the swap happens while
+       the head is invisible and the next draw wears the next glyph.
+       ?msgfx= stays: it animates the BUTTON, not the phrase. */
     const BAY_MICONS = [
       /* lucide message-square-more · message-circle-more · message-square-text */
       ["M22 17a2 2 0 0 1-2 2H6.828a2 2 0 0 0-1.414.586l-2.202 2.202A.71.71 0 0 1 2 21.286V5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2z", "M12 11h.01", "M16 11h.01", "M8 11h.01"],
       ["M2.992 16.342a2 2 0 0 1 .094 1.167l-1.065 3.29a1 1 0 0 0 1.236 1.168l3.413-.998a2 2 0 0 1 1.099.092 10 10 0 1 0-4.777-4.719", "M8 12h.01", "M12 12h.01", "M16 12h.01"],
       ["M22 17a2 2 0 0 1-2 2H6.828a2 2 0 0 0-1.414.586l-2.202 2.202A.71.71 0 0 1 2 21.286V5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2z", "M7 11h10", "M7 15h6", "M7 7h8"]
     ];
-    let bayPi = 0, bayIi = 0, bayPhraseTimer = null;
+    let bayIi = 0;
     const bayMic = document.getElementById("bay-mic");
     const bayMicApply = () => { bayMic.innerHTML = BAY_MICONS[bayIi].map(d => '<path d="' + d + '"/>').join(""); };
     bayMicApply();
-    function bayPhraseDecode(text) {
-      clearInterval(bayPhraseTimer);
-      const chars = [...text];
-      const at = chars.map((c, i) => i * 0.55 + 3 + Math.random() * 5);
-      let f = 0;
-      bayPhraseTimer = setInterval(() => {
-        f++;
-        let out = "", done = true;
-        for (let i = 0; i < chars.length; i++) {
-          if (chars[i] === " ") { out += " "; continue; }
-          if (f >= at[i]) out += chars[i];
-          else { out += GLYPHS[(Math.random() * GLYPHS.length) | 0]; done = false; }
-        }
-        bayMsgT.textContent = out;
-        if (done) clearInterval(bayPhraseTimer);
-      }, 35);
-    }
     bayHead.addEventListener("transitionend", e => {
       if (e.target !== bayHead || e.propertyName !== "opacity") return;
       if (bay.classList.contains("out")) return;   /* the chip-exit is not an arrival OR a drain */
@@ -13505,11 +13591,6 @@
         return;
       }
       if (reduced) bayHead.classList.add("hdrawn");
-      /* the announce: phrase decodes in once the head has landed (after
-         the wipe's sweep when that costume is on — one gesture, in order) */
-      const ph = BAY_PHRASES[bayPi]; bayPi = (bayPi + 1) % BAY_PHRASES.length;
-      if (reduced) bayMsgT.textContent = ph;
-      else setTimeout(() => bayPhraseDecode(ph), (MSGFX === "wipe" && canHover) ? 560 : 180);
       if (!MSGFX || reduced || !canHover) return;
       if (MSGFX === "wipe") bayMsgBtn.classList.add("msgon");
       else if (MSGFX === "glitch") setTimeout(() => bayMsgBtn.classList.add("glitch-run"), 180);

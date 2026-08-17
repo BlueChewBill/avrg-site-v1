@@ -52,8 +52,8 @@ Pre-cutover changes get made in the **vault working copy** (the page
 that is actually live) and ported into v1 at session end. Deliberate:
 it is the test of whether v1's structure survives real change.
 
-1. Get the delta:
-   `git -C ~/Projects/avrg-site diff 762f975..HEAD -- redesign/k-home-dual.html`
+1. Get the delta (`<baseline>` = the hash recorded below, not a fixed one):
+   `git -C ~/Projects/avrg-site diff <baseline>..HEAD -- redesign/k-home-dual.html`
 2. Apply those hunks to `index.html` here. The two files are
    **identical modulo the path repoints**, so hunk context matches
    unless the hunk itself touches a path.
@@ -70,9 +70,29 @@ it is the test of whether v1's structure survives real change.
    inline-script syntax check in `gotchas.md` first, then the browser.
 6. **Update the baseline hash in this file** to the vault's new HEAD.
 
-**Baseline: `762f975`.**
+**Baseline: `9170375`.**
 
 **Port log**
+- `762f975 → 9170375` (2026-08-16) — **the A/B experiment's WINNER**: the
+  vault half's all-12 implementation (`e8774a5`) plus the chevron re-seat
+  on his react (`9170375`). 49 hunks, **49 clean** — no fuzz, no offsets,
+  no rejects; the `RELAY_ON` marker that fuzzed last time sat outside
+  this delta. **One path translated**, the only one the diff introduces:
+  the blank-card art, `../site/img/avrgbg-buttonflip.png` →
+  `site/img/avrgbg-buttonflip.png`. **The asset itself came across** —
+  the vault web-sized the raw 5.2MB export to 413201 bytes (713×800);
+  both repos now hold identical bytes (md5 `8d044a6e…`), and main's
+  5.2MB original is gone. The divergence check held again: v1-vs-vault
+  came out identical before and after **except the one expected new
+  pair** (the buttonflip repoint), which is what a newly-introduced path
+  is supposed to add. Verified headless (private CDP Chrome, own port +
+  profile — the MCP profile was another session's): zero console errors,
+  exceptions, failed requests and boot errors on all six routes; and the
+  1440×790 lightbox measured **byte-for-byte the same as the vault's own
+  served page** — card 265px, dims line identical, both chevrons seated
+  18×30 at top 402 / left 525·896.
+  **Note:** main is no longer at the A/B baseline — the winner lives here
+  now. `ab-run` (the losing half) is untouched and still awaits harvest.
 - `9aca992 → 762f975` (2026-08-16) — intro react 3 + the dims/flip card
   pass. 18 hunks, 17 clean and 1 at fuzz 1 (v1's own `RELAY_ON` marker
   comment sits in that hunk's trailing context, in `renderShopAll`).

@@ -8330,6 +8330,16 @@
          208 → … → 0. That is Dylan's "strange collections viewing" AND
          the drop menu's page-jump: one line, both complaints. Instant
          puts the top of the page in the same frame as its render. */
+      /* AND THE LOCK'S RESTORE POINT MOVES WITH IT (2026-08-17, his live
+         catch: stack tap from an open lightbox on a scrolled collection
+         dealt the picks page at the OLD BOTTOM — blank screen, last card's
+         lower half). Mechanism: the scrollTo below fires while the body is
+         still PINNED by the closing sheet's lock (position:fixed — nothing
+         to scroll, silent no-op), then closeLb's 0ms landing runs
+         unlockScroll ONE MACROTASK LATER and restores lockY, the departed
+         page's offset. Zeroing lockY makes that deferred restore land at
+         the top too — whichever writer fires last, the answer is 0. */
+      lockY = 0;
       window.scrollTo({ top: 0, left: 0, behavior: "instant" });
       /* the ceremony plays LAST — after lockCardScale has sized the cards
          and after the instant landing, so the first beat is painted at
@@ -10072,6 +10082,13 @@
       if (!dockActive()) unOut();
       populate(ci, k);
       lb.hidden = false;
+      /* THE SHEET OPENS AT ITS OWN TOP (2026-08-17, his live framing catch:
+         card top cut under the bar, chrome overlapped). The sheet is
+         scrollable on iOS even when the card fits — #lb-scrim's 100lvh
+         floor leaves a URL-bar's worth of slack — and a stray pan's offset
+         SURVIVES the close into the next open. Reset before the flight
+         measures its rects, so the open frames the card, always. */
+      lb.scrollTop = 0;
       document.body.classList.add("lb-fade");
       /* touch/mobile only: desktop keeps its page scrollbar in place (the
          vanishing bar read as a glitch next to the sheet's own). The sheet's

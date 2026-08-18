@@ -5982,6 +5982,39 @@
         if (a && f) f.textContent = a.textContent;
       });
     }
+    /* THE DIMS REST (2026-08-18): on YOUR PICKS and on the drawer's
+       shelves a card's standing name line is its DIMS. Both surfaces hold
+       boards already CHOSEN — the read that matters there is the size, not
+       the print — while the collection grids and the home belts, where a
+       board is still being met, keep resting on the name. The WRAPPER is
+       the law (.lisst-card / .bay-item, plus the .dimsrest marker a
+       bay-bound fly wears so its mid-air drain lands rest == rest), so
+       every render path on those surfaces inherits it without asking.
+       Two exemptions, both older laws: an unmeasured board (empty
+       data-dims — the tail) falls back to its name, and a flipped card
+       rests on UNDERSIDE everywhere. */
+    const DIMS_REST = ".lisst-card, .bay-item, .dimsrest";
+    const restsDims = card => !!(card && card.closest && card.closest(DIMS_REST));
+    /* the ONE reader of a card's resting name — every writer below asks it */
+    function restNm(card) {
+      const nmt = card && card.querySelector(".nmt");
+      if (!nmt) return "";
+      if (card.classList.contains("flipped")) return "UNDERSIDE";
+      return (restsDims(card) && nmt.dataset.dims) || nmt.dataset.nm || "";
+    }
+    /* land the dims rest STATICALLY on a freshly rendered dims-rest surface
+       — rest IS the landed state (the deck's dress law), so no scramble
+       replays on a page or case render */
+    function landDims(root) {
+      (root || document).querySelectorAll(".nmt").forEach(nmt => {
+        const card = nmt.closest(".d7f");
+        if (!restsDims(card)) return;
+        const txt = restNm(card);
+        if (!txt || nmt.textContent === txt) return;
+        clearInterval(nmt._t);
+        nmt.textContent = txt;
+      });
+    }
     /* the persistent dress's text half (Dylan, 2026-08-01: the fills just
        stay): land the decoded reads on the lb card, scrambling ONLY what
        actually changes — decoding "AVRG" into "AVRG" would be the exact
@@ -6021,16 +6054,20 @@
         const nmt = card.querySelector(".nmt");
         const dims = nmt && nmt.dataset.dims;
         const want = wantWord(card);
+        /* a dims-rest card is ALREADY showing its dims (THE DIMS REST) —
+           decoding dims into dims would be the same re-animation stayLand
+           rules out, so the changed-only guard rides here too */
+        const newDims = dims && nmt.textContent !== dims;
         if (reduced) {
           if (ref) ref.textContent = "AVRG";
           if (stx) stx.textContent = stx.dataset.txt;
-          if (dims) nmt.textContent = dims;
+          if (newDims) nmt.textContent = dims;
           if (want) want.lft.textContent = want.pick;
           return;
         }
         if (ref) decodeInto(ref, "AVRG");
         if (stx) decodeInto(stx, stx.dataset.txt);
-        if (dims) decodeInto(nmt, dims);
+        if (newDims) decodeInto(nmt, dims);
         if (want) decodeInto(want.lft, want.pick);
       };
       cardDressOff = card => {
@@ -6040,8 +6077,9 @@
         const nmt = card.querySelector(".nmt");
         if (ref) { clearInterval(ref._t); ref.textContent = ref.dataset.ref; }
         if (stx) { clearInterval(stx._t); stx.textContent = ""; }
-        /* a flipped card's resting name is UNDERSIDE, not the print */
-        if (nmt) { clearInterval(nmt._t); nmt.textContent = card.classList.contains("flipped") ? "UNDERSIDE" : nmt.dataset.nm; }
+        /* rest is whatever the card's surface rests on — the print name, the
+           dims (THE DIMS REST), or UNDERSIDE on a flipped card */
+        if (nmt) { clearInterval(nmt._t); nmt.textContent = restNm(card); }
         const lft = card.querySelector(".fc-list .ft");
         if (lft && !/✓/.test(lft.textContent)) {
           /* rest is the bare deck mark — decodeInto("") is an instant
@@ -7668,12 +7706,11 @@
         st.textContent = st.dataset.txt || "";
       });
       /* dims land statically with the status word (2026-08-16, the mobile
-         dims pass): the picks cards sit fully decoded — no scramble
-         replay — and the deal's fly clones the text so the landing
-         matches (rest == rest) */
-      if (M) colpage.querySelectorAll(".lisst-card .nmt").forEach(n => {
-        if (n.dataset.dims) n.textContent = n.dataset.dims;
-      });
+         dims pass; 2026-08-18 THE DIMS REST took the phone gate off — the
+         picks card rests on its dims on every size): the picks cards sit
+         fully decoded — no scramble replay — and the deal's fly clones the
+         text so the landing matches (rest == rest) */
+      landDims(colpage);
       landWants(colpage);   /* every pick prints Mine ! (round 4) */
       lockCardScale();
       /* THE ✕ IS TWO TAPS NOW (round 7: "on first tap the card should
@@ -10405,7 +10442,10 @@
         flyCard.classList.add("left");
         const m = jmeta(COLLECTIONS[ci], b, k);
         const put = (sel, txt) => { const el = fly.querySelector(sel); if (el) el.textContent = txt; };
-        put(".fc-ref .ft", m.ref); put(".nmt", m.nm); put(".sttxt", "");
+        /* the name line drains to the LANDING's rest, not always the print:
+           a bay-bound fly wears .dimsrest, so it settles on the dims the
+           shelf under it is already showing (rest == rest) */
+        put(".fc-ref .ft", m.ref); put(".nmt", restNm(flyCard) || m.nm); put(".sttxt", "");
         put(".fc-list .ft", inLisst(id) ? "✓" : "");
       };
       return { fly, rest };
@@ -10487,6 +10527,7 @@
       bayShutAfterLanding = shutAfter;   /* assigned, not OR'd: a killed arc must not leave it armed */
       const sr = lbCard.getBoundingClientRect();
       const { fly, rest } = buildFly(lbCard, ci, b, k, b.id);
+      fly.classList.add("dimsrest");   /* it's going back to a shelf — THE DIMS REST */
       const id = item.dataset.id;
       lbSrc = null;        /* the instant close must NOT restore the gap early */
       closeLb(true);
@@ -11691,6 +11732,10 @@
         }
         shelves[n].appendChild(item);   /* one card per shelf, one shelf per card */
       });
+      /* the shelf card rests on its dims (2026-08-18, THE DIMS REST) —
+         landed statically at the render, so a rebuild (a removal re-stack,
+         a mid-flight preseat) never replays a scramble */
+      landDims(bayShelvesEl);
       bayShelvesEl.scrollTop = keepScroll;   /* the browser clamps a shrunk column */
       /* an incoming flight must land on a VISIBLE slot: the newest
          preseat is always the last shelf — bring it into view (instant;
@@ -14094,6 +14139,7 @@
        (drag hands over its in-flight card). Returns false if there was
        nothing to seat (caller cleans up its fly). */
     function seatFly(id, fly, rest, sr, opts) {
+      fly.classList.add("dimsrest");   /* every seat lands on a shelf — THE DIMS REST */
       pendingSeat.add(id);
       renderBay();   /* the item now exists, hidden — its rect is the target */
       const item = bay.querySelector('.bay-item.preseat[data-id="' + id + '"]');

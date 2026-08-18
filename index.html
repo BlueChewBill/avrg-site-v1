@@ -138,6 +138,10 @@
      by itself and the drawn bar carries its own DM organ, so both would be
      duplicate doors inside the same header. */
   @media (min-width: 941px) { .drow.home, .drow.dm, .drow.ground { display: none; } }
+  /* No self-row: on the home page the menu lists only the places you can
+     GO — the home row sits out (2026-08-17, the screen-recording pass).
+     body.on-home is stamped by route(). */
+  body.on-home .drow.home { display: none; }
   /* THE ROW FURNITURE RETIRED with the drop-lab dress (2026-08-14): rows are
      centred bare words now — no rdots, no counts, no DM hairline. The chase
      dots (see the drop block) are the drop's only dots; the GROUND row keeps
@@ -1465,6 +1469,15 @@
     transform: rotateY(var(--face, 0deg)) scale(var(--bgrow, 1));
     transition: transform .44s ease, filter .44s ease;
   }
+  /* THE SHADOW TAKES PRECEDENCE OVER THE TEXT (2026-08-17, his ruling:
+     "on all the card renders") — the board + its thrown shadow ride z1,
+     over the info line's z0, under every chip/control's z2: a shadow
+     crossing the name/dims line dims it like a real shadow crossing
+     print, instead of sliding beneath. STAGE ONLY here: the lb card's
+     .frame faces carry their own z choreography (top z1 / parked z−1 —
+     the carousel's hide-behind-the-panel trick) and must never gain a
+     stacking context between them and the panel. */
+  .d7f .stage img { z-index: 1; }
   @media (hover: hover) { :is(.d7f:hover, .d7f.lit) .stage img {
     --bgrow: 1.07;
     filter: drop-shadow(11px 14px 0 rgba(0, 0, 0, .3));
@@ -1766,9 +1779,20 @@
   /* geometry comes from the shared .d7f cqw spec (JS puts .d7f on the
      card) — this block only carries what is genuinely lightbox-specific:
      the ambient throw, the frame-chrome kill, nav, and product slimming */
-  /* 84vw → 80vw (2026-08-16 A/B): the phone lb card shrinks very slightly
-     — this base rule only rules ≤720 (the ≥721 media below overrides) */
-  #lb.fv3 .lb-card { width: min(430px, 80vw); }
+  /* 84vw → 80vw (2026-08-16 A/B) → 73vw (2026-08-17, the screen-recording
+     pass: "shrink the card in lb and keep the board size about the same")
+     — this base rule only rules ≤720 (the ≥721 media below overrides).
+     The BOARD holds its absolute size via the ratio bump below: 80/73 on
+     the old 79/78% seats. */
+  #lb.fv3 .lb-card { width: min(430px, 73vw); }
+  @media (max-width: 720px) {
+    /* board-to-card ratio, phone lb only — the ONE CARD SPEC base is
+       untouched. The exchange/scrub clones (.lbnb — the grid template's
+       .stage dialect) ride the same numbers, or the landing swap would
+       pop the board size (the shadow-identical-landing law's cousin). */
+    #lb.fv3 .lb-card .frame img,
+    #lb.fv3 .lbnb .stage img { max-height: 86.6%; max-width: 85.5%; }
+  }
   @media (min-width: 721px) {
     /* the one-spec card is taller (~1.52:1): the height term keeps the
        WHOLE INSPECTION inside the window (2026-08-16 A/B — "at 1440x790
@@ -1809,7 +1833,22 @@
   }
   #lb.fv3 .lb-card .frame {
     border-radius: 0; background: transparent; box-shadow: none;
+    /* THE CUT LINE'S ROOT (2026-08-17, his sim catch — the board's throw
+       ended in a hard horizontal line above the dims): the bare `.frame`
+       photo-dress rule carries overflow:hidden, and this override killed
+       its radius/bg but never its CLIP — so the filter shadow (and the
+       desktop sun's whole draw) was clipped at the frame square's edge,
+       always. Released here; the panel keeps its own load-bearing hidden
+       overflow, so nothing escapes the card. */
+    overflow: visible;
   }
+  /* (The 2026-08-17 first cut put z-index:1 on .frame/.stage here — REVERTED
+     same day: a z'd .frame is a STACKING CONTEXT, and the flip faces' parked
+     z:-1 poses (the hide-behind-the-panel trick, .bot at rest and .top when
+     flipped) got trapped inside it — the bottom deck peeked out the card's
+     left on every fresh open, his catch. The shadow-over-text law lives on
+     the IMGS now — see the .stage img z rule at the ONE CARD SPEC and the
+     overflow release below. */
   /* the frame card carries name/ref/status/list itself — slim the product
      box down to the DM cta */
   #lb.fv3 #lb-nm, #lb.fv3 .lb-pill, #lb.fv3 #lb-list-btn { display: none; }
@@ -2137,8 +2176,51 @@
   .lbs-lane { position: absolute; z-index: 4; cursor: pointer; display: none;
               touch-action: none; }
   body[data-lb="deck"] #lb.fv3 .lbs-lane { display: block; }
+  /* THE STRIP'S CHROME (2026-08-17, the screen-recording pass — "mini
+     cards were almost out of frame and didnt read as swipe-able"):
+     phone-only (≤720, the below-card band's own boundary). Arrows flank
+     the lane and step ONE board — the card swipe's verb through step(),
+     ends at the .22 faint (the .lb-deknav law). Below the band, the
+     LINE—DOT—LINE: the dot rides under the current board's mini. It
+     tracks a scrub RAW (no transition — the finger owns it) and GLIDES
+     on a press (.glide, stripTo's stamp) so an arrow step never pops it
+     spot to spot. Every box is placeStrip's, same as the lane. */
+  .lbs-arr {
+    position: absolute; z-index: 4; display: none;
+    align-items: center; justify-content: center;
+    width: 34px; height: 48px;
+    background: none; border: 0; padding: 0; margin: 0;
+    color: #fff; cursor: pointer;
+    opacity: 0; transition: opacity .25s ease .12s;
+  }
+  body.light .lbs-arr { color: #000; }
+  .lbs-arr svg { display: block; width: 11px; height: 18px; overflow: visible; }
+  .lbs-arr path { fill: none; stroke: currentColor; stroke-width: 2.5px;
+                  stroke-linecap: butt; stroke-linejoin: miter; }
+  .lbs-prog { position: absolute; z-index: 3; display: none; height: 5px;
+              color: #fff; pointer-events: none;
+              opacity: 0; transition: opacity .25s ease .12s; }
+  body.light .lbs-prog { color: #000; }
+  @media (max-width: 720px) {
+    body[data-lb="deck"] #lb.fv3 .lbs-arr { display: flex; }
+    body[data-lb="deck"] #lb.fv3 .lbs-prog { display: block; }
+  }
+  #lb.in .lbs-arr, #lb.in .lbs-prog { opacity: 1; }
+  #lb.in .lbs-arr.off { opacity: .22; }
+  .lbs-prog .lp, .lbs-prog .lpd { position: absolute; top: 50%; background: currentColor; }
+  .lbs-prog .lp { height: 1.5px; margin-top: -.75px; }
+  /* the segments break at the dot — 9px of air each side, the divider read */
+  .lbs-prog .lp.a { left: 0; width: max(0px, calc(var(--px, 0px) - 9px)); }
+  .lbs-prog .lp.b { left: min(100%, calc(var(--px, 0px) + 9px)); right: 0; }
+  .lbs-prog .lpd { width: 5px; height: 5px; margin: -2.5px 0 0 -2.5px;
+                   border-radius: 50%; left: 0;
+                   transform: translateX(var(--px, 0px)); }
+  .lbs-prog.glide .lpd { transition: transform .6s cubic-bezier(.22,1,.36,1); }
+  .lbs-prog.glide .lp.a { transition: width .6s cubic-bezier(.22,1,.36,1); }
+  .lbs-prog.glide .lp.b { transition: left .6s cubic-bezier(.22,1,.36,1); }
   @media (prefers-reduced-motion: reduce) {
     .lbsmini { transition: none; }
+    .lbs-prog.glide .lpd, .lbs-prog.glide .lp.a, .lbs-prog.glide .lp.b { transition: none; }
   }
 
   /* ---- THE DECK NAV (2026-08-16 A/B, supersedes the on-card build;
@@ -5341,6 +5423,11 @@
          counter. Minis are quiet; the lane owns every pointer job. -->
     <div class="lbstrip" id="lbstrip" aria-hidden="true"></div>
     <div class="lbs-lane" id="lbslane" aria-hidden="true"></div>
+    <!-- THE STRIP'S CHROME (2026-08-17, phone only): arrows flanking the
+         band step one board; the line—dot—line below tracks the lb card -->
+    <button class="lbs-arr prev" id="lbs-prev" type="button" aria-label="Previous board"><svg viewBox="0 0 12 20" aria-hidden="true"><path d="M10 2 L2 10 L10 18"/></svg></button>
+    <button class="lbs-arr next" id="lbs-next" type="button" aria-label="Next board"><svg viewBox="0 0 12 20" aria-hidden="true"><path d="M2 2 L10 10 L2 18"/></svg></button>
+    <div class="lbs-prog" id="lbsprog" aria-hidden="true"><i class="lp a"></i><b class="lpd"></b><i class="lp b"></i></div>
     <div class="carlay" id="carback" aria-hidden="true"></div>
     <button class="lb-close label" id="lb-close" type="button">Close ✕</button>
     <button class="lb-nav lb-prev" id="lb-prev" type="button" aria-label="Previous deck">‹</button>
@@ -6309,7 +6396,7 @@
     /* rows are CENTRED BARE WORDS since the drop-lab dress (2026-08-14) —
        the rdots and counts retired with the old mini-bay furniture */
     document.getElementById("dlist").innerHTML =
-      '<a class="drow home" style="--r:0" href="#"><span class="rt">AVRG</span></a>' +   /* the home row speaks the brand (2026-08-16 A/B) */
+      '<a class="drow home" style="--r:0" href="#"><span class="rt">HOME</span></a>' +   /* the row names the PLACE; only the bar itself wears the brand word (2026-08-17, supersedes the 08-16 A/B "row speaks the brand" call) */
       /* the ALL row retired (2026-08-15, Dylan's launch-day trim): the menu
          is the four collections, one word each. #shop-all still routes —
          only its door left the drop. */
@@ -8222,6 +8309,9 @@
         const p = vid.play(); if (p && p.catch) p.catch(() => {});
         playLogo();   /* the arrival draw — every visit home, not just boot */
       }
+      /* the menu never lists the page you're on: home's own row hides
+         while home is showing (body.on-home gates the CSS) */
+      document.body.classList.toggle("on-home", !home.hidden);
       lockCardScale();   /* after visibility settles — hidden grids measure 0 */
       applyDeckHoles();  /* fresh renders don't know which boards the deck holds */
       /* THE STACK REPOPULATES ON THE WAY OUT — his rule: "a move anywhere
@@ -8557,7 +8647,8 @@
          viewport runs behind iOS's floating bar and an INTERACTIVE band
          must not live back there; the card may, the 08-08 ruling). */
       if (!H && SB) {
-        const reserve = mst.clr + SB + 12;
+        /* + the line—dot—line's room (2026-08-17): prog air + the 5px dot */
+        const reserve = mst.clr + SB + (mst.prog || 0) + 5 + 12;
         lbCard.style.paddingBottom = (24 + reserve) + "px";
         const shH = Math.min(lb.clientHeight, innerHeight - lb.offsetTop);
         const avail = shH - need - reserve - 16;
@@ -8978,6 +9069,10 @@
            lives at git d25ee4a with its edgeScale/edgeDrop knobs */
         el.style.transform = "translateX(" + ((o - c.pos) * c.pitch) + "px)";
       }
+      /* the dot rides the scrub RAW — c.pos is already slot-order space,
+         and the snap tween pumps through here too, so the settle is
+         smooth for free (no transition to fight the per-frame writes) */
+      progTo(c.pos, false);
       const near = Math.max(0, Math.min(c.vis.length - 1, Math.round(c.pos)));
       if (near !== c.near) {            /* a crossing — strip + counter follow the hand */
         c.near = near;
@@ -9358,14 +9453,52 @@
          air between the card's shadow edge and the POPPED band top —
          the band's own line comes from deckGeom's g.stripLine and its
          room rides the card's paddingBottom. */
-      mob: { mini: 30, gap: -6, pop: 1.45, lift: 12, maxw: .94,
-             foff: 0, fade: 0, drop: 4, clr: 24, chrome: 34 } };
+      mob: { mini: 30, gap: -6, pop: 1.45, lift: 12, maxw: .72,
+             foff: 0, fade: 0, drop: 4, clr: 24, chrome: 34,
+             /* the chrome pass (2026-08-17): maxw .94 → .72 buys the
+                arrows their seats (the near-full-width band read as
+                furniture, not a scroller); agap = lane edge → arrow,
+                prog = band rest line → the line—dot—line below it */
+             agap: 8, prog: 18 } };
     /* ONE tune, two costumes — every strip read goes through ST() so a
        boundary crossing re-dresses the same engine (deckGeom's T idiom) */
     const ST = () => dockActive()
       ? Object.assign({}, STRIP_TUNE, STRIP_TUNE.mob) : STRIP_TUNE;
     const lbStrip = document.getElementById("lbstrip");
     const lbSLane = document.getElementById("lbslane");
+    const lbProg = document.getElementById("lbsprog");
+    const lbsPrev = document.getElementById("lbs-prev");
+    const lbsNext = document.getElementById("lbs-next");
+    /* the chrome trio shows only on the phone's below-card band; inline
+       display "none"/"" here, the CSS media gate does the rest */
+    function stripChrome(on) {
+      const d = on ? "" : "none";
+      lbsPrev.style.display = d; lbsNext.style.display = d; lbProg.style.display = d;
+    }
+    /* THE DOT'S ONE WRITER. o is SLOT-ORDER space (sGm.ord / caro.pos),
+       fractional mid-scrub. glide true = the press's eased travel, false =
+       raw finger tracking, undefined = keep the current mode — a geometry
+       re-seat (placeStrip fires mid-exchange via the card's RO) must never
+       cut a glide mid-flight by flipping it back to raw. */
+    function progTo(o, glide) {
+      if (!sGm) return;
+      if (glide !== undefined) lbProg.classList.toggle("glide", glide);
+      const x = Math.max(0, Math.min(sGm.n - 1, o)) * sGm.pitch + sGm.w / 2;
+      lbProg.style.setProperty("--px", x.toFixed(1) + "px");
+    }
+    /* a dead end goes faint, never dark — the .lb-deknav law up a level */
+    function armArrows() {
+      if (!cur) return;
+      const c = COLLECTIONS[cur.ci];
+      lbsPrev.classList.toggle("off", nextVis(c, cur.k, -1) === null);
+      lbsNext.classList.toggle("off", nextVis(c, cur.k, 1) === null);
+    }
+    [[lbsPrev, -1], [lbsNext, 1]].forEach(([el, dir]) => {
+      el.addEventListener("click", e => {
+        e.stopPropagation();           /* the scrim behind is tap-to-close */
+        if (cur && !el.classList.contains("off")) step(dir);
+      });
+    });
     /* the CSS fallbacks match, but STRIP_TUNE is the one source — pin them */
     lbStrip.style.setProperty("--sdur", STRIP_TUNE.dur + "ms");
     lbStrip.style.setProperty("--shd", STRIP_TUNE.hdur + "ms");
@@ -9385,7 +9518,7 @@
     function renderStrip(ci) {
       if (!stripLive()) {
         if (lbStrip.children.length) lbStrip.innerHTML = "";
-        sSig = ""; sGm = null; lbSLane.style.display = "none";
+        sSig = ""; sGm = null; lbSLane.style.display = "none"; stripChrome(false);
         return;
       }
       const c = COLLECTIONS[ci], curK = cur ? cur.k : 0;
@@ -9420,11 +9553,13 @@
          that room in its own paddingBottom, so the two travel together.
          Synthesized headTop keeps everything below this line one code
          path (sB = headTop − clr = stripLine exactly). */
+      let belowBand = false;   /* true only on the phone's below-card seat — the chrome's gate */
       if (headTop == null && stripLine != null && dockActive() && stripLive() && !lb.hidden) {
         headTop = stripLine + T.clr;
+        belowBand = true;
       }
       if (!stripLive() || lb.hidden || headTop == null || !lbStrip.children.length) {
-        lbSLane.style.display = "none"; sGm = null;
+        lbSLane.style.display = "none"; stripChrome(false); sGm = null;
         return;
       }
       const stw = lb.clientWidth;
@@ -9457,6 +9592,26 @@
       lbSLane.style.width = (total + sGm.pad * 2) + "px";
       lbSLane.style.top = (sGm.sB - h - rise) + "px";
       lbSLane.style.height = (h + rise) + "px";
+      /* THE CHROME SEATS WITH THE LANE (2026-08-17): arrows centred on the
+         resting minis' mid-line just off the lane's ends, the line—dot—line
+         under the band spanning exactly the minis' run — so the dot's px is
+         literally the current mini's centre. Single-board strips carry no
+         chrome: two dead arrows and a dot on a 30px line say nothing. */
+      stripChrome(belowBand && n > 1);
+      if (belowBand && n > 1) {
+        const ac = sGm.sB - h / 2;
+        lbsPrev.style.left = (sGm.x0 - sGm.pad - T.agap - 34) + "px";
+        lbsNext.style.left = (sGm.x0 + total + sGm.pad + T.agap) + "px";
+        lbsPrev.style.top = lbsNext.style.top = (ac - 24) + "px";
+        lbProg.style.left = sGm.x0 + "px";
+        lbProg.style.width = total + "px";
+        lbProg.style.top = (sGm.sB + T.prog) + "px";
+        armArrows();
+        /* seat the dot on the live target; mode untouched — an in-flight
+           press glide keeps gliding, a fresh open sits where it lands */
+        const pt = sFocus ?? sPend ?? (cur ? cur.k : 0);
+        progTo(sGm.ord[pt] ?? 0);
+      }
       /* the deal is only SPENT once the sheet's fade is live — an early RO
          placement (lb shown, .in not yet added) would play the whole deal
          at opacity 0 and nobody would ever see it; until then park quietly */
@@ -9514,6 +9669,11 @@
     function stripTo(tk) {
       if (tk != null) sPend = tk;        /* a press aims before cur advances */
       if (!sGm) return;
+      /* the dot GLIDES on a press (swipe commit, arrow, strip jump) — his
+         rule: it takes its time to the next spot, never pops. The scrub's
+         raw tracking lives in caroPose; desktop has no dot (CSS-gated),
+         the write is inert there. */
+      if (tk != null) progTo(sGm.ord[tk] ?? 0, true);
       const target = sFocus ?? sPend ?? (cur ? cur.k : 0);
       const press = tk != null;
       if (!press) {
@@ -9562,6 +9722,7 @@
       clearTimeout(sHovT); sHovT = null;
       sFocus = null; sPend = null;
       lbStrip.classList.remove("sitting", "lifting", "hovlive");
+      lbProg.classList.remove("glide");   /* the next open seats the dot, never glides it in */
       sLifted = cur ? cur.k : null;
     }
     /* the riffle: nearest visible slot by clientX vs the lane's LIVE rect
@@ -14655,8 +14816,11 @@
         const x1 = nb.left + nb.width / 2 - br.left, y1 = nb.top + nb.height / 2 - br.top;
         const rd = document.createElement("div");
         rd.className = "mride";
+        /* the ride carries the ROW'S word — for home that's HOME, not the
+           bar's AVRG, or the word would swap mid-lift; touchdown's decode
+           is what turns it into the brand word at the seat */
         rd.innerHTML = '<i class="md l"></i><i class="md r"></i><b class="mrw">' +
-          esc(barWordFor(id)) + "</b>";
+          esc(id ? barWordFor(id) : "HOME") + "</b>";
         rd.style.cssText = "left:" + (x0 - ms / 2).toFixed(1) + "px;top:" + (y0 - H / 2).toFixed(1) +
           "px;width:" + ms + "px;height:" + H + "px";
         topbarEl.appendChild(rd);

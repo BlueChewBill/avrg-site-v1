@@ -55,7 +55,37 @@ for ref in dims:
     dims_by_prefix.setdefault(ref.split()[0], 0)
     dims_by_prefix[ref.split()[0]] += 1
 
-canva_count = len(re.findall(r'"[a-z0-9-]+":', re.search(r"const CANVA = (\{.*?\});", INDEX, re.S).group(1))) if re.search(r"const CANVA = \{", INDEX) else 0
+canva_src = re.search(r"const CANVA = (\{.*?\});", INDEX, re.S).group(1)
+CANVA = dict(re.findall(r'"([a-z-]+-\d+)":\s*"([a-z0-9.]+-(?:top|bottom))"', canva_src))
+canva_count = len(CANVA)
+
+
+def stem(b):
+    return re.sub(r"-\d+$", "", b["thumb"].split("/")[-1].replace(".jpg", ""))
+
+
+def cut(b):
+    """The live page's CUT law: canva cutout, else the originals Vision cut."""
+    cv = CANVA.get(stem(b))
+    if cv:
+        return f"site/img/cards/canva/{cv}.png"
+    return "site/img/cards/cuts/" + b["thumb"].split("/")[-1].replace(".jpg", "") + "-cut.png"
+
+
+def bot(b):
+    cv = CANVA.get(stem(b))
+    if not cv:
+        return None
+    other = cv.replace("-top", "-bottom") if cv.endswith("-top") else cv.replace("-bottom", "-top")
+    return f"site/img/cards/canva/{other}.png"
+
+
+def invref(b):
+    """INVREF + padRef: 'cl3-top' -> 'CL 03'; fall back to the data.js ref."""
+    cv = CANVA.get(stem(b))
+    m = re.match(r"^([a-z]+)([\d.]+)-", cv or "")
+    ref = f"{m.group(1).upper()} {m.group(2)}" if m else b.get("ref", "")
+    return re.sub(r"(\s)(\d+)", lambda x: x.group(1) + x.group(2).zfill(2), ref)
 canva_files = len(list((ROOT / "site/img/cards/canva").glob("**/*.png")))
 
 ANCHORS = [
@@ -160,20 +190,24 @@ og = [b for c in collections if c["id"] == "originals" for b in c["boards"]]
 
 
 def dims_str(ref):
-    r = dims.get(ref.replace("HS ", "HS ").replace("CL ", "CL "))
+    r = dims.get(re.sub(r"(\s)0(\d)", r"\1\2", ref)) or dims.get(ref)
     return f"{r[0]} × {r[1]} MM" if r else ""
 
 
 def card_html(b, acc, extra_cls="", st="avail", st_txt="AVAILABLE"):
-    ref = b.get("ref", "")
+    ref = invref(b)
     name = (b.get("name") or ref).upper()
     d = dims_str(ref)
     sold = " sold" if st == "gone" else ""
+    hidden_face = bot(b)
+    flip = (f'<button class="fflipc" type="button" data-id="{b["id"]}" aria-label="Flip the board">'
+            f'<img class="fface" loading="lazy" src="{hidden_face}" alt=""></button>') if hidden_face else ""
     return (
         f'<div class="d7f{sold}{extra_cls}" style="--acc:{acc}"><div class="panel">'
         '<div class="inframe"><i class="ctl"></i><i class="cbr"></i><i class="dgl"></i><i class="dgr"></i></div>'
         f'<div class="corner"><span class="fchip fc-ref"><span class="ft" data-ref="{ref}">{ref}</span></span></div>'
-        f'<div class="stage"><img loading="lazy" src="site/{b["thumb"]}" alt="{name}"></div>'
+        + flip +
+        f'<div class="stage"><img loading="lazy" src="{cut(b)}" alt="{name}"></div>'
         '<div class="info">'
         f'<span class="nm"><span class="nmt" data-nm="{name}" data-dims="{d}">{name}</span></span>'
         "</div>"
@@ -234,7 +268,7 @@ bench = f"""<!doctype html>
 </style>
 </head><body>
 <h1 class="cbx-h">CARD — BENCH</h1>
-<p class="cbx-sub">The real card dress (the page's entire CSS, extracted verbatim at generation) on real boards from <code>site/data.js</code>. Meta is simplified: refs are data.js fallbacks (the live page derives canonical <code>INVREF</code> refs), no flip chips (needs the <code>CANVA</code> map), and decode/ceremony JS is absent — this bench shows the <b>dress</b>, the live page owns the <b>behavior</b>. Serve from the repo root (:8124), never file://.</p>
+<p class="cbx-sub">The real card dress (the page's entire CSS, extracted verbatim at generation) on real boards from <code>site/data.js</code>, wearing the real cutout art via the page's own <code>CUT</code>/<code>BOT</code>/<code>INVREF</code> laws (replicated here — refs canonical + padded). Decode/ceremony/flip JS is absent: this bench shows the <b>dress</b>, the live page owns the <b>behavior</b>. (Flip-chip markup rides along, and the real display-gating law hides it here — it only shows on mobile grid slots and the lb card.) Serve from the repo root (:8124), never file://.</p>
 {"".join(rows_html)}
 </body></html>
 """

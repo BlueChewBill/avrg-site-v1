@@ -100,6 +100,9 @@ ANCHORS = [
     ("faceSync + FACE", r"function faceSync", "face memory: cards inherit the last-seen side"),
     ("lockCardScale", r"function lockCardScale", "grid render law: 232px then transform-down"),
     ("migrateHole", r"function migrateHole", "lb exchange re-seats the grid hole on every landing"),
+    ("cardDressOn / cardDressOff", r"cardDressOn = card =>", "the hover decode pair: name<->dims, ref<->AVRG, status in/out — display is a TEXT WRITE, never CSS"),
+    ("stayLand / dockDress", r"function stayLand", "the static text lands (no hover to earn a decode): lb arrival + mobile picks"),
+    ("DRESS_TEXTS", r"const DRESS_TEXTS", "the four text slots the dress systems own (.fc-ref .ft, .nmt, .sttxt, .fc-list .ft)"),
     ("DIMS_MM", r"const DIMS_MM", "hand-authored real dims (data.js is generated, so these live in-page)"),
     ("CANVA / INVREF", r"const CANVA", "cutout map + canonical inventory refs (the jref/refOf law)"),
 ]

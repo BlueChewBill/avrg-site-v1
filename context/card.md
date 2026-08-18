@@ -9,7 +9,7 @@
 ## Facts
 
 <!-- GEN:BEGIN — written by build_context.py, do not hand-edit this block -->
-*Derived 2026-08-18 · commit 1d0f640 · index.html 15104 lines*
+*Derived 2026-08-18 · commit 0b70d36 · index.html 15104 lines*
 
 **The card in numbers**
 - Boards it draws: originals 6 · hand-shaped 14 · classic 19 · resale 0 — 39 total
@@ -30,6 +30,9 @@
 - `faceSync + FACE` (index.html:6322) — face memory: cards inherit the last-seen side
 - `lockCardScale` (index.html:7140) — grid render law: 232px then transform-down
 - `migrateHole` (index.html:10089) — lb exchange re-seats the grid hole on every landing
+- `cardDressOn / cardDressOff` (index.html:6017) — the hover decode pair: name<->dims, ref<->AVRG, status in/out — display is a TEXT WRITE, never CSS
+- `stayLand / dockDress` (index.html:5990) — the static text lands (no hover to earn a decode): lb arrival + mobile picks
+- `DRESS_TEXTS` (index.html:5978) — the four text slots the dress systems own (.fc-ref .ft, .nmt, .sttxt, .fc-list .ft)
 - `DIMS_MM` (index.html:6245) — hand-authored real dims (data.js is generated, so these live in-page)
 - `CANVA / INVREF` (index.html:6155) — cutout map + canonical inventory refs (the jref/refOf law)
 

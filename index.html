@@ -2420,6 +2420,14 @@
      transitions; the JS lerps do all easing. The :hover grow above still
      serves reduced-motion and the pre-takeover instant. */
   #lb.fv3 .lb-card.suntrack .frame img { transition-property: none; }
+  /* THE PINCH'S STAGE (2026-08-17 — the board-only zoom): per-frame writes
+     ride muted transitions (suntrack's touch cousin), and the panel's
+     load-bearing clip OPENS for the session so the lifted board can
+     outgrow the card under the fingers — the clip returns at release.
+     The parked flip face stays hidden through it: its z−1 rides paint
+     order against the panel's background, not the clip. */
+  #lb.fv3 .lb-card.pzoom .frame img { transition: none; }
+  #lb.fv3 .lb-card.pzoom .panel { overflow: visible; }
   /* ---- UNDERSIDES: the lb card runs the CAROUSEL (the behind-the-back
      switch — lb-only, it needs the lateral room). Dylan's landed sketch
      (re-drawn 2026-07-26 — the lab's symmetric far-station excursion
@@ -10887,56 +10895,118 @@
        zoom session can never read as a board-flip tap. closeLb and
        slideExchange reset the pose FIRST — a flight measured off a zoomed
        rect lands wrong. */
-    let pz = null, pzLive = false, pzScale = 1, pzX = 0, pzY = 0, pzT = 0;
+    /* THE PINCH LIFTS THE BOARD, NOT THE CARD (2026-08-17, Dylan: "make
+       the board the only thing that zooms and have its shadow reflect
+       that") — the desktop grow/sun grammar in touch dialect. The card
+       and its chrome stay seated; the VISIBLE FACE scales about the
+       pinch's own point, the hard throw deepens with the lift (the
+       1.00→1.07 : 7/9→11/14 ratio ≈ ×1.6 per unit of grow, extended),
+       and the shadow stays PLANTED under a pan (the sun's ground law —
+       the board slides over its own shadow). Seeding compensates the
+       origin move against the live blift pose (translate = (s−1)(O−C))
+       so nothing jumps at first touch, and the retreat eases to that
+       same compensated rest before the muted final clear. */
+    let pz = null, pzLive = false, pzScale = 1, pzX = 0, pzY = 0, pzT = 0,
+        pzImg = null, pzBase = 1, pzSh = null, pzC = { x: 0, y: 0 };
     function pinchReset() {
       if (!pzLive) return;
       pz = null; pzLive = false; pzScale = 1; pzX = 0; pzY = 0;
-      lbCard.style.transition = "none";
-      lbCard.style.transform = "";
-      lbCard.style.transformOrigin = "";
-      void lbCard.offsetWidth;
-      lbCard.style.transition = "";
+      lbCard.classList.remove("pzoom");
+      if (pzImg) {
+        pzImg.style.transition = "none";
+        pzImg.style.transform = "";
+        pzImg.style.filter = "";
+        pzImg.style.transformOrigin = "";
+        void pzImg.offsetWidth;
+        pzImg.style.transition = "";
+        pzImg = null;
+      }
     }
     lb.addEventListener("touchstart", e => {
       if (!dockActive() || !cur || drag || e.touches.length < 2) return;
+      if (lbCard.classList.contains("flipping")) return;   /* the carousel owns the board mid-gesture */
       pzT = performance.now();
       swX = null; swMode = null;   /* a pinch is never a swipe */
       const a = e.touches[0], b = e.touches[1];
       const mx = (a.clientX + b.clientX) / 2, my = (a.clientY + b.clientY) / 2;
       if (!pzLive) {
-        const r = lbCard.getBoundingClientRect();
-        lbCard.style.transformOrigin = (mx - r.left) + "px " + (my - r.top) + "px";
+        pzImg = document.getElementById(lbCard.classList.contains("flipped") ? "lb-bot" : "lb-big");
+        /* a re-pinch mid-retreat inherits inline pose + transition — clear
+           to the CSS rest under a mute first, so every baseline below reads
+           the true resting pose (no-op on a rest-state first touch) */
+        pzImg.style.transition = "none";
+        pzImg.style.transform = "";
+        pzImg.style.filter = "";
+        pzImg.style.transformOrigin = "";
+        void pzImg.offsetWidth;
+        pzImg.style.transition = "";
+        const r = pzImg.getBoundingClientRect();
+        if (!r.width) { pzImg = null; return; }
+        /* origin in the img's LOCAL (unscaled) space; the rect is scaled */
+        const w0 = pzImg.offsetWidth, h0 = pzImg.offsetHeight;
+        const lx = (mx - r.left) * (w0 / r.width), ly = (my - r.top) * (h0 / r.height);
+        /* seed from the LIVE pose (blift's 1.07 rides here) — and moving
+           the origin re-anchors that scale, so the compensating translate
+           (s−1)(O−C) keeps the screen pose identical at first touch */
+        const t = getComputedStyle(pzImg).transform;
+        pzBase = t === "none" ? 1 : (new DOMMatrix(t)).a || 1;
+        pzC = { x: (pzBase - 1) * (lx - w0 / 2), y: (pzBase - 1) * (ly - h0 / 2) };
+        /* the shadow baseline rides the same seed (the sun's lazy-scan) */
+        const sm = /drop-shadow\(.*?(-?[\d.]+)px\s+(-?[\d.]+)px/.exec(getComputedStyle(pzImg).filter);
+        pzSh = { x: sm ? +sm[1] : 9, y: sm ? +sm[2] : 11 };
+        pzImg.style.transformOrigin = lx + "px " + ly + "px";
+        pzScale = pzBase; pzX = pzC.x; pzY = pzC.y;
+        lbCard.classList.add("pzoom");   /* mutes img transitions + opens the panel window */
         pzLive = true;
       }
       pz = {
         d0: Math.hypot(a.clientX - b.clientX, a.clientY - b.clientY),
         mx: mx, my: my, s0: pzScale, x0: pzX, y0: pzY
       };
-      lbCard.style.transition = "none";
     }, { passive: true });
     lb.addEventListener("touchmove", e => {
-      if (!pz || e.touches.length < 2) return;
+      if (!pz || !pzImg || e.touches.length < 2) return;
       pzT = performance.now();
       e.preventDefault();   /* ours end to end — no page zoom, no scroll */
       const a = e.touches[0], b = e.touches[1];
       const d = Math.hypot(a.clientX - b.clientX, a.clientY - b.clientY);
       const mx = (a.clientX + b.clientX) / 2, my = (a.clientY + b.clientY) / 2;
-      pzScale = Math.min(3, Math.max(1, pz.s0 * (d / pz.d0)));
+      pzScale = Math.min(pzBase * 3, Math.max(pzBase, pz.s0 * (d / pz.d0)));
       pzX = pz.x0 + (mx - pz.mx);
       pzY = pz.y0 + (my - pz.my);
-      lbCard.style.transform = "translate(" + pzX + "px," + pzY + "px) scale(" + pzScale + ")";
+      /* lift: the throw deepens ×1.6 per unit of grow (the desktop hover's
+         own ratio); ground: the shadow gives back most of the pan, so it
+         stays planted while the board slides over it */
+      const m = 1 + (pzScale / pzBase - 1) * 1.6;
+      pzImg.style.transform = "translate(" + pzX + "px," + pzY + "px) scale(" + pzScale + ")";
+      pzImg.style.filter = "drop-shadow(" + (pzSh.x * m - (pzX - pzC.x) * .8).toFixed(1) + "px "
+        + (pzSh.y * m - (pzY - pzC.y) * .8).toFixed(1) + "px 0 rgba(0,0,0,.3))";
     }, { passive: false });
     function pzEnd(e) {
       if (!pzLive) return;
       if (e.touches.length >= 2) return;                 /* still pinching */
       if (e.touches.length === 1) { pz = null; return; } /* the hold */
-      /* input clear: the retreat, always */
+      /* input clear: the retreat, always — eased to the COMPENSATED rest
+         (the origin is still at the pinch point, so a bare "" would land
+         (s−1)(O−C) off and jump when the origin cleared); the muted final
+         clear at 400ms swaps to the true CSS pose with zero visual delta */
       pz = null; pzLive = false; pzScale = 1; pzX = 0; pzY = 0;
       swcAte = performance.now();   /* the lift-off must not tap the board */
-      lbCard.style.transition = "transform .38s cubic-bezier(.22,1,.36,1)";
-      lbCard.style.transform = "";
+      const img = pzImg, rx = pzC.x, ry = pzC.y, rs = pzBase, rsh = pzSh;
+      pzImg = null;
+      if (!img) return;
+      lbCard.classList.remove("pzoom");   /* the panel's clip returns */
+      img.style.transition = "transform .38s cubic-bezier(.22,1,.36,1), filter .38s cubic-bezier(.22,1,.36,1)";
+      img.style.transform = "translate(" + rx + "px," + ry + "px) scale(" + rs + ")";
+      img.style.filter = "drop-shadow(" + rsh.x + "px " + rsh.y + "px 0 rgba(0,0,0,.3))";
       setTimeout(() => {
-        if (!pzLive) { lbCard.style.transition = ""; lbCard.style.transformOrigin = ""; }
+        if (pzLive || pzImg) return;   /* a re-pinch took the img back */
+        img.style.transition = "none";
+        img.style.transform = "";
+        img.style.filter = "";
+        img.style.transformOrigin = "";
+        void img.offsetWidth;
+        img.style.transition = "";
       }, 400);
     }
     lb.addEventListener("touchend", pzEnd, { passive: true });

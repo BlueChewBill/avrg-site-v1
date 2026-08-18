@@ -14153,6 +14153,15 @@
            NO PICKUPS FROM A HOME-OPENED INSPECTION (2026-08-01): the
            front page takes no adds, and a drag's only jobs are adds
            and removes — on home the card is a click-and-look object. */
+        /* THE PHONE INSPECTION LOST ITS GRAB (2026-08-17, Dylan: "remove
+           the ability to grab a card in lightbox on mobile") — the hold
+           pickup kept stealing the pinch's FIRST finger (holdMs fired
+           while the second finger was still landing, and the card stuck
+           to the thumb). ADD is the phone's whole add path; the carry
+           was desktop grammar visiting. Desktop lb grabs are untouched,
+           and with the hold gone the pinch owns two fingers anywhere on
+           the sheet, uncontested. */
+        if (mob) return;
         if (colpage.hidden) return;
         if (!cur || !e.target.closest("#lb-card") || e.target.closest("#lb-thumbs")) return;
         id = lbListBtn.dataset.id;

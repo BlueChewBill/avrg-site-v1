@@ -6306,6 +6306,31 @@
        replaced, and the price-tag before that, both RETIRED 2026-08-05. */
     const SCRIPTSVG =
       '<svg class="fscript" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path fill-rule="evenodd" shape-rendering="crispEdges" d="M6 2.5h13v19H6V2.5Z M7.4 4.3v15.4h10.2V4.3H7.4Z"/><rect shape-rendering="crispEdges" x="9.8" y="6.5" width="1.4" height="3"/><rect shape-rendering="crispEdges" x="9.8" y="14.5" width="1.4" height="3"/><circle cx="10.5" cy="12" r="1.2"/><path class="sh" shape-rendering="crispEdges" d="M3.5 4.5V23.5H16.5V21H6.5V4.5Z"/></svg>';
+    /* THE CARD REMEMBERS ITS FACE (2026-08-17, Dylan: "keeps its last seen
+       side across its versions") — session memory, board-id keyed, bottom-
+       last-seen ids only. THREE WRITERS, all user gestures: setFlip (the lb
+       flip), flipStage (grid chips), flipCaret (picks) — silent/mechanical
+       resets never write. ONE READ POINT: the fv3 template below, so every
+       rendition — grid, picks page, stack minis, strip, flankers, exchange
+       clones, flights — inherits the face automatically at render. faceSync
+       re-faces an ALREADY-rendered card in place (the close flight's landing
+       pad, the live grid card behind an lb flip) so no surface has to wait
+       for a re-render to agree. */
+    const FACE = new Set();
+    const faceImg = m => (m.bot && FACE.has(m.id)) ? m.bot : m.img;
+    const faceHid = m => (m.bot && FACE.has(m.id)) ? m.img : m.bot;
+    function faceSync(cardEl) {
+      if (!cardEl) return;
+      const chip = cardEl.querySelector(".fflipc");
+      const img = cardEl.querySelector(".stage img, .frame img");
+      if (!chip || !img || !chip.dataset.bot || cardEl === lbCard) return;
+      const bot = FACE.has(chip.dataset.id || "");
+      const want = bot ? chip.dataset.bot : chip.dataset.top;
+      if (img.getAttribute("src") !== want) img.src = want;
+      if (bot) img.dataset.flipped = "1"; else delete img.dataset.flipped;
+      const face = chip.querySelector(".fface");
+      if (face) face.src = bot ? chip.dataset.top : chip.dataset.bot;
+    }
     const JCARDS = {
       framev3: m =>
         /* no `canflip` and no kick: rendered cards do not 3D-flip since the
@@ -6322,9 +6347,11 @@
           '<div class="inframe"><i class="ctl"></i><i class="cbr"></i><i class="dgl"></i><i class="dgr"></i></div>' +
           (m.spark ? '<span class="spark tspark" title="Builder\'s mark — this one came out perfect">✱</span>' : '') +
           '<div class="corner"><span class="fchip fc-ref"><span class="ft" data-ref="' + esc(m.ref) + '">' + esc(m.ref) + '</span></span></div>' +
-          (m.bot ? '<button class="fflipc" type="button" data-top="' + esc(m.img) + '" data-bot="' + esc(m.bot) +
-            '" aria-label="Flip the board"><img class="fface" loading="lazy" src="' + esc(m.bot) + '" alt=""></button>' : '') +
-          '<div class="stage"><img loading="lazy" src="' + m.img + '" alt="' + esc(m.nm) + '"></div>' +
+          (m.bot ? '<button class="fflipc" type="button" data-id="' + esc(m.id) + '" data-top="' + esc(m.img) + '" data-bot="' + esc(m.bot) +
+            '" aria-label="Flip the board"><img class="fface" loading="lazy" src="' + esc(faceHid(m)) + '" alt=""></button>' : '') +
+          /* the stage wears the REMEMBERED face (FACE law above); the
+             data-flipped stamp keeps flipStage/flipCaret's toggle honest */
+          '<div class="stage"><img loading="lazy"' + (m.bot && FACE.has(m.id) ? ' data-flipped="1"' : '') + ' src="' + faceImg(m) + '" alt="' + esc(m.nm) + '"></div>' +
           '<div class="info">' +
             '<span class="nm"><span class="nmt" data-nm="' + esc(m.nm) + '" data-dims="' + esc(m.dimsPh) + '">' + esc(m.nm) + '</span></span>' +
           '</div>' +
@@ -7733,8 +7760,13 @@
           const now = performance.now();
           if (!bot || !img || now - (+img.dataset.flipT || 0) < 300) return;
           img.dataset.flipT = now;
-          if (!img.dataset.top) img.dataset.top = img.getAttribute("src");
+          /* CANONICAL top, never the current src (2026-08-17, the face
+             memory): a card can now RENDER bottom-up, and seeding "top"
+             from what's showing would flip bottom↔bottom forever */
+          if (!img.dataset.top) img.dataset.top = CUT(b);
           const toBot = !img.dataset.flipped;
+          /* the face memory's picks writer */
+          if (toBot) FACE.add(bid); else FACE.delete(bid);
           img.style.transition = "scale .13s ease-in";
           img.style.scale = "0 1";
           setTimeout(() => {
@@ -9977,12 +10009,26 @@
         /* src="" would request the PAGE as an image — clear by attribute */
         if (bp) lbBot.src = bp; else lbBot.removeAttribute("src");
         lbCard.classList.toggle("canflip", !!bp && j === 0);
+        /* THE INSPECTION ARRIVES ON THE REMEMBERED FACE (2026-08-17): a
+           board last seen bottom-up lands bottom-up — the landed-flip POSE
+           (.flipped.fset), no animation, sun re-aimed. lbBig/lbBot stay
+           canonical (top/bot) so the carousel's grammar is untouched, and
+           the name line keeps the grid's rule — the face never renames the
+           card; UNDERSIDE is the gesture's own word (setFlip's). */
+        const wantBot = !!bp && j === 0 && FACE.has(b.id);
+        lbCard.classList.toggle("flipped", wantBot);
+        lbCard.classList.toggle("fset", wantBot);
+        lbCard.classList.remove("unflipped", "flipping");
+        sunImg = wantBot ? lbBot : lbBig;
         lbBig.title = (bp && j === 0) ? "Flip the board" : "View the whole collection";
         /* the phone flip chip's mini shows the face you are NOT looking
            at — populate always lands top-side-up, so it starts on the
            bottom; setFlip swaps it with the state (clear by attribute,
            the src="" law) */
         const ffc = document.getElementById("lb-fface");
+        /* the chip shows the face you are NOT looking at — top when the
+           memory landed us bottom-up */
+        const chipFace = wantBot ? CUT(b) : bp;
         if (ffc) {
           if (bp && j === 0) {
             /* THE CHIP NEVER WEARS THE LAST BOARD'S FACE (2026-08-17, his
@@ -9992,7 +10038,7 @@
                hit answers synchronously via .complete and never blinks. */
             ffc.style.visibility = "hidden";
             ffc.onload = () => { ffc.style.visibility = ""; ffc.onload = null; };
-            ffc.src = bp;
+            ffc.src = chipFace;
             if (ffc.complete) { ffc.style.visibility = ""; ffc.onload = null; }
           } else { ffc.onload = null; ffc.removeAttribute("src"); }
         }
@@ -10238,6 +10284,10 @@
          close the lb themselves, but a case inspection or stale source
          can still route here). The fade is enough. */
       if (backCard && backCard.classList.contains("indeck")) backCard = null;
+      /* the landing pad wears the remembered face BEFORE the reveal — the
+         returning card may carry the bottom while the slot was rendered
+         top-up, and a landing must never snap faces (2026-08-17) */
+      faceSync(backCard);
       /* deck target: the close rides the same ARC as the add — the
          straight flip b-lined back through the drawer (2026-07-24) */
       if (backCard && backCard.classList.contains("bay-item")) { lbToShelfArc(backCard); return; }
@@ -14682,6 +14732,23 @@
         ff.onload = null; ff.style.visibility = "";
         ff.src = on ? lbBig.src : (lbBot.src || lbBig.src);
       }
+      /* THE FACE MEMORY'S LB WRITER (2026-08-17): only the GESTURE writes —
+         silent stand-downs are mechanical resets and must not forget the
+         user's choice. The board's live grid card and strip mini re-face
+         NOW (the page is faded behind the sheet, the swap is unwatched) so
+         no already-rendered surface waits for a re-render to agree. */
+      if (!silent && card === lbCard && cur && lbBot.src) {
+        const fb = COLLECTIONS[cur.ci].boards[cur.k];
+        if (fb) {
+          if (on) FACE.add(fb.id); else FACE.delete(fb.id);
+          /* the inspected board's own slot is HIDDEN (openLb lifted it),
+             and sourceFrame skips hidden cards — sync the held source
+             element itself; the visible-slot lookup covers a swiped-to
+             board whose slot never lifted */
+          faceSync(lbSrc && lbSrc.ci === cur.ci && lbSrc.k === cur.k ? lbSrc.el : sourceFrame());
+          faceSync(lbStrip.querySelector('.lbsmini[data-k="' + cur.k + '"] .d7f'));
+        }
+      }
       if (silent) {
         card.classList.remove("unflipped", "flipping", "fset");
         if (nmt) { clearInterval(nmt._t); nmt.textContent = nmt.dataset.nm; }
@@ -14787,6 +14854,9 @@
       if (now - (+img.dataset.flipT || 0) < 300) return;
       img.dataset.flipT = now;
       const toBot = !img.dataset.flipped;
+      /* the face memory's grid writer — the chip carries its board's id */
+      const fid = chip.dataset.id;
+      if (fid) { if (toBot) FACE.add(fid); else FACE.delete(fid); }
       const face = chip.querySelector(".fface");
       img.style.transition = "scale .13s ease-in";
       img.style.scale = "0 1";

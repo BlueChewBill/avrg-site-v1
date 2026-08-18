@@ -9,7 +9,7 @@
 ## Facts
 
 <!-- GEN:BEGIN — written by build_context.py, do not hand-edit this block -->
-*Derived 2026-08-18 · commit 0b70d36 · index.html 15104 lines*
+*Derived 2026-08-18 · commit bf753dd · index.html 15104 lines*
 
 **The card in numbers**
 - Boards it draws: originals 6 · hand-shaped 14 · classic 19 · resale 0 — 39 total
@@ -23,7 +23,8 @@
 - `jmeta` (index.html:6280) — shapes a data.js board into card meta (acc, ref, dims, cutouts)
 - `cardInner / renderColPage` (index.html:7173) — collection-page grids (.scard slots)
 - `bindScards` (index.html:7157) — grid slot wiring: click/keyboard -> openLb
-- `renderLisst` (index.html:7497) — YOUR PICKS page cards
+- `renderLisst` (index.html:7497) — YOUR PICKS page cards (one producer for both dresses: YOUR PICKS on the dock side, My Lisst on desktop)
+- `renderBay` (index.html:11619) — draws the drawer/bay shelf cards — the shelf's producer (flyToBay is only the flight)
 - `the shop conveyor` (index.html:11066) — home belt cards (recycler owns their visibility)
 - `flyToBay` (index.html:14147) — card -> drawer flight
 - `setFlip / flipStage` (index.html:14712) — the flip system (chip = the hidden-face mini)
@@ -31,7 +32,7 @@
 - `lockCardScale` (index.html:7140) — grid render law: 232px then transform-down
 - `migrateHole` (index.html:10089) — lb exchange re-seats the grid hole on every landing
 - `cardDressOn / cardDressOff` (index.html:6017) — the hover decode pair: name<->dims, ref<->AVRG, status in/out — display is a TEXT WRITE, never CSS
-- `stayLand / dockDress` (index.html:5990) — the static text lands (no hover to earn a decode): lb arrival + mobile picks
+- `stayLand / dockDress` (index.html:5990) — the static text lands (no hover to earn a decode) — note: stayLand resolves dims||name, so THE LB CARD ALREADY RESTS ON DIMS on desktop
 - `DRESS_TEXTS` (index.html:5978) — the four text slots the dress systems own (.fc-ref .ft, .nmt, .sttxt, .fc-list .ft)
 - `DIMS_MM` (index.html:6245) — hand-authored real dims (data.js is generated, so these live in-page)
 - `CANVA / INVREF` (index.html:6155) — cutout map + canonical inventory refs (the jref/refOf law)
@@ -65,13 +66,15 @@
 - **Face memory has one reader** — the `FACE` set is written by three gestures but read in ONE place (the template). New render paths inherit it for free; do not add a second reader.
 - **The card decode is width × length only** — tail/nose is lightbox-only ("too much noise on a card decode"). Phones don't decode want-words. Status text is written by JS — the text IS the state.
 - **The lazy law works FOR us** — hidden imgs are 0×0 boxes that never load. Costumes must preserve it.
+- **Rest == rest, no touchdown pop** — a flight drains its texts mid-air toward its DESTINATION's rest state (`buildFly`'s drain). Any change to what a surface rests on must ride the drain too, or cards pop at landing.
+- **PH_DIMS is a placeholder table** — `jmeta.dimsPh` merges `DIMS_MM` (real) with `PH_DIMS` (demo values). Anything that makes dims MORE prominent makes the placeholders more prominent too; know which table a string came from.
 
 **Taste.** No borders on the card face. No new chrome without a react round. Changes to how the card *looks* are collided as variants for Dylan to react to — never spec'd straight to done.
 
 ## Success criteria for a scoped change here
 
 1. **Syntax-check the inline script first** (one stray comment kills the whole 15k-line file silently — the one-liner is in [gotchas.md](../.claude/docs/gotchas.md)).
-2. Serve from the repo root on **:8124** — never `file://`.
+2. Serve from the repo root on **:8124** — never `file://`. Browser-console checks: the whole inline script is one IIFE — nothing is reachable on `window`; drive checks through synthetic DOM events on real elements. Deck membership (`myLisst`) persists across reloads — a "fresh" check may start with boards already decked.
 3. Verify, minimum: desktop ≥1280 hover dress · **iPhone 15 Pro sim (393×852)** grid + lightbox · card→lb open/close flight lands every edge · flip in grid AND lb · blank-card behavior with a board decked · home belts still recycle.
 4. If the change is gated/experimental: defaults stay **bit-identical** (pixel-verify).
 5. Rerun `python3 build_context.py` so the Facts above stay honest; append the decision + why to [.claude/docs/cards.md](../.claude/docs/cards.md).

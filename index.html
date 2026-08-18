@@ -9975,7 +9975,19 @@
            bottom; setFlip swaps it with the state (clear by attribute,
            the src="" law) */
         const ffc = document.getElementById("lb-fface");
-        if (ffc) { if (bp && j === 0) ffc.src = bp; else ffc.removeAttribute("src"); }
+        if (ffc) {
+          if (bp && j === 0) {
+            /* THE CHIP NEVER WEARS THE LAST BOARD'S FACE (2026-08-17, his
+               catch: HS 18's corner held HS 07's bottom for a beat). A bare
+               src swap keeps the OLD decoded pixels on screen until the new
+               file lands — hide until this src's own load answers; a cache
+               hit answers synchronously via .complete and never blinks. */
+            ffc.style.visibility = "hidden";
+            ffc.onload = () => { ffc.style.visibility = ""; ffc.onload = null; };
+            ffc.src = bp;
+            if (ffc.complete) { ffc.style.visibility = ""; ffc.onload = null; }
+          } else { ffc.onload = null; ffc.removeAttribute("src"); }
+        }
         /* clones pre-load at populate so the first gesture never pays the
            decode (a first-flip stutter reads as chop) */
         [[".ctop", bp && lbBig.src], [".cbot", bp]].forEach(([sel, src]) => {
@@ -14592,7 +14604,14 @@
          silent return on purpose: a populate reset re-writes it anyway,
          but a mid-lb silent stand-down must not strand a stale face */
       const ff = card === lbCard ? document.getElementById("lb-fface") : null;
-      if (ff && lbBig.src) ff.src = on ? lbBig.src : (lbBot.src || lbBig.src);
+      /* both faces are on screen / preloaded by flip time, so this write
+         needs no load gate — but it must CLEAR a pending one (populate
+         hides the chip until its src loads; a fast flip mid-load would
+         inherit the hidden state and strand the chip blank) */
+      if (ff && lbBig.src) {
+        ff.onload = null; ff.style.visibility = "";
+        ff.src = on ? lbBig.src : (lbBot.src || lbBig.src);
+      }
       if (silent) {
         card.classList.remove("unflipped", "flipping", "fset");
         if (nmt) { clearInterval(nmt._t); nmt.textContent = nmt.dataset.nm; }

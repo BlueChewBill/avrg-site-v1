@@ -1855,6 +1855,16 @@
     #lb.fv3 .lbnb .stage img { max-height: 86.6%; max-width: 85.5%; }
   }
   @media (min-width: 721px) {
+    /* THE BOARD GROWS 20% (2026-08-19, his ask: "i want the centered board
+       to be larger on the lightbox card. 20pct size increase") — desktop
+       lb only, the ONE CARD SPEC base (79/78) untouched, exactly as the
+       phone block works. The CLONES ride the same numbers (.lbnb — the
+       exchange/scrub actors are the grid template's .stage dialect) or a
+       promoted flank would pop to a different board size at the landing:
+       the phone's own ratio law, and it is why the resting neighbours
+       grow with the hero rather than being left behind. */
+    #lb.fv3 .lb-card .frame img,
+    #lb.fv3 .lbnb .stage img { max-height: 94.8%; max-width: 93.6%; }
     /* the one-spec card is taller (~1.52:1): the height term keeps the
        WHOLE INSPECTION inside the window (2026-08-16 A/B — "at 1440x790
        the lightbox view should hold all its components comfortably").
@@ -2283,9 +2293,17 @@
   .lbs-prog.glide .lpd { transition: transform .6s cubic-bezier(.22,1,.36,1); }
   .lbs-prog.glide .lp.a { transition: width .6s cubic-bezier(.22,1,.36,1); }
   .lbs-prog.glide .lp.b { transition: left .6s cubic-bezier(.22,1,.36,1); }
+  /* THE DRAG (2026-08-19): the desktop riffle's own clock — nearly twice
+     the press glide, easing out the whole way, so the dot reads as being
+     TOWED by the raised card rather than tracking it. Same three
+     properties, so the line's break travels with the dot as one object. */
+  .lbs-prog.drag .lpd { transition: transform 1.1s cubic-bezier(.33,1,.68,1); }
+  .lbs-prog.drag .lp.a { transition: width 1.1s cubic-bezier(.33,1,.68,1); }
+  .lbs-prog.drag .lp.b { transition: left 1.1s cubic-bezier(.33,1,.68,1); }
   @media (prefers-reduced-motion: reduce) {
     .lbsmini { transition: none; }
-    .lbs-prog.glide .lpd, .lbs-prog.glide .lp.a, .lbs-prog.glide .lp.b { transition: none; }
+    .lbs-prog.glide .lpd, .lbs-prog.glide .lp.a, .lbs-prog.glide .lp.b,
+    .lbs-prog.drag .lpd, .lbs-prog.drag .lp.a, .lbs-prog.drag .lp.b { transition: none; }
   }
 
   /* ---- THE DECK NAV (2026-08-16 A/B, supersedes the on-card build;
@@ -9617,18 +9635,25 @@
        counter a bit of breathing room between the two"). RE-POINTED
        2026-08-19 with the counter-leads re-order: drop is now the air
        between the COUNTER and the band's popped top, and clr the air
-       below the line—dot—line down to the card. */
+       below the line—dot—line down to the card. THE SCOOT, same day
+       (his react: "lets scoot the mini row and its line up"): drop 26 →
+       12 and clr 26 → 46 move the band and its line UP ~21px while the
+       card holds its seat — the two knobs are the same air either side
+       of the group, so trading between them slides the group without
+       touching anything below it. Minis 40 → 37 with it. */
     /* THE DESKTOP RESET (2026-08-19, his four asks in one pass): the
        counter moved ABOVE the band, the minis came down 46 → 40 and
-       tightened -8 → -10 (overlap 17% → 25%; -14 was tried and read as a squeeze — the boards stopped being legible one by one), and the row went FLAT — foff/fade to 0, so
+       tightened -8 → -10 (overlap 17% → 25%; -14 was tried and read as a
+       squeeze — the boards stopped being legible one by one), and the row
+       went FLAT — foff/fade to 0, so
        every mini rests at one height and one ink and the only card up is
        the one matching the lb card (the phone's own 2026-08-12 ruling,
        now the house rule on both costumes). `gapB` retired with the move:
        it was the counter→card air, and nothing sits there any more.
        `prog` joins the desktop set for the line—dot—line below the band. */
-    const STRIP_TUNE = { mini: 40, gap: -10, pop: 1.45, lift: 18, foff: 0,
+    const STRIP_TUNE = { mini: 37, gap: -10, pop: 1.45, lift: 18, foff: 0,
       fade: 0, maxw: .86, dur: 900, hdur: 400, sit: 250, stag: 50,
-      drop: 26, clr: 26, prog: 18, scoot: 60,
+      drop: 12, clr: 46, prog: 18, scoot: 60,
       /* THE PHONE COSTUME (2026-08-12 evening — the NB_TUNE.mob idiom):
          smaller minis (46 puts 14 boards into a >2:1 shingle at 393),
          tighter airs, wider lane, NO falloffs (every mini full-size,
@@ -9671,9 +9696,18 @@
        raw finger tracking, undefined = keep the current mode — a geometry
        re-seat (placeStrip fires mid-exchange via the card's RO) must never
        cut a glide mid-flight by flipping it back to raw. */
-    function progTo(o, glide) {
+    function progTo(o, mode) {
       if (!sGm) return;
-      if (glide !== undefined) lbProg.classList.toggle("glide", glide);
+      /* THREE CLOCKS NOW (2026-08-19): false = raw finger tracking (the
+         phone scrub), true = the press's .6s glide, "drag" = the desktop
+         riffle's long trail (his ask: "have our line dot chase the rifle,
+         slow smoothe motion, dragging behind the card row scrub").
+         undefined = keep the current mode — a geometry re-seat must never
+         cut a travel mid-flight by flipping it back to raw. */
+      if (mode !== undefined) {
+        lbProg.classList.toggle("glide", mode === true);
+        lbProg.classList.toggle("drag", mode === "drag");
+      }
       const x = Math.max(0, Math.min(sGm.n - 1, o)) * sGm.pitch + sGm.w / 2;
       lbProg.style.setProperty("--px", x.toFixed(1) + "px");
     }
@@ -9882,6 +9916,12 @@
         clearTimeout(sLiftT); sLiftT = null;
         lbStrip.classList.remove("sitting", "lifting");
         sLifted = target;
+        /* THE DOT CHASES THE HAND (2026-08-19) on its own long clock, so it
+           trails the raised card instead of keeping up with it — the cards
+           answer every move instantly, the dot takes its time. The same
+           travel carries it home when the cursor leaves (sFocus null →
+           target falls back to cur). */
+        progTo(sGm.ord[target] ?? 0, "drag");
         poseStrip();
         return;
       }
@@ -9915,7 +9955,7 @@
       clearTimeout(sHovT); sHovT = null;
       sFocus = null; sPend = null;
       lbStrip.classList.remove("sitting", "lifting", "hovlive");
-      lbProg.classList.remove("glide");   /* the next open seats the dot, never glides it in */
+      lbProg.classList.remove("glide", "drag");   /* the next open seats the dot, never travels it in */
       sLifted = cur ? cur.k : null;
     }
     /* the riffle: nearest visible slot by clientX vs the lane's LIVE rect

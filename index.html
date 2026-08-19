@@ -1858,17 +1858,19 @@
     /* the one-spec card is taller (~1.52:1): the height term keeps the
        WHOLE INSPECTION inside the window (2026-08-16 A/B — "at 1440x790
        the lightbox view should hold all its components comfortably").
-       The old 120px budget predated the strip: the head stack above the
-       card is headClr 12 + drop 26 + band ~119 + clr 26 + counter ~24 +
-       gapB 46 ≈ 253, plus the card's 24px bottom pad and the dims line
-       (~39 with its margin — a first-class component now that the desc
-       retired) — 320 is that stack stated once (re-derive if STRIP_TUNE
-       or the dims spec moves). Assets come down on short displays by
+       The old 120px budget predated the strip. RE-DERIVED 2026-08-19 with
+       the counter-leads re-order and the smaller minis: the head stack is
+       headClr 12 + counter ~29 + drop 26 + band ~106 (mini 40) + prog 18
+       + dot 5 + clr 26 ≈ 222 (measured 222), plus the card's 24px bottom pad and the dims
+       line (~39 with its margin — a first-class component now that the
+       desc retired) — 285 is that stack stated once (re-derive if
+       STRIP_TUNE or the dims spec moves; gapB left the stack with the
+       counter). Assets come down on short displays by
        construction: 790-tall ≈ a 268px card with the dims line inside
        the fold, 900-tall ≈ 337, the 430 cap binds from ~1012px windows.
        Floor 260 so it never dwindles (280 was binding at exactly 790 and
        pushing the dims line back out); past the floor the sheet scrolls. */
-    #lb.fv3 .lb-card { width: max(260px, min(430px, calc((100dvh - var(--tbh, 0px) - 320px) / 1.53))); }
+    #lb.fv3 .lb-card { width: max(260px, min(430px, calc((100dvh - var(--tbh, 0px) - 285px) / 1.53))); }
   }
   #lb.fv3 .lb-card .panel {
     /* base shadow restated (id-specificity) + the lightbox ambient throw */
@@ -2262,9 +2264,11 @@
               color: #fff; pointer-events: none;
               opacity: 0; transition: opacity .25s ease .12s; }
   body.light .lbs-prog { color: #000; }
+  /* the line—dot—line rides BOTH costumes (2026-08-19); the arrows stay
+     the phone's, since desktop steps from the on-card nav chevrons */
+  body[data-lb="deck"] #lb.fv3 .lbs-prog { display: block; }
   @media (max-width: 720px) {
     body[data-lb="deck"] #lb.fv3 .lbs-arr { display: flex; }
-    body[data-lb="deck"] #lb.fv3 .lbs-prog { display: block; }
   }
   #lb.in .lbs-arr, #lb.in .lbs-prog { opacity: 1; }
   #lb.in .lbs-arr.off { opacity: .22; }
@@ -5488,12 +5492,14 @@
         <span class="lbh-pos"><span class="lbh-cur" id="lbh-cur"></span><span class="lbh-tot" id="lbh-tot"></span></span>
       </span>
     </div>
-    <!-- THE COLLECTION STRIP (2026-08-12): the collection strung above the
-         counter. Minis are quiet; the lane owns every pointer job. -->
+    <!-- THE COLLECTION STRIP (2026-08-12): the collection strung BELOW the
+         counter (2026-08-19 — the counter leads on desktop now) and above
+         the card. Minis are quiet; the lane owns every pointer job. -->
     <div class="lbstrip" id="lbstrip" aria-hidden="true"></div>
     <div class="lbs-lane" id="lbslane" aria-hidden="true"></div>
-    <!-- THE STRIP'S CHROME (2026-08-17, phone only): arrows flanking the
-         band step one board; the line—dot—line below tracks the lb card -->
+    <!-- THE STRIP'S CHROME (2026-08-17): arrows flanking the band step one
+         board — PHONE ONLY, desktop steps from the on-card chevrons. The
+         line—dot—line below the band tracks the lb card on BOTH (08-19). -->
     <button class="lbs-arr prev" id="lbs-prev" type="button" aria-label="Previous board"><svg viewBox="0 0 12 20" aria-hidden="true"><path d="M10 2 L2 10 L10 18"/></svg></button>
     <button class="lbs-arr next" id="lbs-next" type="button" aria-label="Next board"><svg viewBox="0 0 12 20" aria-hidden="true"><path d="M2 2 L10 10 L2 18"/></svg></button>
     <div class="lbs-prog" id="lbsprog" aria-hidden="true"><i class="lp a"></i><b class="lpd"></b><i class="lp b"></i></div>
@@ -8784,17 +8790,28 @@
          card modes), and then this whole term vanishes. */
       const SB = stripBand();
       /* strip-live, the header block is TOP-ANCHORED chrome: a fixed stack
-         from the sheet top (band drop + band + counter air), so the card's
-         minimum seat is plain arithmetic and the counter's below-air (gapB)
-         GROWS on tall windows as the card centers away. Without the strip,
-         the original proportional headAt placement stands untouched. */
-      const fixedHead = SB ? T.headClr + STRIP_TUNE.drop + SB + STRIP_TUNE.clr : 0;
+         from the sheet top, so the card's minimum seat is plain arithmetic
+         and the air below the stack GROWS on tall windows as the card
+         centres away. Without the strip, the original proportional headAt
+         placement stands untouched. */
+      /* THE COUNTER LEADS (2026-08-19, his call: "move the counter to
+         above the card minis"). The desktop stack from the sheet top is
+         still plain arithmetic, just re-ordered — and it now carries the
+         line—dot—line the phone has had since 08-17:
+
+           headClr → counter H → drop → band SB → prog + dot → clr → card
+
+         dTop is the counter's own seat (it leads, so it is simply the
+         top clearance); dLine is the band's rest-bottom, which is what
+         placeStrip seats everything else off. */
+      const dTop = T.headClr;
+      const dLine = T.headClr + H + STRIP_TUNE.drop + SB;
       /* PHONE (H = 0): the strip band still wants its room — the card's
          minimum seat is the chrome row + the band + clearance (placeStrip's
          own phone arithmetic, read through the same ST costume). The
          deficit loop below is regime-proof either side. */
       const mst = ST();
-      const need = H ? (SB ? fixedHead + H + STRIP_TUNE.gapB
+      const need = H ? (SB ? dLine + STRIP_TUNE.prog + 5 + STRIP_TUNE.clr
                            : (T.headClr + H / 2) / (1 - T.headAt))
                      : (SB ? mst.chrome + mst.drop : 0);
       /* THE BAND MOVED BELOW THE CARD (2026-08-16 A/B — "move the mini
@@ -8865,7 +8882,7 @@
         /* CLAMPED, so a short viewport degrades instead of painting the
            header on the card or under the bar: the proportional seat is the
            intent, headClr at either end of the gap is the guarantee. */
-        headTop: H ? (SB ? fixedHead
+        headTop: H ? (SB ? dTop
                      : Math.max(T.headClr, Math.min(T.headAt * oy - H / 2, oy - H - T.headClr))) : null
       };
       /* off-sheet staging: a whole card-width clear of each edge, so an entering
@@ -8881,10 +8898,10 @@
          3.8793% of card width, the .d7f panel spec's vertical throw) + clr
          air to the POPPED band top + the pop's rise + the mini itself.
          placeStrip consumes it; null everywhere the band isn't phone-live. */
-      g.stripLine = (!H && SB)
-        ? oy + panel.offsetHeight + panel.offsetWidth * .038793 + mst.clr
-          + (mst.mini * 1.51) * (mst.pop - 1) + mst.lift + mst.mini * 1.51
-        : null;
+      g.stripLine = !SB ? null
+        : H ? dLine                      /* desktop: under the counter */
+            : oy + panel.offsetHeight + panel.offsetWidth * .038793 + mst.clr
+              + (mst.mini * 1.51) * (mst.pop - 1) + mst.lift + mst.mini * 1.51;
       return g;
     }
 
@@ -9597,13 +9614,21 @@
     /* MOTION RETUNE + LOWER SEATING (2026-08-12, Dylan's slider screenshot:
        step 900 · hover 400 · sit 250 · stag 50 — the luxurious clock; plus
        "skoot the big cards down lower, same with the minis, and give the
-       counter a bit of breathing room between the two"). drop pushes the
-       whole strip band down from the sheet top; clr is the counter's air
-       ABOVE (strip rest line → counter), gapB its minimum air BELOW
-       (counter → card top; grows on tall windows since the card centers). */
-    const STRIP_TUNE = { mini: 46, gap: -8, pop: 1.45, lift: 18, foff: .015,
-      fade: .03, maxw: .86, dur: 900, hdur: 400, sit: 250, stag: 50,
-      drop: 26, clr: 26, gapB: 46, scoot: 60,
+       counter a bit of breathing room between the two"). RE-POINTED
+       2026-08-19 with the counter-leads re-order: drop is now the air
+       between the COUNTER and the band's popped top, and clr the air
+       below the line—dot—line down to the card. */
+    /* THE DESKTOP RESET (2026-08-19, his four asks in one pass): the
+       counter moved ABOVE the band, the minis came down 46 → 40 and
+       tightened -8 → -10 (overlap 17% → 25%; -14 was tried and read as a squeeze — the boards stopped being legible one by one), and the row went FLAT — foff/fade to 0, so
+       every mini rests at one height and one ink and the only card up is
+       the one matching the lb card (the phone's own 2026-08-12 ruling,
+       now the house rule on both costumes). `gapB` retired with the move:
+       it was the counter→card air, and nothing sits there any more.
+       `prog` joins the desktop set for the line—dot—line below the band. */
+    const STRIP_TUNE = { mini: 40, gap: -10, pop: 1.45, lift: 18, foff: 0,
+      fade: 0, maxw: .86, dur: 900, hdur: 400, sit: 250, stag: 50,
+      drop: 26, clr: 26, prog: 18, scoot: 60,
       /* THE PHONE COSTUME (2026-08-12 evening — the NB_TUNE.mob idiom):
          smaller minis (46 puts 14 boards into a >2:1 shingle at 393),
          tighter airs, wider lane, NO falloffs (every mini full-size,
@@ -9631,11 +9656,15 @@
     const lbProg = document.getElementById("lbsprog");
     const lbsPrev = document.getElementById("lbs-prev");
     const lbsNext = document.getElementById("lbs-next");
-    /* the chrome trio shows only on the phone's below-card band; inline
-       display "none"/"" here, the CSS media gate does the rest */
-    function stripChrome(on) {
-      const d = on ? "" : "none";
-      lbsPrev.style.display = d; lbsNext.style.display = d; lbProg.style.display = d;
+    /* SPLIT 2026-08-19: the line—dot—line rides BOTH costumes now (his
+       ask: "underneath the card row, lets give it the same line dot line
+       that mobile gets"), while the ARROWS stay the phone's — desktop
+       steps from the on-card nav chevrons. Inline display "none"/"" here,
+       the CSS gate does the rest. */
+    function stripChrome(prog, arrows) {
+      lbProg.style.display = prog ? "" : "none";
+      const d = (prog && arrows) ? "" : "none";
+      lbsPrev.style.display = d; lbsNext.style.display = d;
     }
     /* THE DOT'S ONE WRITER. o is SLOT-ORDER space (sGm.ord / caro.pos),
        fractional mid-scrub. glide true = the press's eased travel, false =
@@ -9680,7 +9709,7 @@
     function renderStrip(ci) {
       if (!stripLive()) {
         if (lbStrip.children.length) lbStrip.innerHTML = "";
-        sSig = ""; sGm = null; lbSLane.style.display = "none"; stripChrome(false);
+        sSig = ""; sGm = null; lbSLane.style.display = "none"; stripChrome(false, false);
         return;
       }
       const c = COLLECTIONS[ci], curK = cur ? cur.k : 0;
@@ -9709,19 +9738,19 @@
        own geometry (slot pitch, the lane's box) and poses every mini */
     function placeStrip(headTop, stripLine) {
       const T = ST();
-      /* THE PHONE SEAT — BELOW THE CARD (2026-08-16 A/B, supersedes the
-         chrome-hung band): deckGeom hands the below-card rest-bottom line
-         (g.stripLine — shadow edge + clr + pop room) and the card reserves
-         that room in its own paddingBottom, so the two travel together.
-         Synthesized headTop keeps everything below this line one code
-         path (sB = headTop − clr = stripLine exactly). */
-      let belowBand = false;   /* true only on the phone's below-card seat — the chrome's gate */
-      if (headTop == null && stripLine != null && dockActive() && stripLive() && !lb.hidden) {
-        headTop = stripLine + T.clr;
-        belowBand = true;
-      }
-      if (!stripLive() || lb.hidden || headTop == null || !lbStrip.children.length) {
-        lbSLane.style.display = "none"; stripChrome(false); sGm = null;
+      /* THE BAND'S OWN LINE ANCHORS BOTH COSTUMES (2026-08-19). deckGeom
+         hands `stripLine` — the minis' rest-bottom — for the phone's
+         below-card band AND for the desktop band under the counter, so
+         everything that seats off the band is one code path. headTop is
+         kept as the fallback for any caller that still passes only the
+         counter's seat (sB = headTop − clr, the pre-move contract).
+         `belowCard` is the PHONE's flag alone: it gates the arrows, which
+         desktop does not take (its nav is the on-card chevrons). */
+      const band = stripLine != null ? stripLine
+                 : (headTop != null ? headTop - T.clr : null);
+      const belowCard = stripLine != null && dockActive();
+      if (!stripLive() || lb.hidden || band == null || !lbStrip.children.length) {
+        lbSLane.style.display = "none"; stripChrome(false, false); sGm = null;
         return;
       }
       const stw = lb.clientWidth;
@@ -9743,7 +9772,7 @@
       const first = lbStrip.querySelector(".lbsmini:not(.held) > *");
       sGm = { vis, ord, n, w, h, pitch, total,
               x0: (stw - total) / 2,
-              sB: headTop - T.clr,
+              sB: band,
               REFH: (first && first.offsetHeight) || 350,
               pad: w * (T.pop - 1) / 2 };
       /* the lane: a STATIC hit surface over the strip's full raised extent,
@@ -9759,16 +9788,18 @@
          under the band spanning exactly the minis' run — so the dot's px is
          literally the current mini's centre. Single-board strips carry no
          chrome: two dead arrows and a dot on a 30px line say nothing. */
-      stripChrome(belowBand && n > 1);
-      if (belowBand && n > 1) {
-        const ac = sGm.sB - h / 2;
-        lbsPrev.style.left = (sGm.x0 - sGm.pad - T.agap - 34) + "px";
-        lbsNext.style.left = (sGm.x0 + total + sGm.pad + T.agap) + "px";
-        lbsPrev.style.top = lbsNext.style.top = (ac - 24) + "px";
+      stripChrome(n > 1, belowCard);
+      if (n > 1) {
+        if (belowCard) {
+          const ac = sGm.sB - h / 2;
+          lbsPrev.style.left = (sGm.x0 - sGm.pad - T.agap - 34) + "px";
+          lbsNext.style.left = (sGm.x0 + total + sGm.pad + T.agap) + "px";
+          lbsPrev.style.top = lbsNext.style.top = (ac - 24) + "px";
+          armArrows();
+        }
         lbProg.style.left = sGm.x0 + "px";
         lbProg.style.width = total + "px";
         lbProg.style.top = (sGm.sB + T.prog) + "px";
-        armArrows();
         /* seat the dot on the live target; mode untouched — an in-flight
            press glide keeps gliding, a fresh open sits where it lands */
         const pt = sFocus ?? sPend ?? (cur ? cur.k : 0);

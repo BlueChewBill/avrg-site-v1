@@ -6011,7 +6011,7 @@
         if (!restsDims(card)) return;
         const txt = restNm(card);
         if (!txt || nmt.textContent === txt) return;
-        clearInterval(nmt._t);
+        clearInterval(nmt._t); nmt._t = null;   /* decodeEl's lesson: null the handle */
         nmt.textContent = txt;
       });
     }
@@ -6079,7 +6079,7 @@
         if (stx) { clearInterval(stx._t); stx.textContent = ""; }
         /* rest is whatever the card's surface rests on — the print name, the
            dims (THE DIMS REST), or UNDERSIDE on a flipped card */
-        if (nmt) { clearInterval(nmt._t); nmt.textContent = restNm(card); }
+        if (nmt) { clearInterval(nmt._t); nmt._t = null; nmt.textContent = restNm(card); }
         const lft = card.querySelector(".fc-list .ft");
         if (lft && !/✓/.test(lft.textContent)) {
           /* rest is the bare deck mark — decodeInto("") is an instant

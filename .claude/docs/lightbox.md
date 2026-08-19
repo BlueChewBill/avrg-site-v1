@@ -75,3 +75,15 @@ Verified on :8124 at 1440×900: counter 76 → row 160 → line 234 → card 277
 Budget re-derived 285 → 321 with the taller stack.
 
 Verified on :8124 at 1440×900: seat dead-centre over its mini (639 = 639), a full scrub to another mini leaves it untouched, a step shows the number changed and the seat moved at opacity 0, landing re-aligned (666 = 666). Fits at 1440×790 and 1440×900. No console errors.
+
+### React 3 — pop down, the seat fixed at its source, SOLD no longer see-through (2026-08-19, ported)
+
+**POP `1.45 → 1.3`** on the desktop base (`mob` keeps its own), which shrinks the band and the whole stack with it.
+
+**THE FIRST-DRAW SEAT was a real race.** `populate` calls `setHead` BEFORE it assigns `cur`, so any `placeStrip` landing in that window (the card's RO fires constantly through a populate) seated the counter on whatever `cur` still pointed at — or on **slot 0 when `cur` was null, i.e. every first open**. Correction depended on a later re-seat firing, which is why it read as intermittent. Fixed at the source: **`setHead` writes the seat as it writes the number**, so the two can never disagree and no caller needs to know about `cur`; and **`seatHead` lost its fallback slot**, so with nothing to seat on it leaves the counter alone rather than guessing 0. `sHeadK` moved above its writer (setHead runs long before the strip block's statements — a `let` reached in its TDZ kills the script). `headSwap`'s explicit re-seat is gone; it already calls `setHead` inside the fade at opacity 0.
+
+**SOLD DIMS ITS COLOUR, NOT ITS CARD.** The blanket `.sold { opacity: .55 }` made the whole card translucent, so wherever cards overlap — the strip's shingle above all — the neighbour read straight through. `.d7f.sold` is opaque and the board carries it (`grayscale(.85) brightness(1.12)`). The filter rides the **img, never `.stage`** (a filter there makes a stacking context and traps the flip faces' parked `z:−1`), so the drop-shadow is restated with it — and again at **hover weight**, since `:is(.d7f:hover, .d7f.lit) .stage img` outranks the sold block and washed the grey out on hover. Legacy specs keep the old blanket rule.
+
+Budget re-tuned 321 → 292 (the landed stack exceeds the knob sum — the scoot's margin:auto share grows with the card — so the constant is tuned against measured slack, not derived).
+
+Verified on :8124: first-draw seat delta 0 at 1440×900 and 1280×800, sold opaque with the greyed board, nothing over the fold. No console errors.

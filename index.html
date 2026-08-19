@@ -1478,10 +1478,36 @@
      the carousel's hide-behind-the-panel trick) and must never gain a
      stacking context between them and the panel. */
   .d7f .stage img { z-index: 1; }
+  /* THE SOLD BOARD DIMS ITS COLOUR, NOT ITS CARD (2026-08-19, his ask:
+     "keep its opacity just fade / dim its color so its neighboring card
+     cant be seen through it"). The blanket `.sold { opacity: .55 }` made
+     the whole CARD translucent, so anywhere cards overlap — the strip's
+     shingle above all — you read the neighbour straight through a sold
+     one. The card is opaque again here and the BOARD carries the sold
+     read instead: desaturated and lifted, no transparency anywhere.
+     The filter goes on the IMG, never on .stage — a filter makes a
+     stacking context, and one on .stage would trap the flip faces'
+     parked z:−1 exactly as the 2026-08-17 z lesson describes — which
+     means the drop-shadow has to be restated alongside it (both the px
+     fallback and the cqw, in that order, like the base rule). */
+  .d7f.sold { opacity: 1; }
+  .d7f.sold .stage img, .d7f.sold .frame img {
+    filter: grayscale(.85) brightness(1.12) drop-shadow(7px 9px 0 rgba(0, 0, 0, .18));
+    filter: grayscale(.85) brightness(1.12) drop-shadow(3.0172cqw 3.8793cqw 0 rgba(0, 0, 0, .18));
+  }
   @media (hover: hover) { :is(.d7f:hover, .d7f.lit) .stage img {
     --bgrow: 1.07;
     filter: drop-shadow(11px 14px 0 rgba(0, 0, 0, .3));
     filter: drop-shadow(4.7414cqw 6.0345cqw 0 rgba(0, 0, 0, .3));
+  } }
+  /* the sold read SURVIVES the hover: the rule above outranks the sold
+     block on specificity (:is takes its widest arm), so the grey would
+     wash out the moment the cursor landed. Restated at hover weight,
+     with the hover shadow — a sold card still answers the hand, it just
+     never gets its colour back. */
+  @media (hover: hover) { :is(.d7f.sold:hover, .d7f.sold.lit) .stage img {
+    filter: grayscale(.85) brightness(1.12) drop-shadow(11px 14px 0 rgba(0, 0, 0, .18));
+    filter: grayscale(.85) brightness(1.12) drop-shadow(4.7414cqw 6.0345cqw 0 rgba(0, 0, 0, .18));
   } }
   /* ---- UNDERSIDES (flip-lab port — vault repo, 2026-07-25) ----
      Board click flips to the underside — the object is the control.
@@ -1870,18 +1896,20 @@
        the lightbox view should hold all its components comfortably").
        The old 120px budget predated the strip. RE-DERIVED 2026-08-19 with
        the counter-leads re-order and the smaller minis: the head stack is
-       headClr 12 + counter ~16 (13px type) + drop 12 + band ~99 (mini 37)
-       + prog 18 + dot 5 + clr 72 ≈ 258 (MEASURED 258 — measure it, the
-       counter's height moves with its font size), plus the card's 24px bottom pad and the dims
+       headClr 12 + counter ~16 (13px type) + drop 12 + band ~91 (mini 37
+       at pop 1.3) + prog 18 + dot 5 + clr 72 ≈ 219 — but the LANDED stack is bigger than
+       that sum (the scoot's margin:auto share grows with the card), so
+       this number is TUNED against the measured dims-line slack, not
+       derived: 282 left it 2-3px over the fold, 292 lands it inside, plus the card's 24px bottom pad and the dims
        line (~39 with its margin — a first-class component now that the
-       desc retired) — 321 is that stack stated once (re-derive if
+       desc retired) — 292 is that stack stated once (re-derive if
        STRIP_TUNE or the dims spec moves; gapB left the stack with the
        counter). Assets come down on short displays by
        construction: 790-tall ≈ a 268px card with the dims line inside
        the fold, 900-tall ≈ 337, the 430 cap binds from ~1012px windows.
        Floor 260 so it never dwindles (280 was binding at exactly 790 and
        pushing the dims line back out); past the floor the sheet scrolls. */
-    #lb.fv3 .lb-card { width: max(260px, min(430px, calc((100dvh - var(--tbh, 0px) - 321px) / 1.53))); }
+    #lb.fv3 .lb-card { width: max(260px, min(430px, calc((100dvh - var(--tbh, 0px) - 292px) / 1.53))); }
   }
   #lb.fv3 .lb-card .panel {
     /* base shadow restated (id-specificity) + the lightbox ambient throw */
@@ -8735,12 +8763,27 @@
        spans: only the number changes board to board, and only the number
        animates. Shared by populate and by the shuffle's mid-flight swap, so
        the two paths can never write the header differently. */
+    /* declared HERE, above its writer, not down in the strip block: setHead
+       runs on the open path long before that block's statements, and a `let`
+       reached in its TDZ kills the whole script (the 2026-08-16 bite). */
+    let sHeadK = null;
     function setHead(c, b, k) {
       const tag = refOf(b, k, c), cut = tag.lastIndexOf(" ");
       lbhPre.textContent = cut < 0 ? "" : tag.slice(0, cut + 1);
       lbhNum.textContent = cut < 0 ? tag : tag.slice(cut + 1);
       lbhCur.textContent = k + 1;
       lbhTot.textContent = " / " + c.boards.length;
+      /* THE SEAT IS WRITTEN WITH THE NUMBER (2026-08-19, his catch: "the
+         counter is static on its first light box draw instead of above the
+         current selected lb card"). It used to be seated from `cur`, and
+         populate calls setHead BEFORE it assigns cur — so a placeStrip
+         firing in that window (the card's RO fires constantly through a
+         populate) seated the counter on the board cur still pointed at, or
+         on slot 0 when cur was null, which is the FIRST open every time.
+         Whether a later re-seat corrected it was pure timing. Writing both
+         here closes the window by construction: there is no moment where
+         the number and its seat disagree, and seatHead never has to guess. */
+      seatHead(k);
     }
     const nbPrev = document.getElementById("lbnb-prev");
     const nbNext = document.getElementById("lbnb-next");
@@ -9053,11 +9096,11 @@
       headT = setTimeout(() => {
         if (my !== xactN) return;
         const c = COLLECTIONS[ci];
+        /* setHead re-seats the counter as it writes the number, and this is
+           the moment INSIDE the fade — the out has just finished, the in has
+           not started — so the counter is at opacity 0 and its travel across
+           the band is never seen */
         setHead(c, c.boards[k], k);
-        /* the move happens HERE, inside the fade: the out has just finished
-           and the in has not started, so the counter is at opacity 0 and
-           its travel across the band is never seen */
-        seatHead(k);
         lbHead.classList.remove("swapping");
         lbHead.classList.add("swapped");
         /* cleanup rides the ENTER'S OWN animationend, not a timer. A timer
@@ -9669,7 +9712,7 @@
        now the house rule on both costumes). `gapB` retired with the move:
        it was the counter→card air, and nothing sits there any more.
        `prog` joins the desktop set for the line—dot—line below the band. */
-    const STRIP_TUNE = { mini: 37, gap: -10, pop: 1.45, lift: 18, foff: 0,
+    const STRIP_TUNE = { mini: 37, gap: -10, pop: 1.3, lift: 18, foff: 0,
       fade: 0, maxw: .86, dur: 900, hdur: 400, sit: 250, stag: 50,
       drop: 12, clr: 72, prog: 18, scoot: 60,
       /* THE PHONE COSTUME (2026-08-12 evening — the NB_TUNE.mob idiom):
@@ -9805,9 +9848,11 @@
        the landing. A geometry re-seat mid-exchange (placeStrip fires off
        the card's RO) would otherwise yank the counter back to the old
        board, the same hazard the dot's glide mode guards against. */
-    let sHeadK = null;
     function seatHead(k) {
       if (k != null) sHeadK = k;
+      /* NO FALLBACK SLOT: with nothing to seat on, leave the counter where
+         it is rather than guessing 0 — guessing is what parked it on the
+         first mini through every open. */
       const o = sGm && sHeadK != null ? sGm.ord[sHeadK] : null;
       if (o == null || dockActive() || !stripLive() || lb.hidden) {
         lbHead.style.left = lbHead.style.right = lbHead.style.width = "";
@@ -9890,8 +9935,8 @@
         progTo(sGm.ord[pt] ?? 0);
       }
       /* the counter re-seats with the geometry, on the board it is CURRENTLY
-         showing (sHeadK) — never on the scrub's focus */
-      seatHead(sHeadK ?? (cur ? cur.k : 0));
+         showing (sHeadK, written by setHead) — never on the scrub's focus */
+      seatHead();
       /* the deal is only SPENT once the sheet's fade is live — an early RO
          placement (lb shown, .in not yet added) would play the whole deal
          at opacity 0 and nobody would ever see it; until then park quietly */

@@ -10634,8 +10634,22 @@
     function closeLb(instant) {
       sunRelease();   /* shadow back to CSS before the return flight */
       pinchReset();   /* a zoomed rect must never anchor the flight math */
-      /* the flight flies top-up (the slot card was reset at lift) */
-      if (lbCard.classList.contains("canflip")) setFlip(lbCard, false, true);
+      /* THE FLIGHT FLIES THE FACE IT LANDS ON (2026-08-19 — the face
+         memory reaching the exit). The old law here flew top-up because
+         the slot card was reset at lift; since 2026-08-17 the pad wears
+         the REMEMBERED face (faceSync below), so forcing top-up made a
+         bottom-up card revert mid-flight and pop back at the handoff.
+         The silent settle still stands a mid-carousel close down (clones
+         binned, caring dropped); .fset re-added by hand because the
+         silent branch sheds it, and only .flipped.fset holds the landed
+         bottom-up pose through the flight. The card's own .flipped is
+         FACE's mirror (every gesture writes both), and populate re-arms
+         the next open either way. */
+      if (lbCard.classList.contains("canflip")) {
+        const exitBot = lbCard.classList.contains("flipped");
+        setFlip(lbCard, exitBot, true);
+        if (exitBot) lbCard.classList.add("fset");
+      }
       lbArcKill();    /* an in-flight deck arc settles instantly first */
       caroKill();     /* a live train bins its clones and hands the card back
                          BEFORE the flight measures — the lbArcKill idiom */

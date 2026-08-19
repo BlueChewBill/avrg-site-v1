@@ -119,3 +119,9 @@ Raw cursor-tracking killed the judder but took the trail with it. The trail is b
 Resuming from a press reads the **computed** `--px` (interpolated, thanks to the `@property` registration) before dropping `.glide`, so entering the lane mid-glide picks up where the eye left it rather than snapping to the destination.
 
 Verified on :8124, per animation frame through a 30-step sweep: **zero reversals**, peak 10.2px/frame against a target jumping ~28px/frame, median frame-to-frame velocity change 0.38px, p95 2.11. Gap error 0.01px, travel home lands on the lb card's mini. No console errors.
+
+### React 4 — the bar scoots to the minis (2026-08-19, ported)
+
+`prog 18 → 12` with `clr 72 → 78` — the same trade the band's own scoot used one level up: the two knobs are the air either side of the line, so moving between them slides the line without touching the card. Verified on :8124 at 1440×900 and 1440×790: band→line **12**, card unmoved. The phone keeps its own `mob.prog: 18`.
+
+**The strip pass is settled here** — his sign-off on the lerp: "works great!"

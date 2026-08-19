@@ -87,3 +87,13 @@ Verified on :8124 at 1440×900: seat dead-centre over its mini (639 = 639), a fu
 Budget re-tuned 321 → 292 (the landed stack exceeds the knob sum — the scoot's margin:auto share grows with the card — so the constant is tuned against measured slack, not derived).
 
 Verified on :8124: first-draw seat delta 0 at 1440×900 and 1280×800, sold opaque with the greyed board, nothing over the fold. No console errors.
+
+### The dot and the gap were RACING — one value, three readers (2026-08-19, ported)
+
+`--px` fed **three separate transitions**: the dot's `transform`, segment A's `width`, segment B's `left`. A transform transition goes to the **compositor**; width and left are main-thread **layout**. One clean travel stayed locked (9.00–9.02px of gap), but the riffle **retargets on every slot crossing**, and each interruption restarts the three from whatever each currently reads — not the same instant for a composited property as for a laid-out one. Measured over a two-pass scrub the gap drifted **41.56px**, the dot ending up past the break in its own line.
+
+**Fix:** `@property` registers `--px` as a `<length>`, making the custom property itself interpolatable; the transition moves to the parent and the three elements become plain readers of one animated number, so they cannot disagree at any frame. Same scrub after: **0.02px**.
+
+**The curve was tested and kept** — a near-zero onset never builds speed under constant retargeting (22px travelled against 490 of row) and softer ease-outs stepped less evenly; the shipped `cubic-bezier(.33,1,.68,1)` both follows best and has the smallest step-to-step change. The race was the judder, not the curve. Do not re-walk it.
+
+Verified on :8124: 0.02px gap error through a two-pass scrub.

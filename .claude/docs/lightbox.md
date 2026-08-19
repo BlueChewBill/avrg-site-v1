@@ -109,3 +109,13 @@ The drag clock keeps one job: **the way home** — `stripTo`'s hand branch write
 Verified on :8124: the dot sits under the cursor through a sweep at 0.00px gap error, clamping in the lane's pad at the ends, and travels home onto the lb card's mini (477 = 477).
 
 **Consequence:** while the hand is in, the dot no longer trails — it IS the cursor. A trail during the scrub cannot come from a transition (that IS the judder); it would need a frame-driven lerp. Not built.
+
+### THE DOT'S CHASE — a frame loop replaces the trail's transition (2026-08-19, ported)
+
+Raw cursor-tracking killed the judder but took the trail with it. The trail is back as a **frame loop**, not a tween, because **a transition cannot trail a moving target** — re-aiming one restarts it, and a restarted tween has a velocity discontinuity by construction. That is the whole judder story.
+
+`dotAim(o)` / `dotStep()`: exponential smoothing normalized by real elapsed time, `x += (target − x) · (1 − e^(−dt/tau))`, identical at 60 and 120Hz, with `dt` clamped to 64ms so a backgrounded tab's one enormous frame cannot teleport the dot. `STRIP_TUNE.dotTau` (170ms) is the feel. The loop **self-cancels** the frame it arrives. It owns BOTH the chase and the way home, so there is no mode change to stutter at the hand-off; `.lbs-prog.drag` and `progTo`'s `"drag"` mode retire with it.
+
+Resuming from a press reads the **computed** `--px` (interpolated, thanks to the `@property` registration) before dropping `.glide`, so entering the lane mid-glide picks up where the eye left it rather than snapping to the destination.
+
+Verified on :8124, per animation frame through a 30-step sweep: **zero reversals**, peak 10.2px/frame against a target jumping ~28px/frame, median frame-to-frame velocity change 0.38px, p95 2.11. Gap error 0.01px, travel home lands on the lb card's mini. No console errors.

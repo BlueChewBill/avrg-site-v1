@@ -2370,14 +2370,12 @@
                    transform: translateX(var(--px, 0px)); }
   /* ONE transition, on the value itself — the dot and both segments follow */
   .lbs-prog.glide { transition: --px .6s cubic-bezier(.22,1,.36,1); }
-  /* THE DRAG: the desktop riffle's own clock — nearly twice the press
-     glide, so the dot reads as TOWED by the raised card rather than
-     tracking it. The near-zero onset is what makes a chain of retargets
-     read as one drift instead of a string of kicks. */
-  .lbs-prog.drag { transition: --px 1.1s cubic-bezier(.33,1,.68,1); }
+  /* the riffle's trail is dotAim's frame loop now, not a transition —
+     see its comment in the JS for why a tween cannot chase a moving
+     target. Only the press keeps a stated clock. */
   @media (prefers-reduced-motion: reduce) {
     .lbsmini { transition: none; }
-    .lbs-prog.glide, .lbs-prog.drag { transition: none; }
+    .lbs-prog.glide { transition: none; }
   }
 
   /* ---- THE DECK NAV (2026-08-16 A/B, supersedes the on-card build;
@@ -9747,7 +9745,7 @@
        `prog` joins the desktop set for the line—dot—line below the band. */
     const STRIP_TUNE = { mini: 37, gap: -10, pop: 1.3, lift: 18, foff: 0,
       fade: 0, maxw: .86, dur: 900, hdur: 400, sit: 250, stag: 50,
-      drop: 12, clr: 72, prog: 18, scoot: 60,
+      drop: 12, clr: 72, prog: 18, scoot: 60, dotTau: 170,
       /* THE PHONE COSTUME (2026-08-12 evening — the NB_TUNE.mob idiom):
          smaller minis (46 puts 14 boards into a >2:1 shingle at 393),
          tighter airs, wider lane, NO falloffs (every mini full-size,
@@ -9790,20 +9788,69 @@
        raw finger tracking, undefined = keep the current mode — a geometry
        re-seat (placeStrip fires mid-exchange via the card's RO) must never
        cut a glide mid-flight by flipping it back to raw. */
+    /* declared ABOVE progTo, which assigns it: the strip block's own
+       statements run late, and a `let` reached in its TDZ takes the whole
+       script down (the 2026-08-16 bite, twice learned) */
+    let sDotX = null, sDotTgt = null, sDotRAF = 0, sDotT0 = 0;
     function progTo(o, mode) {
       if (!sGm) return;
-      /* THREE CLOCKS NOW (2026-08-19): false = raw finger tracking (the
-         phone scrub), true = the press's .6s glide, "drag" = the desktop
-         riffle's long trail (his ask: "have our line dot chase the rifle,
-         slow smoothe motion, dragging behind the card row scrub").
-         undefined = keep the current mode — a geometry re-seat must never
-         cut a travel mid-flight by flipping it back to raw. */
-      if (mode !== undefined) {
-        lbProg.classList.toggle("glide", mode === true);
-        lbProg.classList.toggle("drag", mode === "drag");
-      }
-      const x = Math.max(0, Math.min(sGm.n - 1, o)) * sGm.pitch + sGm.w / 2;
+      /* TWO MODES: false = raw (the phone's finger scrub, and every
+         geometry re-seat), true = the press's .6s glide. undefined = keep
+         the current mode, so a re-seat mid-press cannot cut the glide.
+         The desktop riffle's trail is NOT a mode here any more — it is
+         dotAim's frame loop below, which owns the dot outright. */
+      if (mode !== undefined) lbProg.classList.toggle("glide", mode === true);
+      if (mode !== undefined) dotStop();   /* a written value ends any chase */
+      const x = dotPx(o);
+      sDotX = x;                 /* the chase resumes from what was last written */
       lbProg.style.setProperty("--px", x.toFixed(1) + "px");
+    }
+    /* THE DOT'S CHASE (2026-08-19, his call: "lets try the lerp"). A
+       transition cannot trail a moving target: re-aiming it restarts the
+       tween, and a restarted tween has a velocity discontinuity — that was
+       the judder, and no curve fixes a chain of them (the curve table
+       above measured which lurch was least bad, not smoothness). A frame
+       loop has no restarts to have: there is one position, one target, and
+       every frame closes a fixed FRACTION of whatever gap is left.
+
+       Exponential smoothing, normalized by real elapsed time —
+       `1 − e^(−dt/tau)` — so the motion is identical at 60 and 120Hz and a
+       dropped frame is caught up rather than skipped. tau is the trail's
+       whole feel (STRIP_TUNE.dotTau ms): the gap closes to ~63% in one
+       tau, ~95% in three. It owns BOTH halves of the hover grammar — the
+       chase while the hand sweeps and the travel home when it leaves —
+       so the dot is one continuous object with no mode change to stutter
+       at the hand-off. Presses still glide: a deliberate, uninterrupted
+       move wants a stated clock, and progTo stops the chase before it. */
+    const dotPx = o => Math.max(0, Math.min(sGm.n - 1, o)) * sGm.pitch + sGm.w / 2;
+    function dotStop() { if (sDotRAF) cancelAnimationFrame(sDotRAF); sDotRAF = 0; }
+    function dotAim(o) {
+      if (!sGm) return;
+      sDotTgt = dotPx(o);
+      if (reduced) { progTo(o, false); return; }
+      /* resuming from a glide: the WRITTEN value is the glide's endpoint,
+         not what is on screen — read the animated one so the chase picks
+         up where the eye left it (registered custom property, so the
+         computed value is the interpolated one) */
+      if (lbProg.classList.contains("glide")) {
+        const now = parseFloat(getComputedStyle(lbProg).getPropertyValue("--px"));
+        if (!isNaN(now)) sDotX = now;
+        lbProg.classList.remove("glide");
+      }
+      if (sDotX == null) sDotX = sDotTgt;
+      if (!sDotRAF) { sDotT0 = performance.now(); sDotRAF = requestAnimationFrame(dotStep); }
+    }
+    function dotStep(now) {
+      sDotRAF = 0;
+      if (!sGm || lb.hidden || sDotTgt == null) { return; }
+      /* clamp dt: a backgrounded tab hands back one enormous frame, and an
+         un-clamped one would teleport the dot (the slideT law's cousin) */
+      const dt = Math.min(64, Math.max(1, now - sDotT0));
+      sDotT0 = now;
+      sDotX += (sDotTgt - sDotX) * (1 - Math.exp(-dt / (ST().dotTau || 170)));
+      if (Math.abs(sDotTgt - sDotX) < .15) sDotX = sDotTgt;
+      lbProg.style.setProperty("--px", sDotX.toFixed(2) + "px");
+      if (sDotX !== sDotTgt) sDotRAF = requestAnimationFrame(dotStep);
     }
     /* a dead end goes faint, never dark — the .lb-deknav law up a level */
     function armArrows() {
@@ -10056,7 +10103,7 @@
            judder. This branch only owns the RETURN: sFocus null means the
            hand has left, and the dot travels home to the lb card's slot on
            the drag clock. */
-        if (sFocus == null) progTo(sGm.ord[target] ?? 0, "drag");
+        if (sFocus == null) dotAim(sGm.ord[target] ?? 0);   /* the way home, chased */
         poseStrip();
         return;
       }
@@ -10090,7 +10137,8 @@
       clearTimeout(sHovT); sHovT = null;
       sFocus = null; sPend = null;
       lbStrip.classList.remove("sitting", "lifting", "hovlive");
-      lbProg.classList.remove("glide", "drag");   /* the next open seats the dot, never travels it in */
+      lbProg.classList.remove("glide");   /* the next open seats the dot, never travels it in */
+      dotStop(); sDotX = null; sDotTgt = null;
       sHeadK = null;                      /* the counter re-seats off cur on the next open */
       lbHead.style.left = lbHead.style.right = lbHead.style.width = "";
       sLifted = cur ? cur.k : null;
@@ -10118,7 +10166,7 @@
          is only ever re-aimed at slot centres is a transition restarting a
          few times a second, which is what juddered. Fractional slot space,
          so it tracks between minis instead of hopping between them. */
-      progTo((x - sGm.pad - sGm.w / 2) / sGm.pitch, false);
+      dotAim((x - sGm.pad - sGm.w / 2) / sGm.pitch);
       const o = Math.max(0, Math.min(sGm.vis.length - 1,
         Math.round((x - sGm.pad - sGm.w / 2) / sGm.pitch)));
       const i = sGm.vis[o];

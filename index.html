@@ -15495,6 +15495,19 @@
     addEventListener("resize", () => { clearTimeout(mszT); mszT = setTimeout(sizeBarWord, 120); });
 
     route();
+
+    /* ── BENCH SHIM (CompUI pilot, 2026-08-19) — TEMPORARY dev chrome.
+       Hands the tuning consts to the same-origin bench page by REFERENCE
+       (localhost:8124/bench/ — spec at ~/projects/CompUI/pilot/BUILD-SPEC.md),
+       so a property write takes effect on the const's next read. benchRepose
+       re-lays geometry through the page's own resize door — no signatures
+       assumed. LOCALHOST-GATED: inert on the live site and the LAN ride-along
+       by construction. No DT here — v1 carries the decode dials as literals
+       (the A/B's one vault-only const). Retire with the pilot. */
+    if (location.hostname === "localhost" || location.hostname === "127.0.0.1") {
+      window.BENCH = { STRIP_TUNE, NB_TUNE, SUN };
+      window.benchRepose = () => window.dispatchEvent(new Event("resize"));
+    }
   })();
   </script>
 </body>

@@ -1870,17 +1870,18 @@
        the lightbox view should hold all its components comfortably").
        The old 120px budget predated the strip. RE-DERIVED 2026-08-19 with
        the counter-leads re-order and the smaller minis: the head stack is
-       headClr 12 + counter ~29 + drop 26 + band ~106 (mini 40) + prog 18
-       + dot 5 + clr 26 ≈ 222 (measured 222), plus the card's 24px bottom pad and the dims
+       headClr 12 + counter ~16 (13px type) + drop 12 + band ~99 (mini 37)
+       + prog 18 + dot 5 + clr 72 ≈ 258 (MEASURED 258 — measure it, the
+       counter's height moves with its font size), plus the card's 24px bottom pad and the dims
        line (~39 with its margin — a first-class component now that the
-       desc retired) — 285 is that stack stated once (re-derive if
+       desc retired) — 321 is that stack stated once (re-derive if
        STRIP_TUNE or the dims spec moves; gapB left the stack with the
        counter). Assets come down on short displays by
        construction: 790-tall ≈ a 268px card with the dims line inside
        the fold, 900-tall ≈ 337, the 430 cap binds from ~1012px windows.
        Floor 260 so it never dwindles (280 was binding at exactly 790 and
        pushing the dims line back out); past the floor the sheet scrolls. */
-    #lb.fv3 .lb-card { width: max(260px, min(430px, calc((100dvh - var(--tbh, 0px) - 285px) / 1.53))); }
+    #lb.fv3 .lb-card { width: max(260px, min(430px, calc((100dvh - var(--tbh, 0px) - 321px) / 1.53))); }
   }
   #lb.fv3 .lb-card .panel {
     /* base shadow restated (id-specificity) + the lightbox ambient throw */
@@ -2048,7 +2049,19 @@
   }
   body.light #lb .lbhead .lbh-chip { color: #000; }
   .lbhead .lbh-tag { font-size: 36px; letter-spacing: .1em; }
-  .lbhead .lbh-pos { font-size: 20px; letter-spacing: .16em; opacity: .62; }
+  /* 20px → 13px (2026-08-19): the counter is TIED TO THE LIFTED MINI now
+     (his ask: "sits right above the mini. same width as the mini card or
+     close"), and a 20px line was nearly twice the popped mini's 54px. At
+     13px "7 / 19" measures ~59 — the "or close" — so it reads as that
+     card's label instead of a banner over the sheet. The tag line is
+     display:none here, so this is the whole header. */
+  .lbhead .lbh-pos { font-size: 13px; letter-spacing: .16em; opacity: .62;
+    /* NOWRAP IS LOAD-BEARING: the box is the popped mini's width (53.6) and
+       "7 / 19" measures ~59, so without it the line breaks after the slash
+       and the counter becomes two stacked rows. It overhangs ~3px each side
+       instead, centred and pointer-events:none — nothing to collide with,
+       and the box stays honestly tied to the mini. */
+    white-space: nowrap; }
   /* THE TAG RETIRED TO THE STRIP (2026-08-12, Dylan: "remove the HS03 id tag
      that was tied to our position counter ... the new card row can take its
      place"): the collection strip above carries the board's identity now —
@@ -9041,6 +9054,10 @@
         if (my !== xactN) return;
         const c = COLLECTIONS[ci];
         setHead(c, c.boards[k], k);
+        /* the move happens HERE, inside the fade: the out has just finished
+           and the in has not started, so the counter is at opacity 0 and
+           its travel across the band is never seen */
+        seatHead(k);
         lbHead.classList.remove("swapping");
         lbHead.classList.add("swapped");
         /* cleanup rides the ENTER'S OWN animationend, not a timer. A timer
@@ -9638,7 +9655,8 @@
        below the line—dot—line down to the card. THE SCOOT, same day
        (his react: "lets scoot the mini row and its line up"): drop 26 →
        12 and clr 26 → 46 move the band and its line UP ~21px while the
-       card holds its seat — the two knobs are the same air either side
+       card holds its seat (clr → 72 on the next react: "give it some
+       breathing room from the minis above") — the two knobs are the same air either side
        of the group, so trading between them slides the group without
        touching anything below it. Minis 40 → 37 with it. */
     /* THE DESKTOP RESET (2026-08-19, his four asks in one pass): the
@@ -9653,7 +9671,7 @@
        `prog` joins the desktop set for the line—dot—line below the band. */
     const STRIP_TUNE = { mini: 37, gap: -10, pop: 1.45, lift: 18, foff: 0,
       fade: 0, maxw: .86, dur: 900, hdur: 400, sit: 250, stag: 50,
-      drop: 12, clr: 46, prog: 18, scoot: 60,
+      drop: 12, clr: 72, prog: 18, scoot: 60,
       /* THE PHONE COSTUME (2026-08-12 evening — the NB_TUNE.mob idiom):
          smaller minis (46 puts 14 boards into a >2:1 shingle at 393),
          tighter airs, wider lane, NO falloffs (every mini full-size,
@@ -9768,6 +9786,38 @@
       sFresh = true;                    /* the next placement deals it in */
       sLifted = curK;                   /* a fresh strip lands pop-seated */
     }
+    /* THE COUNTER IS TIED TO THE LIFTED MINI (2026-08-19, his ask: "can we
+       tie the counter to the lifted mini. so 7/19 sits right above the
+       mini"). It is seated over the POPPED slot and boxed at the popped
+       mini's width, so it reads as that card's label.
+
+       ITS ONE CUE IS THE LIGHTBOX, NEVER THE SCRUB (his rule: "counter
+       doesnt chase the minis while being scrubbed ... that way it doesnt
+       cause noise on a mini scrub"). That falls out of WHERE it is called
+       from: the riffle re-poses through poseStrip, which never touches the
+       header, while headSwap — the exchange's own counter choreography —
+       re-seats at its swap timer, i.e. while the number is invisible
+       between the fade out and the fade in. So the counter never slides;
+       it is simply somewhere else when it comes back.
+
+       sHeadK is the k the header is CURRENTLY seated for, and it is the
+       number setHead last wrote — not `cur`, which does not advance until
+       the landing. A geometry re-seat mid-exchange (placeStrip fires off
+       the card's RO) would otherwise yank the counter back to the old
+       board, the same hazard the dot's glide mode guards against. */
+    let sHeadK = null;
+    function seatHead(k) {
+      if (k != null) sHeadK = k;
+      const o = sGm && sHeadK != null ? sGm.ord[sHeadK] : null;
+      if (o == null || dockActive() || !stripLive() || lb.hidden) {
+        lbHead.style.left = lbHead.style.right = lbHead.style.width = "";
+        return;
+      }
+      const box = sGm.w * ST().pop;          /* the popped mini's own width */
+      lbHead.style.left = (sGm.x0 + o * sGm.pitch + sGm.w / 2 - box / 2) + "px";
+      lbHead.style.right = "auto";
+      lbHead.style.width = box + "px";
+    }
     /* seats the strip off the header line placeDeck computed; measures its
        own geometry (slot pitch, the lane's box) and poses every mini */
     function placeStrip(headTop, stripLine) {
@@ -9839,6 +9889,9 @@
         const pt = sFocus ?? sPend ?? (cur ? cur.k : 0);
         progTo(sGm.ord[pt] ?? 0);
       }
+      /* the counter re-seats with the geometry, on the board it is CURRENTLY
+         showing (sHeadK) — never on the scrub's focus */
+      seatHead(sHeadK ?? (cur ? cur.k : 0));
       /* the deal is only SPENT once the sheet's fade is live — an early RO
          placement (lb shown, .in not yet added) would play the whole deal
          at opacity 0 and nobody would ever see it; until then park quietly */
@@ -9956,6 +10009,8 @@
       sFocus = null; sPend = null;
       lbStrip.classList.remove("sitting", "lifting", "hovlive");
       lbProg.classList.remove("glide", "drag");   /* the next open seats the dot, never travels it in */
+      sHeadK = null;                      /* the counter re-seats off cur on the next open */
+      lbHead.style.left = lbHead.style.right = lbHead.style.width = "";
       sLifted = cur ? cur.k : null;
     }
     /* the riffle: nearest visible slot by clientX vs the lane's LIVE rect

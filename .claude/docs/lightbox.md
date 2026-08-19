@@ -65,3 +65,13 @@ Verified on :8124 at 1440×900 (counter leads, prog under the band, arrows absen
 **THE SCOOT:** `drop 26 → 12` and `clr 26 → 46` — the same air either side of the band+line group, so trading between them slides the group up ~21px while the card holds its seat. Minis `40 → 37` with it. **THE DOT DRAGS BEHIND THE RIFFLE:** `progTo`'s second argument is a three-way mode (raw scrub · the .6s press glide · `"drag"`), and `stripTo`'s HAND branch writes `progTo(target, "drag")` — a 1.1s ease-out so the dot reads as towed by the raised card, with the same travel carrying it home on cursor-off; `stripReset` drops both classes so a fresh open still SEATS it. **THE BOARD GROWS 20%** on the desktop lb card (79/78% → 94.8/93.6%), the ONE CARD SPEC base untouched — and the **clones ride the same numbers** (`.lbnb`), or a promoted flank pops the board size at every exchange landing. It is near the ceiling: the board is HEIGHT-bound at 94.8%, ~9px of air from the AVRG chip and the name line.
 
 Verified on :8124 at 1440×900: counter 76 → row 160 → line 234 → card 277, minis 37, board 94.8%, the drag sampled mid-travel and settled. No console errors.
+
+### React 2 — the counter becomes the lifted mini's label (2026-08-19, ported)
+
+`clr 46 → 72` gives the card its breathing room from the band. **The counter is seated over the POPPED slot** at the popped mini's own width (53.6), 12px above it, type `20px → 13px` to match that scale; `white-space: nowrap` is **load-bearing** ("7 / 19" measures ~70 in a 53.6 box and breaks after the slash without it) and the line overhangs ~8px a side, centred and `pointer-events:none`.
+
+**Its one cue is the lightbox, never the scrub** — and that falls out of WHERE `seatHead` is called, not from a new gate: the riffle re-poses through `poseStrip`, which never touches the header, while `headSwap` re-seats **at its swap timer**, the instant between the fade out finishing and the fade in starting, where the number is at opacity 0. `sHeadK` tracks the number `setHead` last wrote (not `cur`, which only advances at the landing), so a mid-exchange `placeStrip` off the card's RO cannot yank the counter back; `stripReset` nulls it so a fresh open never inherits a seat. The fade TIMING needed no change — `headSwap` already splits `xDur` at `headOut .42`, completing the in on the card's landing.
+
+Budget re-derived 285 → 321 with the taller stack.
+
+Verified on :8124 at 1440×900: seat dead-centre over its mini (639 = 639), a full scrub to another mini leaves it untouched, a step shows the number changed and the seat moved at opacity 0, landing re-aligned (666 = 666). Fits at 1440×790 and 1440×900. No console errors.

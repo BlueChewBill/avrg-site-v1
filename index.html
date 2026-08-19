@@ -1966,7 +1966,17 @@
      detailed tail/nose suffix already rides where measured. fv3-scoped:
      #vlb's hardcoded desc line and the stock lb keep theirs. */
   #lb.fv3 .lb-desc { display: none; }
-  #lb.fv3 .lb-dims { font-size: 15px; margin-top: 20px; }
+  /* THE DIMS RESERVE (2026-08-17, his catch: "slight bounce in light box
+     scroll... when the text below the lb card changes in terms of rows
+     below the card (0, 1 line, 2) it shifts the whole line of lb cards"):
+     the line's seat is a CONSTANT two rows — unmeasured boards (dims
+     :empty) and one-liners reserve the same height as a wrapped
+     tail/nose read, so stepping board-to-board never re-centres the
+     card row. The :empty collapse stays for the stock lb + phone (all
+     lb text hidden there anyway); fv3 desktop overrides it to hold the
+     seat. */
+  #lb.fv3 .lb-dims { font-size: 15px; margin-top: 20px; line-height: 1.4; min-height: 2.8em; }
+  #lb.fv3 .lb-dims:empty { display: block; }
 
   /* ---- LB DECK (2026-07-26, Dylan's lightbox rework) ----------------------
      The thumb strip retires: the board flip does face-switching now, and the

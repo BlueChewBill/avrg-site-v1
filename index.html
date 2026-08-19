@@ -1549,11 +1549,16 @@
      lab in the first place. Sized in cqw like everything else on the
      card; the lb ghost re-sizes it below with its own face. */
   .d7f .fflipc .fmark {
-    fill: none; stroke: currentColor; stroke-width: 2;
+    fill: none; stroke: #fff; stroke-width: 2;
     stroke-linecap: round; stroke-linejoin: round;
-    display: block; flex: none;
+    /* ON the board, dead centre (his call 2026-08-19) — out of flow, so
+       the chip's box stays exactly the mini's box and "centre of the
+       chip" IS "centre of the board". The chip is position:absolute, so
+       it is this mark's containing block. */
+    position: absolute; left: 50%; top: 50%;
+    transform: translate(-50%, -50%);
+    z-index: 1; pointer-events: none;
     width: 13px; height: 13px; width: 5.6034cqw; height: 5.6034cqw;
-    margin-bottom: 3px; margin-bottom: 1.2931cqw;
   }
   /* the mini needs a REAL box pre-load (the lazy 0×0 law) — cutouts are
      tall portraits; contain keeps every shape honest in one slot */

@@ -97,3 +97,15 @@ Verified on :8124: first-draw seat delta 0 at 1440×900 and 1280×800, sold opaq
 **The curve was tested and kept** — a near-zero onset never builds speed under constant retargeting (22px travelled against 490 of row) and softer ease-outs stepped less evenly; the shipped `cubic-bezier(.33,1,.68,1)` both follows best and has the smallest step-to-step change. The race was the judder, not the curve. Do not re-walk it.
 
 Verified on :8124: 0.02px gap error through a two-pass scrub.
+
+### The dot rides the cursor while the hand is in (2026-08-19, ported)
+
+Locking the three readers to one value killed the RACE; the remaining judder was the other half — a 1.1s transition **re-aimed at slot centres several times a second**, and a restarted tween has a velocity discontinuity by definition, so no curve makes a chain of them smooth.
+
+The lane's `pointermove` now writes the dot **raw and continuously** — `progTo((x − pad − w/2) / pitch, false)` in FRACTIONAL slot space, so it tracks between minis rather than hopping — written on **every** move, deliberately before the slot early-return that guards the mini pop. Nothing animates during a scrub, so nothing restarts. Same raw grammar the phone's finger scrub already used.
+
+The drag clock keeps one job: **the way home** — `stripTo`'s hand branch writes it only when `sFocus == null`. Press glides untouched.
+
+Verified on :8124: the dot sits under the cursor through a sweep at 0.00px gap error, clamping in the lane's pad at the ends, and travels home onto the lb card's mini (477 = 477).
+
+**Consequence:** while the hand is in, the dot no longer trails — it IS the cursor. A trail during the scrub cannot come from a transition (that IS the judder); it would need a frame-driven lerp. Not built.

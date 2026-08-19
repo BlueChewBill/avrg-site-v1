@@ -10047,12 +10047,16 @@
         clearTimeout(sLiftT); sLiftT = null;
         lbStrip.classList.remove("sitting", "lifting");
         sLifted = target;
-        /* THE DOT CHASES THE HAND (2026-08-19) on its own long clock, so it
-           trails the raised card instead of keeping up with it — the cards
-           answer every move instantly, the dot takes its time. The same
-           travel carries it home when the cursor leaves (sFocus null →
-           target falls back to cur). */
-        progTo(sGm.ord[target] ?? 0, "drag");
+        /* THE DOT IS THE CURSOR'S WHILE THE HAND IS IN (2026-08-19 react 2,
+           his diagnosis: "its restarting when a new card is hovered ... can
+           we tie it to the cursor when its inside the cards? and tie it to
+           the current lb card when its not?" — exactly right). The lane's
+           pointermove writes the dot RAW and continuously, so there is no
+           transition to restart at a slot crossing and nothing left to
+           judder. This branch only owns the RETURN: sFocus null means the
+           hand has left, and the dot travels home to the lb card's slot on
+           the drag clock. */
+        if (sFocus == null) progTo(sGm.ord[target] ?? 0, "drag");
         poseStrip();
         return;
       }
@@ -10107,6 +10111,14 @@
       if (e.pointerType !== "mouse") return;
       if (!sGm) return;
       const x = e.clientX - lbSLane.getBoundingClientRect().left;
+      /* the dot rides the CURSOR, continuously and untweened — the same raw
+         grammar the phone's finger scrub uses (progTo's `false` mode). It is
+         written on EVERY move, before the slot early-return below, because
+         the whole point is that it never waits for a crossing: a value that
+         is only ever re-aimed at slot centres is a transition restarting a
+         few times a second, which is what juddered. Fractional slot space,
+         so it tracks between minis instead of hopping between them. */
+      progTo((x - sGm.pad - sGm.w / 2) / sGm.pitch, false);
       const o = Math.max(0, Math.min(sGm.vis.length - 1,
         Math.round((x - sGm.pad - sGm.w / 2) / sGm.pitch)));
       const i = sGm.vis[o];

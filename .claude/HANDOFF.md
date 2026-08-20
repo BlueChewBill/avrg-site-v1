@@ -82,6 +82,18 @@ it is the test of whether v1's structure survives real change.
 **Baseline: `9170375`.**
 
 **Port log**
+- `c54a2a2` (2026-08-20) — **THE ORIGINALS GO DEEP**, commit-scoped port (not
+  a baseline diff): the og-scoped lb photos+info (see lightbox.md's entry).
+  4 hunks, 4 clean, no new paths (CUT/IMG are runtime helpers, already
+  repointed). **NOTE: the baseline hash below is STALE** — the 2026-08-19
+  ports (S1/S2, the flip mark) were cherry-picked without updating it, and a
+  translated full-file diff now measures ~2010 divergent lines: partly v1's
+  own founding cleanups (permanent by design), partly what looks like
+  UNPORTED vault work (the Satoshi-Light face + tagline tick from
+  2026-08-17, the deck-mark T3/T4 retirement). A reconciliation pass — walk
+  the vault log since `9170375`, classify each commit ported/pending/
+  vault-only — is an open chore; until then port commit-scoped, as this one
+  and the 08-19 ports did.
 - `762f975 → 9170375` (2026-08-16) — **the A/B experiment's WINNER**: the
   vault half's all-12 implementation (`e8774a5`) plus the chevron re-seat
   on his react (`9170375`). 49 hunks, **49 clean** — no fuzz, no offsets,

@@ -2005,6 +2005,20 @@
   body[data-lb="deck"] #lb.fv3 .lb-thumbs,
   body[data-lb="deck"] #lb.fv3 .lb-count { display: none; }
 
+  /* THE ORIGINALS GO DEEP (2026-08-20, Dylan: "the best move is to simply
+     add lots of photos and info to each originals lightbox view") — the 1/1
+     collection gets its thumbs and description BACK inside the deck lb,
+     og-scoped: populate stamps #lb.og from the collection id. The strip
+     leads with a CARD tile (data-j="c") so a photo view is never a one-way
+     door back to the cutout. Every other collection keeps the 2026-07-26
+     deck ruling (photos unreachable, the card is the hero) — this scope is
+     the reversal FOR ORIGINALS ONLY. Desktop-gated: the phone lb stays
+     card-only until the mobile pass (the sequencing law). */
+  @media (min-width: 941px) {
+    body[data-lb="deck"] #lb.fv3.og .lb-thumbs { display: flex; }
+    #lb.fv3.og .lb-desc { display: block; }
+  }
+
   /* THE HEADER IS ONE LINE ON A CHIP (Dylan, 2026-08-01, replacing the
      2026-07-26 stack of collection-name-over-fraction):
 
@@ -10353,6 +10367,7 @@
          big card into the delegated hover choreography. */
       const fv3 = CARD === "framev3";
       lb.classList.toggle("fv3", fv3);
+      lb.classList.toggle("og", fv3 && c.id === "originals");
       lbCard.classList.toggle("d7f", fv3);
       lbCard.classList.remove("left");
       if (!fv3) lbCard.classList.remove("tset", "stay", "dressed", "redress", "navdraw");
@@ -10411,6 +10426,18 @@
         lbCard.classList.remove("unflipped", "flipping");
         sunImg = wantBot ? lbBot : lbBig;
         lbBig.title = (bp && j === 0) ? "Flip the board" : "View the whole collection";
+        /* THE ORIGINALS GO DEEP (2026-08-20): rebuild the strip with the
+           CARD tile in front — the cutout view stays one click away from
+           any photo. The generic build above already handled the .on marks
+           for photo tiles; here the card tile owns the j===0 mark because
+           in fv3 j===0 IS the cutout view, not photos[0]. */
+        if (c.id === "originals" && b.photos.length) {
+          lbThumbs.innerHTML =
+            '<img class="' + (j === 0 ? "on" : "") + '" src="' + CUT(b) + '" data-j="c" alt="the card">' +
+            b.photos.map((p, tj) =>
+              '<img class="' + (j > 0 && tj === j ? "on" : "") + '" src="' + IMG((b.thumbs && b.thumbs[tj]) || p) + '" data-j="' + tj + '" alt="angle ' + (tj + 1) + '">'
+            ).join("");
+        }
         /* the phone flip chip's mini shows the face you are NOT looking
            at — populate always lands top-side-up, so it starts on the
            bottom; setFlip swaps it with the state (clear by attribute,
@@ -11222,6 +11249,17 @@
     lbThumbs.addEventListener("click", e => {
       const j = e.target.dataset && e.target.dataset.j;
       if (j == null || !cur) return;
+      /* the CARD tile (originals strip): back to the cutout view — og
+         boards carry no flip pair, so no canflip re-arm here */
+      if (j === "c") {
+        const b = COLLECTIONS[cur.ci].boards[cur.k];
+        setFlip(lbCard, false, true);
+        lbBig.src = CUT(b);
+        lbBig.title = "View the whole collection";
+        cur.j = 0;
+        lbThumbs.querySelectorAll("img").forEach(t => t.classList.toggle("on", t.dataset.j === "c"));
+        return;
+      }
       /* a photo replaces the cutout: faces-up first, the flip disarms */
       setFlip(lbCard, false, true);
       lbCard.classList.remove("canflip");

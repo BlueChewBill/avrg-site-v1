@@ -6,6 +6,12 @@
       "runtimeExecutable": "python3",
       "runtimeArgs": ["-m", "http.server", "8124"],
       "port": 8124
+    },
+    {
+      "name": "avrg-vault",
+      "runtimeExecutable": "python3",
+      "runtimeArgs": ["-m", "http.server", "8123", "--directory", "/Users/dylan/Projects/avrg-site"],
+      "port": 8123
     }
   ]
 }

@@ -16,7 +16,7 @@ Created 2026-08-16 as a clean copy of the working page out of the workshop repo 
 
 - `python3 build_site.py` — reads `sources/`, writes `site/img/{thumb,full}` + `site/data.js`. Re-run any time photos in `sources/` are added, removed or moved. (`seed_boards.py` did not come across — it seeded from raw photo folders that live in the vault.)
 - `python3 build_context.py` — regenerates the DERIVED halves of `context/` (the card pack's Facts block + the whole bench page). Run after any change to `index.html` or `site/data.js`. Authored Intent sections are never touched.
-- Preview: `.claude/launch.json` config **`avrg-v1`** — `python3 -m http.server 8124`, serving the **repo root**. The page is `http://localhost:8124/index.html`. Never `file://`.
+- Preview: `.claude/launch.json` config **`avrg-v1`** — `python3 -m http.server 8124`, serving the **repo root**. The page is `http://localhost:8124/index.html`. Never `file://`. A second config **`avrg-vault`** serves the vault working copy on :8123 (labs + the leading page live there until cutover).
 - **LAN ride-along:** python's `http.server` binds all interfaces, so `:8124` reaches his phone on the same wifi (`http://192.168.1.119:8124/`) — instant, no push, no Pages cache.
 
 ## Layout

@@ -5672,8 +5672,12 @@
       <!-- THE OG SPREAD's clip seat (2026-08-20): og desktop only (CSS-gated
            off #lb.og). One STAND-IN cut serves every board until the
            per-board clip program lands — the seat is what shipped. -->
+      <!-- preload=none + NO autoplay: the 279KB cut must not ride every page
+           visit (bench C4's find — six per-board clips would multiply it).
+           The clip-gate observer at the IIFE foot plays it on og open,
+           pauses it on close; the fetch happens on first play. -->
       <div id="og-clipseat">
-        <video src="site/media/og-clip.mp4" poster="site/media/og-clip-poster.jpg" autoplay muted loop playsinline></video>
+        <video src="site/media/og-clip.mp4" poster="site/media/og-clip-poster.jpg" preload="none" muted loop playsinline></video>
         <div class="ogclipcap">The clip &middot; in hand</div>
       </div>
       <div class="lb-rest">
@@ -15591,6 +15595,19 @@
       lbCard.style.setProperty("--ogpt", lbCard.style.paddingTop || "24px");
     };
     new ResizeObserver(ogptSync).observe(lbCard);
+
+    /* THE CLIP GATE (C4's find): the seat's video ships preload=none and
+       no autoplay, so a plain visit never fetches the cut — this observer
+       plays it when an og inspection is UP on the desktop dress (first
+       play triggers the fetch) and pauses it when the inspection leaves.
+       Muted play needs no gesture; the catch swallows the rare abort. */
+    const ogClipVid = document.querySelector("#og-clipseat video");
+    new MutationObserver(() => {
+      const on = !lb.hidden && lb.classList.contains("og")
+        && matchMedia("(min-width: 941px)").matches;
+      if (on) { if (ogClipVid.paused) ogClipVid.play().catch(() => {}); }
+      else if (!ogClipVid.paused) ogClipVid.pause();
+    }).observe(lb, { attributes: true, attributeFilter: ["class", "hidden"] });
   })();
   </script>
 </body>

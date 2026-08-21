@@ -137,15 +137,16 @@
   /* Home and DM are MOBILE-ONLY rows: on desktop the logo still goes home
      by itself and the drawn bar carries its own DM organ, so both would be
      duplicate doors inside the same header. */
-  @media (min-width: 941px) { .drow.home, .drow.dm, .drow.ground { display: none; } }
+  @media (min-width: 941px) { .drow.home, .drow.dm { display: none; } }
   /* No self-row: on the home page the menu lists only the places you can
      GO — the home row sits out (2026-08-17, the screen-recording pass).
      body.on-home is stamped by route(). */
   body.on-home .drow.home { display: none; }
   /* THE ROW FURNITURE RETIRED with the drop-lab dress (2026-08-14): rows are
      centred bare words now — no rdots, no counts, no DM hairline. The chase
-     dots (see the drop block) are the drop's only dots; the GROUND row keeps
-     its .rn value read. The old accent-dot/count dress is in git history. */
+     dots (see the drop block) are the drop's only dots. (The GROUND row and
+     its .rn readout retired 2026-08-20 — light is the one ground.) The old
+     accent-dot/count dress is in git history. */
   /* (.anchor-left RETIRED 2026-08-16 with the word-is-the-door rework: the
      phone drop centres under the bar word's seat now — parkDrop's phone
      branch centres on #nbar — so it shares the desktop's translateX(-50%)
@@ -764,8 +765,8 @@
   .colnav { margin-top: clamp(44px, 7vh, 72px); text-align: center; }
   /* THE FOOT GOES HOME (2026-08-15): the loop chip + collection buttons
      retired (the drop is the nav) — the scroll ends on the brand mark
-     over a · HOME · label, one door. The img asset is ground-swapped
-     (colnavHtml at render, setGround live). */
+     over a · HOME · label, one door. The img asset is the circle sticker
+     (colnavHtml at render — light is the one ground). */
   .colnav-home {
     display: inline-flex; flex-direction: column; align-items: center;
     gap: 16px; transition: transform .3s ease;
@@ -5273,40 +5274,9 @@
     .drop.selecting .drow:not(.msel) { animation: none; opacity: 0; }
   }
 
-  /* ================= ground switcher (tool chrome) ================= */
-  /* THE GROUND PICK (2026-08-01) — all that survives of the comparison
-     switcher. Bottom LEFT by Dylan's call, so it sits opposite the deck's
-     right-edge case and can never be mistaken for drawer chrome.
-     INTERIM BY HIS OWN NOTE: "it will get a site button in time... neither
-     will be in the shape they are in now." So this is deliberately plain —
-     no decode, no draw-in, no chip grammar. Do not invest in the look; the
-     real control arrives with the light/dark extraction at the port, where
-     the parked three-state sun / cloudy-sun / moon set gets decided. */
-  .gpick {
-    position: fixed; left: 18px; bottom: 18px; z-index: 6000;
-    display: flex; gap: 7px;
-  }
-  .gpick button {
-    font-family: var(--mono); font-size: 9px; font-weight: 700;
-    letter-spacing: .16em; text-transform: uppercase;
-    color: #fff; background: rgba(20, 20, 20, .9);
-    border: 1.5px solid #555; border-radius: 6px;
-    padding: 6px 10px;
-    -webkit-backdrop-filter: blur(8px); backdrop-filter: blur(8px);
-    transition: background .15s ease, color .15s ease, border-color .15s ease;
-  }
-  .gpick button:hover { border-color: #fff; }
-  .gpick button.on { background: #fff; color: #000; border-color: #fff; }
-  body.light .gpick button { color: #000; background: rgba(255, 255, 255, .9); border-color: #bbb; }
-  body.light .gpick button:hover { border-color: #000; }
-  body.light .gpick button.on { background: #000; color: #fff; border-color: #000; }
-  /* MOBILE: the fixed chips are GONE (2026-08-07, the 15 Pro audit) — bottom-
-     left fixed put them ON the 2-up grid's cards and over the lisst page's
-     SHAPED button (a real tap blocker). The control moved into the AVRG
-     menu as the GROUND row (Dylan: "should be light/dark, lets add it to
-     the avrg menu button... its still just for me at the moment"). Same
-     interim status as the chips — goes at the port with the real toggle. */
-  @media (max-width: 940px) { .gpick { display: none; } }
+  /* THE GROUND PICK RETIRED 2026-08-20 (with the menu's GROUND row): light
+     is the one ground for launch. The parked future of the thread is the
+     three-scheme sun / cloudy-sun / moon picker — open-threads. */
 
   /* ================= light ground: the inversion =================
      j-cards-white idiom. --bg/--bone/--soft/--hint flip via inheritance
@@ -5354,8 +5324,8 @@
 
   /* collection pages */
   body.light .colpage-inner h2 { color: #000; }
-  /* the foot's light dress: the label darkens; the mark swaps assets
-     (setGround) so it needs no rule here */
+  /* the foot's light dress: the label darkens; the mark is the circle
+     sticker (colnavHtml) so it needs no rule here */
   body.light .colnav-home .label { color: #777; }
   body.light .colnav-home:hover .label { color: #000; }
 
@@ -5391,7 +5361,10 @@
   body.light .tile .tframe { background: #eee9df; }
 </style>
 </head>
-<body>
+<!-- class="light" ships in markup: LIGHT IS THE ONE GROUND (2026-08-20 ruling)
+     and the very first paint must already wear it — no dark flash before the
+     main script runs at the end of body. -->
+<body class="light">
   <!-- THE INTRO ARM (2026-08-16, thread 3): the load ceremony's gate must
        be up before the FIRST PAINT — the main script runs at the end of
        body and the browser can paint before it, which would flash the full
@@ -5410,7 +5383,7 @@
     })();
   </script>
   <header class="topbar">
-    <div class="bar-brand" id="bar-brand" title="AVRG"><img id="bar-logo" src="" alt="AVRG" /></div>
+    <div class="bar-brand" id="bar-brand" title="AVRG"><img id="bar-logo" src="site/img/logo-circle.png" alt="AVRG" /></div>
     <!-- the deck mark (AVRG card-between-dots, drawn in-house 2026-08-05;
          replaced the phosphor film-script) — top right, the brand's mirror
          seat. Its job is the drawer toggle (wired at the barScript block),
@@ -5797,11 +5770,7 @@
     </div>
   </aside>
 
-  <!-- ground pick: the comparison switcher's one surviving row (see .gpick) -->
-  <div class="gpick" id="gpick">
-    <button class="label" type="button" data-ground="black">Black</button>
-    <button class="label" type="button" data-ground="white">White</button>
-  </div>
+  <!-- the ground pick chips retired 2026-08-20 (LIGHT IS THE ONE GROUND) -->
 
   <script src="site/data.js"></script>
   <script>
@@ -5815,41 +5784,18 @@
     const esc = s => String(s == null ? "" : s).replace(/[&<>"]/g, m => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" }[m]));
     const reduced = matchMedia("(prefers-reduced-motion: reduce)").matches;
 
-    /* ========= the ground machine =========
-       ground switch: black (h-blackout baseline) <-> white (j-cards
-       idiom). Persisted so reloads keep the ground under comparison. The
-       bar logo swaps assets (white line art on black, circle sticker on
-       white); the masthead line logo flips via CSS invert instead. */
-    const GROUND_KEY = "avrg-k-ground";
-    const barLogo = document.getElementById("bar-logo");
-    function setGround(g, persist = true) {
-      document.body.classList.toggle("light", g === "white");
-      barLogo.src = IMG(g === "white" ? "img/logo-circle.png" : "img/logo-line-white.png");
-      /* the foot's home mark wears the same asset (2026-08-15) — rendered
-         per route by colnavHtml, re-synced here for a live ground flip */
-      document.querySelectorAll(".colnav-home img").forEach(im => { im.src = barLogo.src; });
-      document.querySelectorAll("#gpick [data-ground]").forEach(b =>
-        b.classList.toggle("on", b.dataset.ground === g));
-      /* the menu's GROUND row prints the current pick — guarded because the
-         boot call runs before the drop's rows are built */
-      const grn = document.getElementById("ground-rn");
-      if (grn) grn.textContent = g === "white" ? "WHITE" : "BLACK";
-      if (persist) try { localStorage.setItem(GROUND_KEY, g); } catch (e) {}
-    }
-    document.querySelectorAll("#gpick [data-ground]").forEach(b =>
-      b.addEventListener("click", () => setGround(b.dataset.ground)));
-    let ground = "black";
-    try { ground = localStorage.getItem(GROUND_KEY) || "black"; } catch (e) {}
-    /* THE PHONE IS WHITE (2026-08-08, Dylan: "for now we are going with white
-       for the phone. no black background on mobile"). Forced, NOT persisted:
-       the stored pick is the comparison state and a phone visit must not
-       rewrite it — and the stored-pick-outranks-new-default gotcha means
-       storage can never be allowed to win here (his own phone holds "black").
-       The menu GROUND row still flips live after boot — it is HIS control;
-       a reload simply comes back white. dockActive isn't defined yet at boot
-       (const, later in the file), so the query is inlined. */
-    const phoneNow = matchMedia("(max-width: 940px)").matches;
-    setGround(phoneNow ? "white" : (ground === "white" ? "white" : "black"), false);
+    /* ========= the ground: LIGHT, PINNED =========
+       LIGHT IS THE ONE GROUND (2026-08-20, Dylan's pre-launch ruling —
+       "light is the direction"). The ground machine (setGround, the gpick
+       chips, the menu GROUND row, the avrg-k-ground storage) retired with
+       it. Pinned like CARD/LB below and for the same reason: the old
+       storage key is never read, so a stale "black" pick can't strand
+       anyone on the retired dark dress. <body> ships class="light" and
+       the bar logo ships the circle sticker in markup, so nothing needs
+       stamping at boot. The dark costume's CSS is unreachable and goes
+       in a later proven-identical sweep; the parked future of this
+       thread is the three-scheme sun / cloudy-sun / moon picker
+       (open-threads). */
 
     /* ---- card style. FRAME V3 IS THE ONLY CARD (2026-08-01): the Card
        comparison row is retired, so photo/paper/zoned no longer ship a way
@@ -6677,16 +6623,11 @@
          only: up on desktop the drawn bar carries its own DM organ, and a
          second one inside the collections drop would be the same door twice
          in the same header. */
+      /* the GROUND row retired with the ground machine (2026-08-20 — light
+         is the one ground); DM is the menu's last row now */
       '<a class="drow dm" style="--r:' + (HOME.length + 1) + '" href="' +
         esc(genericDm()) + '" target="_blank" rel="noopener">' +
-        '<span class="rt">DM</span></a>' +
-      /* GROUND is Dylan's own control (the gpick chips' mobile home — see the
-         .gpick CSS note); a button, not an <a>, so the row-click close
-         doesn't fire and the flip is visible under the open menu. Built with
-         the CURRENT ground: the stored pick lands before this markup. */
-      '<button class="drow ground" style="--r:' + (HOME.length + 2) + '" type="button">' +
-        '<span class="rt">Ground</span><span class="rn" id="ground-rn">' +
-        (document.body.classList.contains("light") ? "WHITE" : "BLACK") + '</span></button>';
+        '<span class="rt">DM</span></a>';
     const drop = document.getElementById("drop");
     const topbarEl = document.querySelector(".topbar");
     let dropT = 0, dropHideT = 0;
@@ -6967,11 +6908,6 @@
       if (!a) return;
       if (!drawnBarOn() && !reduced && a.classList.contains("drow") && !a.classList.contains("dm")) return;
       closeDrop(true);
-    });
-    /* the GROUND row flips in place — menu stays open so the flip shows */
-    dpanel.addEventListener("click", e => {
-      if (e.target.closest(".drow.ground"))
-        setGround(document.body.classList.contains("light") ? "black" : "white");
     });
     addEventListener("keydown", e => { if (e.key === "Escape") closeDrop(); });
     /* row fills drain like chips (class-armed, same .left trick); the chip
@@ -7323,13 +7259,11 @@
        as our top left page header, and give it '· home ·' underneath it") —
        the loop icon (LOOP_SVG) and the collection chips retired: the drop
        is the nav now, so the scroll's end states ONE door. The mark is the
-       bar's own logo, ground-swapped at render here and live-synced by
-       setGround. */
+       bar's own logo — the circle sticker, since light is the one ground. */
     function colnavHtml() {
-      const lite = document.body.classList.contains("light");
       return '<div class="colnav">' +
           '<a class="colnav-home" href="#" title="Back to the main page" aria-label="Back to the main page">' +
-            '<img src="' + IMG(lite ? "img/logo-circle.png" : "img/logo-line-white.png") + '" alt="AVRG" />' +
+            '<img src="' + IMG("img/logo-circle.png") + '" alt="AVRG" />' +
             '<span class="label">·&#8195;HOME&#8195;·</span>' +
           '</a>' +
         '</div>';
@@ -12661,7 +12595,7 @@
        dragStole = the toss-release guard (a release is not a click). */
     document.addEventListener("click", e => {
       if (dockActive() || bayP <= 0 || !lb.hidden || !vlb.hidden || drag || dragStole) return;
-      if (e.target.closest("#bay, .topbar, .card, .scard, .bay-item, .bay-fly, .fc-list, a, button, input, select, textarea, label, #lb, #vlb, .gpick")) return;
+      if (e.target.closest("#bay, .topbar, .card, .scard, .bay-item, .bay-fly, .fc-list, a, button, input, select, textarea, label, #lb, #vlb")) return;
       closeBay();
     });
 
@@ -14462,20 +14396,13 @@
     });
     /* crossing the 940/hover boundary hands the deck between its two
        bodies: the drawer stands down going in (the phone's deck is YOUR
-       PICKS), and takes the job back going out.
-       The GROUND crosses with it (2026-08-08): mobile is forced white
-       (unpersisted — see the boot comment at GROUND_KEY), desktop takes
-       the stored pick back. */
+       PICKS), and takes the job back going out. (The ground used to cross
+       with it — retired 2026-08-20, light is the one ground.) */
     matchMedia("(max-width: 940px)").addEventListener("change", e => {
       if (e.matches) {
         bayLocked = false; bayClosing = false; bayRearm = false;
         bayP = 0; bayPosedP = -1;
         if (document.body.classList.contains("bay-room")) shopRoom(false);
-        setGround("white", false);
-      } else {
-        let g = "black";
-        try { g = localStorage.getItem(GROUND_KEY) || "black"; } catch (err) {}
-        setGround(g === "white" ? "white" : "black", false);
       }
       applyDeckHoles();
       /* the lisst page wears a different costume per side (YOUR PICKS vs

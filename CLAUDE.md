@@ -8,9 +8,9 @@
 
 Created 2026-08-16 as a clean copy of the working page out of the workshop repo (**the vault**, `~/Projects/avrg-site`, which is 1.5GB of labs, photo archives and full react history). v1 holds the page + exactly what builds it: `index.html` is the vault's `redesign/k-home-dual.html` with its asset paths repointed, `sources/` is the build input, `site/` is the build output plus the committed media.
 
-**The vault is still the archive and still the reference.** Every lab and tuner page (`drop-lab`, the card-lab family, the h-blackout lineage, the decode labs), `labs.md`, `PORT.md`, the raw photography (`clean shots/`, `boards/`, `completes/`), the raw videos, `about/` staging, `AVRG brand img/`, `retired/`, `design-bundle/` and the whole commit history live **only there**. Design exploration keeps happening against those labs; only the result ships here. When a doc in this folder says "see the lab", the lab is in the vault.
+**The vault is RETIRED (2026-08-20, Dylan's ruling) — frozen archive, not the reference.** Every lab and tuner page, `labs.md`, `PORT.md`, the raw photography, the raw videos, `about/` staging, `AVRG brand img/`, `retired/`, `design-bundle/` and the pre-split commit history still live only there, read-only. **No more editing in the vault, no more porting** — all work happens HERE, directly. When a doc in this folder says "see the lab", that's archaeology: the lab file exists in the vault but nothing keeps up with it anymore.
 
-**The site is live from the VAULT repo until cutover** — see "Where things stand".
+**The public Pages URL still serves from the vault repo until the Saturday cutover** — see "Where things stand". That's a serving fact, not a workflow fact: changes land here only.
 
 ## Commands
 
@@ -66,6 +66,56 @@ The deep project memory — decisions, laws, mechanics, react history — lives 
 - [open-threads.md](.claude/docs/open-threads.md) — what's still open, parked passes, undecided directions, the site thesis.
 - [design-sync.md](.claude/docs/design-sync.md) — the claude.design "AVRG Site" project (its recipe still points at vault paths).
 
+## The AVRG Bench (the tuning deck at /bench)
+
+**What it is:** a live tuning UI over THIS page — Win2000 dress, sliders
+and wells bound to the real site's values — at
+**http://localhost:8124/bench/**, riding the same server that serves the
+page. It owns ZERO site code: every control drives the actual page through
+injected CSS overrides or the fenced, localhost-gated **BENCH shim** at the
+main IIFE's foot in `index.html` (exposes `STRIP_TUNE`/`NB_TUNE`/`SUN` by
+reference — the shim is the ONE sanctioned bench hook in this file; extend
+it deliberately, and it retires with the pilot). Not to be confused with
+`context/card-bench.html`, the card context pack's static bench page.
+
+**Where it lives:** `bench/` here is a **symlink** to
+`~/Projects/CompUI/pilot/` and is **gitignored — this repo is PUBLIC and
+bench files (manifest, BUILD-SPEC, the UI) never get committed to it.**
+Bench changes are committed in the CompUI repo:
+`git -C ~/Projects/CompUI add pilot && git -C ~/Projects/CompUI commit`.
+CompUI has no remote; nothing there gets pushed.
+
+**The contract (canonical since 2026-08-20, Dylan's ruling):** the bench
+and the site move together. A site change that touches a **charted param**
+(one in `bench/manifest/avrg.json`) updates the manifest — and the bench's
+ANCHORS entry when the override shape changes — **in the same session**. A
+new tunable surface gets charted when first touched. Two lanes:
+
+- **Inline (small):** retuning an already-charted value (a bake landing, a
+  range widening) — just update the manifest value/note yourself.
+- **Dispatch (real charting):** a new param spec, a new wing, or a
+  multi-param pass — do the site edit + any shim notation here, then hand
+  the **`bench-cartographer` agent** (`.claude/agents/`) a ticket: param
+  ids/names, exact selectors or consts, shipped values, sensible ranges,
+  couplings/laws worth recording. It edits the CompUI side, verifies
+  end-to-end on the served bench, commits there, and reports back — this
+  session stays pointed at the site and Dylan.
+
+**Bench laws that bind this repo's sessions** (constitution:
+`bench/BUILD-SPEC.md`): the manifest is the bench's ONLY data source;
+anchors are NAMES (selectors, consts, vars) — never line numbers; params
+bind to the one shared source — a bench-side fork is unconstitutional,
+"separation" is a site-code change Dylan orders; locked params render
+visible, never hidden; overrides replicate shipped behavior exactly,
+quirks included — a shipped quirk is flagged as a find, never silently
+fixed.
+
+**Verifying bench work:** the Claude pane's frame loop is dead inside the
+stage iframe — motion is unjudgeable there AND CSS transitions freeze
+mid-flight (computed style reads the START value; kill the transition with
+a probe rule or use the CDP harness in gotchas). Cache-bust every load
+(`?v=<ts>`).
+
 ## Always-on rules (the short list)
 
 - `site/data.js` is **generated** — never hand-edit; re-run `build_site.py`.
@@ -80,12 +130,14 @@ The deep project memory — decisions, laws, mechanics, react history — lives 
 - Board dimensions: `DIMS_MM` in `index.html` is **hand-authored**, keyed by padded ref, and feeds the hover dims-decode — all 14 hand-shaped boards + 12 of 19 classics. Tail/nose widths print in the lightbox `#lb-dims` line only ("too much noise on a card decode"). Still unmeasured: CL 03/06/08/12/16/19/26, originals, resale.
 - The lb selected-state accent is deliberate — ask before removing.
 - **The scroll relay SLEEPS** — `RELAY_ON = false` in the relay IIFE; the one switch gates both the CSS (`body.relayon`) and the machine. Parked, not bailed on. Do not wake it without his word.
-- **Until cutover, the site is edited in the VAULT and PORTED here** — the porting recipe (with the current baseline hash) lives in [.claude/HANDOFF.md](.claude/HANDOFF.md). (The 2026-08-16 A/B experiment is CLOSED — its record + trip log live in the HANDOFF; multi-item lists are just lists again.)
+- ~~Until cutover, the site is edited in the VAULT and PORTED here~~ **RETIRED 2026-08-20: the vault edit-and-port workflow is over — edit HERE directly.** The old porting recipe stays in [.claude/HANDOFF.md](.claude/HANDOFF.md) as history. (The 2026-08-16 A/B experiment is CLOSED — its record + trip log live in the HANDOFF; multi-item lists are just lists again.)
+- **A site change that touches a charted bench param isn't done until the bench knows** — see THE AVRG BENCH section above (the change-with-charting law).
 
 ## Where things stand
 
 - **2026-08-16: v1 was created** from the vault at commit `9aca992` (working tree clean), cleaned, and **PUBLISHED at https://bluechewbill.github.io/avrg-site-v1/**. The founding commits: THE COPY (the live site, whole, in its own house) · THE DEAD CODE COMES OUT (the takeover-case machine and `cardInner`'s photo branch, both unreachable, removed for real — only comments still name them) · THE MEMORY MOVES IN (these docs) · THE TOMBSTONES COME OUT (comment-only sweep, proven code-identical; 18 JS section banners) · the angry-0 removal. Verified same day: zero 404s, zero console errors, every route, both grounds, the phone costume.
 - **What the page is at this point** — the feature state as of `9aca992`: the drop-lab header dress on both surfaces, the send takeover, the LB carry suite, THE PICKS CEREMONY (the deal, the bench, the driven glides, the deal shield), thread 3's mobile pass (THE LOAD INTRO, THE WORD IS THE DOOR, THE MENU-SELECT CEREMONY), the drawn logo on every home arrival, real board dims, and the launch trim (the foot goes home). Every react history for those lives in the surface doc that owns them.
-- **The live site is still served from the VAULT repo** (`bluechewbill/avrg-site`, GH Pages) until cutover. **The workflow between now and then: pre-launch changes are made in the vault working copy — the page people are actually looking at — and PORTED into v1 at session end.** That is deliberate: it is Dylan's test of whether v1's structure holds up under real change. The recipe + the current baseline hash are in `.claude/HANDOFF.md`; update the hash after every port.
-- **The cutover checklist is PARKED, on Dylan's word, in this order:** verify the v1 live URL → Dylan buys a domain (he wants **avrg.website** and **avrg.cards** — his purchase) → a `CNAME` file here + DNS at the registrar per the GitHub Pages docs → flip the vault repo **private** (its Pages URL dies with it — free plans don't serve Pages from private repos) → future work happens in v1 directly. Optionally rename the local folders at that point so the working repo takes the familiar path; note that changes Claude's per-project memory keying.
+- **The live site is still served from the VAULT repo** (`bluechewbill/avrg-site`, GH Pages) until cutover — but **the edit-in-vault-and-port workflow ENDED 2026-08-20 (the vault is retired; v1's structure passed the test)**. All changes land here; what the public URL shows lags until the Saturday cutover flips it. The old recipe + baseline hash live in `.claude/HANDOFF.md` as history.
+- **2026-08-20: THE BENCH WENT CANONICAL** — the CompUI tuning bench at `/bench` and this site now move together (see THE AVRG BENCH section). Same day: THE ORIGINALS GO DEEP charted as bench wings `lb-og-thumbs` + `lb-og-desc` (census 103), and Dylan ruled LIGHT IS THE DIRECTION — dark mode comes out before launch (see open-threads).
+- **The cutover checklist is LIVE — launch target Saturday 2026-08-22, ~noon (Dylan, 2026-08-20). The order:** verify the v1 live URL → Dylan buys a domain (he wants **avrg.website** and **avrg.cards** — his purchase) → a `CNAME` file here + DNS at the registrar per the GitHub Pages docs → flip the vault repo **private** (its Pages URL dies with it — free plans don't serve Pages from private repos) → future work happens in v1 directly. Optionally rename the local folders at that point so the working repo takes the familiar path; note that changes Claude's per-project memory keying.
 - **Still open / parked:** see [open-threads.md](.claude/docs/open-threads.md) — the intro tweak + decode-timing threads, thread 1's desktop half, thread 2 (home collection cards), thread 3's desktop half, waking the relay, the ORIGINALS RETHINK, the iPad tweaks (lowest priority, unenumerated), sound, the browser-compat sweep.

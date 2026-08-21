@@ -135,3 +135,15 @@ Verified on :8124, per animation frame through a 30-step sweep: **zero reversals
 **Open/react points:** the .lb-rest stack (thumbs + desc + dims) deepens the below-fold scroll at 1440×900 — the standing "reachable by scroll" ruling covers it, but if og inspections should fit unscrolled that's a height-budget decision; the marble photo letterboxes on the WHITE card stage (reads as the specimen mount — looked right on first verify); **clips are the named next step** ("they each need a clip when available") — the #vlb machinery is the obvious door, unwired on purpose; and the mobile og view is undesigned.
 
 Verified both repos (vault :8123, v1 :8124, real Chrome 1440): open on OG 01 = `fv3 og`, strip `c*,0,1,2`, desc block with collection copy, photo tile swaps the frame, card tile returns the cutout, arrow exchange lands OG 02 with the strip rebuilt and the card tile lit, classic boards show none of it, zero console/boot errors.
+
+## THE OGARR LAB — og-dossier arrangement collider (2026-08-20, TEMPORARY)
+
+Dylan asked for arrangement work on the desktop og view (the .lb-rest below-fold react point above). **Three variants live IN the page** behind `body[data-ogarr]` — `?ogarr=a|b|c` at boot, or keys **1/2/3** while an og inspection is open (**0** = shipped; no param = shipped, so the live site is untouched). Two fenced blocks, both marked OGARR LAB: the CSS beside the og go-deep rules, the JS at the IIFE foot beside the bench shim. Retires whole on his pick.
+
+- **A — FIT THE FOLD:** the whole dossier inside the window; the card pays via an og-scoped height budget (base formula's 292 → 448, thumbs 44px, tighter margins). Card ~356→~253 at 900-tall — the honest cost of fitting below.
+- **B — THE SIDE DOSSIER:** the whole `.lb-rest` absolute off the card's right shoulder (76px out — clears the on-card stepper's seat, 48 didn't), 2×2 thumb grid + left-aligned desc + dims. Full-size card, no scroll. Real copy may run the column down toward the right neighbour — judge with real descriptions in.
+- **C — THE FLANKS:** thumb rail vertical off the LEFT shoulder, desc column off the RIGHT (44px both), dims keeps its shipped under-card seat. `.lb-rest` stays static so the card anchors the columns.
+
+**Mechanics worth keeping:** the card's scoot padding is JS-written, so absolute columns can't top-align with the panel in pure CSS — the lab mirrors it into `--ogpt` via a ResizeObserver on `#lb-card`; a key flip also fires the resize door so placeDeck re-derives neighbours around variant A's card size. **Bench note:** the lab does not chart — shipped values are unchanged (default = shipped). The PICK, when it lands, is the charted change (og wings lb-og-thumbs/lb-og-desc + the card formula if A wins).
+
+**Pane gotcha, re-bitten during verify:** on a fresh load the pane froze the `.lb-rest` opacity transition at 0 (and the strip's) — reads as "the lab is broken" when it's the frozen-transition wedge. The probe rule (`transition:none !important`) reads the truth; real Chrome unaffected.

@@ -3,18 +3,18 @@
 <head>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-<title>AVRG — K: home, dual ground</title>
+<title>AVRG</title>
 <link rel="icon" type="image/png" href="favicon.png" />
 <link rel="preconnect" href="https://fonts.googleapis.com" />
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
 <link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,300..800&family=Space+Mono:ital,wght@0,400;0,700;1,400&display=swap" rel="stylesheet" />
 <style>
-  /* K — home page, dual ground. h-blackout cloned, with a live black/white
-     ground switch (bottom-right, persisted) — a working prototype of a site
-     light/dark mode. Dark is the h-blackout baseline verbatim; light is the
-     body.light override block at the end of this stylesheet, speaking the
-     j-cards-white idiom (#fff ground, #000 max-contrast, #444 soft,
-     #767676 hints). Engine and markup are otherwise identical to h. */
+  /* K — home page. h-blackout cloned; since 2026-08-20 LIGHT IS THE ONE
+     GROUND (the switch retired) — the body.light override block at the end
+     of this stylesheet is the live dress, speaking the j-cards-white idiom
+     (#fff ground, #000 max-contrast, #444 soft, #767676 hints); the dark
+     h-blackout baseline underneath is unreachable, pending the sweep.
+     Engine and markup are otherwise identical to h. */
   /* Satoshi Black: the heading voice (approved in the Type & Button Lab
      mockup). One weight only — 46KB, shipped from site/fonts/. */
   @font-face {
@@ -2067,7 +2067,50 @@
       position: absolute; left: 100%; top: var(--ogpt, 230px);
       margin: 0 0 0 44px; width: 216px; text-align: left;
     }
+
+    /* D — THE SPREAD (2026-08-20 evening, Dylan's sketch: "the originals
+       need the whole page in light box view. no flankers"): the og
+       inspection takes the page — flanker cards out (the deknav chevrons
+       stay; they still step), the CLIP off the left shoulder (the
+       stand-in cut from the vault's originals-lab — the real clip
+       program is per-board), the extended photo set as a 2-up grid + the
+       read off the right. The strip up top goes bigger/wider via real
+       STRIP_TUNE values through the machinery (the JS half), not a
+       scale. #og-clipseat is lab-injected markup (JS half). */
+    /* .live restated: the deck's own `.lbnb.live { display:block }` sits
+       later in source and ties bare `.lbnb` on specificity — the .live
+       form out-specs it so the hide wins from up here */
+    body[data-ogarr="d"] #lb.fv3.og .lbnb,
+    body[data-ogarr="d"] #lb.fv3.og .lbnb.live { display: none; }
+    body[data-ogarr="d"] #lb.fv3.og .lb-rest {
+      position: absolute; left: 100%; top: var(--ogpt, 230px);
+      margin-left: 76px; width: 224px;
+    }
+    body[data-ogarr="d"] #lb.fv3.og .lb-thumbs {
+      display: grid; grid-template-columns: repeat(2, 107px);
+      justify-content: start; gap: 10px; margin-top: 0;
+    }
+    body[data-ogarr="d"] #lb.fv3.og .lb-thumbs img { width: 107px; height: 107px; border-radius: 6px; }
+    body[data-ogarr="d"] #lb.fv3.og .lb-desc { margin: 18px 0 0; max-width: none; text-align: left; }
+    body[data-ogarr="d"] #lb.fv3.og .lb-dims { margin: 14px 0 0; text-align: left; }
+    body[data-ogarr="d"] #lb.fv3.og #og-clipseat {
+      display: block; position: absolute; right: 100%; top: var(--ogpt, 230px);
+      margin-right: 76px; width: 200px;
+    }
+    #og-clipseat video {
+      width: 100%; display: block; border-radius: 8px;
+      box-shadow: 0 0 0 2.5px #111;
+    }
+    #og-clipseat .ogclipcap {
+      margin-top: 10px; text-align: left;
+      font-family: var(--mono); font-size: 10px; font-weight: 700;
+      letter-spacing: .2em; text-transform: uppercase; color: #767676;
+    }
   }
+  /* the base hide lives OUTSIDE the ≥941 block on purpose: below the gate
+     the seat must not fall back to display:block under the card (bitten
+     at the pane's 735px native width) */
+  #og-clipseat { display: none; }
   /* ===== /OGARR LAB ===== */
 
   /* THE HEADER IS ONE LINE ON A CHIP (Dylan, 2026-08-01, replacing the
@@ -15557,20 +15600,41 @@
        neighbours around the new geometry. CSS half: the OGARR LAB block
        by the og go-deep rules. */
     {
-      const ogarrQ = new URLSearchParams(location.search).get("ogarr");
-      if (ogarrQ && "abc".includes(ogarrQ)) document.body.dataset.ogarr = ogarrQ;
       const ogptSync = () => {
         lbCard.style.setProperty("--ogpt", lbCard.style.paddingTop || "24px");
       };
       new ResizeObserver(ogptSync).observe(lbCard);
-      const OGARR_KEYS = { "1": "a", "2": "b", "3": "c", "0": "" };
+      /* D's clip seat — lab-injected so no lab markup ships in the tree
+         proper. The stand-in cut serves EVERY board for now (the real
+         clip program is per-board — the seat is what's being judged). */
+      const clipSeat = document.createElement("div");
+      clipSeat.id = "og-clipseat";
+      clipSeat.innerHTML =
+        '<video src="site/media/og-clip.mp4" poster="site/media/og-clip-poster.jpg"' +
+        ' autoplay muted loop playsinline></video>' +
+        '<div class="ogclipcap">The clip &middot; in hand</div>';
+      lbCard.appendChild(clipSeat);
+      /* D's strip tune — REAL values through the real machinery (the
+         resize door rebuilds and re-seats), bigger minis, wider spread.
+         Saved/restored around the variant so a/b/c/shipped keep the
+         shipped strip. */
+      const OG_STRIP = { mini: 50, gap: 8, pop: 1.2, maxw: .92 };
+      const SHIPPED_STRIP = {};
+      Object.keys(OG_STRIP).forEach(k => { SHIPPED_STRIP[k] = STRIP_TUNE[k]; });
+      const ogarrApply = v => {
+        if (v) document.body.dataset.ogarr = v;
+        else delete document.body.dataset.ogarr;
+        Object.assign(STRIP_TUNE, v === "d" ? OG_STRIP : SHIPPED_STRIP);
+        ogptSync();
+        dispatchEvent(new Event("resize"));
+      };
+      const ogarrQ = new URLSearchParams(location.search).get("ogarr");
+      if (ogarrQ && "abcd".includes(ogarrQ)) ogarrApply(ogarrQ);
+      const OGARR_KEYS = { "1": "a", "2": "b", "3": "c", "4": "d", "0": "" };
       addEventListener("keydown", e => {
         if (lb.hidden || !lb.classList.contains("og")) return;
         if (!(e.key in OGARR_KEYS)) return;
-        if (OGARR_KEYS[e.key]) document.body.dataset.ogarr = OGARR_KEYS[e.key];
-        else delete document.body.dataset.ogarr;
-        ogptSync();
-        dispatchEvent(new Event("resize"));
+        ogarrApply(OGARR_KEYS[e.key]);
       });
     }
   })();

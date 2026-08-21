@@ -968,10 +968,10 @@
     box-shadow: 0 0 0 2.5px var(--bone), 0 34px 90px rgba(0, 0, 0, .6);
   }
   .lb-card .frame img { pointer-events: auto; cursor: pointer; object-fit: contain; }
-  .lb-rest { opacity: 0; transition: opacity .4s ease .18s; }
-  .lb.in .lb-rest { opacity: 1; }
-  /* closing: the card flies home — thumbs/rest must not ride along */
-  .lb:not(.in) .lb-rest { transition: opacity .1s ease; }
+  .lb-rest, #og-clipseat { opacity: 0; transition: opacity .4s ease .18s; }
+  .lb.in .lb-rest, .lb.in #og-clipseat { opacity: 1; }
+  /* closing: the card flies home — thumbs/rest/clip must not ride along */
+  .lb:not(.in) .lb-rest, .lb:not(.in) #og-clipseat { transition: opacity .1s ease; }
   .lb-thumbs { display: flex; justify-content: center; gap: 12px; margin-top: 20px; }
   .lb-thumbs:empty { display: none; }
   .lb-thumbs img {
@@ -2015,87 +2015,55 @@
      deck ruling (photos unreachable, the card is the hero) — this scope is
      the reversal FOR ORIGINALS ONLY. Desktop-gated: the phone lb stays
      card-only until the mobile pass (the sequencing law). */
+  /* THE OG SPREAD (2026-08-20 evening — Dylan's pick from the ogarr lab,
+     his sketch + ruling: "the originals need the whole page in light box
+     view. no flankers"): the og inspection takes the page. Flanker cards
+     out (the deknav chevrons stay; they still step), the CLIP off the
+     left shoulder (#og-clipseat — the STAND-IN cut serving every board
+     until the per-board clip program lands), the extended photo set as a
+     2-up grid + the read off the right. The strip up top wears its own
+     bigger/wider og costume — STRIP_TUNE.og through ST()'s one door (the
+     mob idiom). Desktop-gated ≥941; the phone og view is still the
+     mobile pass's (the sequencing law).
+
+     EVERY DIAL BELOW IS A --og* VAR on the #lb.fv3.og rule — the bench's
+     originals-lb wing binds here; tune the vars, not the consumer rules.
+     --ogpt is not a dial: it mirrors the card's JS-written scoot padding
+     (the ResizeObserver at the IIFE foot) so the columns top-align with
+     the panel. */
   @media (min-width: 941px) {
-    body[data-lb="deck"] #lb.fv3.og .lb-thumbs { display: flex; }
-    #lb.fv3.og .lb-desc { display: block; }
-  }
-
-  /* ===== OGARR LAB (2026-08-20, TEMPORARY — retires on Dylan's pick) =====
-     Three collideable arrangements for the og dossier (thumbs + desc +
-     dims), behind body[data-ogarr] — stamped from ?ogarr=a|b|c at boot,
-     flicked live with keys 1/2/3 (0 = shipped) while an og inspection is
-     open (the JS half sits at the IIFE foot, beside the bench shim). No
-     param = the shipped arrangement. --ogpt is the lab's sync of the
-     card's JS-written scoot padding, so the side columns can top-align
-     with the panel. */
-  @media (min-width: 941px) {
-    /* A — FIT THE FOLD: the whole dossier inside the window; the card
-       pays for it with an og-scoped height budget (the base formula's
-       292 + thumbs 74 + desc ~86 ≈ 452, trimmed to 448 by the tighter
-       furniture below). */
-    body[data-ogarr="a"] #lb.fv3.og .lb-card { width: max(240px, min(430px, calc((100dvh - var(--tbh, 0px) - 448px) / 1.53))); }
-    body[data-ogarr="a"] #lb.fv3.og .lb-thumbs { margin-top: 14px; gap: 10px; }
-    body[data-ogarr="a"] #lb.fv3.og .lb-thumbs img { width: 44px; height: 44px; }
-    body[data-ogarr="a"] #lb.fv3.og .lb-desc { margin-top: 12px; font-size: 12.5px; line-height: 1.6; }
-    body[data-ogarr="a"] #lb.fv3.og .lb-dims { margin-top: 8px; }
-
-    /* B — THE SIDE DOSSIER: the whole rest stack rides the card's right
-       shoulder as a left-aligned column; nothing below the panel, no
-       scroll, the card keeps its full size. */
-    body[data-ogarr="b"] #lb.fv3.og .lb-rest {
-      /* 76px, not the flanks' 44: the column rides the chevron's side, so
-         it clears the on-card stepper's seat (~30px past the card edge) */
-      position: absolute; left: 100%; top: var(--ogpt, 230px);
-      margin-left: 76px; width: 216px;
+    #lb.fv3.og {
+      --ogClipW: 200px;    /* clip column width (height rides the video's ratio) */
+      --ogClipGap: 76px;   /* card edge -> clip column (clears the stepper's seat) */
+      --ogTile: 107px;     /* photo tile square */
+      --ogTileGap: 10px;   /* photo grid gutter */
+      --ogRestW: 224px;    /* right column width (photos + read) */
+      --ogRestGap: 76px;   /* card edge -> right column */
+      --ogDescSize: 13px;  /* the read's type size */
+      --ogColTop: 0px;     /* both columns' extra drop below the panel top */
     }
-    body[data-ogarr="b"] #lb.fv3.og .lb-thumbs {
-      display: grid; grid-template-columns: repeat(2, 54px);
-      justify-content: start; gap: 10px; margin-top: 0;
-    }
-    body[data-ogarr="b"] #lb.fv3.og .lb-desc { margin: 18px 0 0; max-width: none; text-align: left; }
-    body[data-ogarr="b"] #lb.fv3.og .lb-dims { margin: 14px 0 0; text-align: left; }
-
-    /* C — THE FLANKS: photo rail off the left shoulder, the read off the
-       right; the dims line keeps its shipped seat under the card (already
-       inside the base height budget, so no scroll). .lb-rest stays static
-       so the card is the columns' anchor box. */
-    body[data-ogarr="c"] #lb.fv3.og .lb-thumbs {
-      position: absolute; right: 100%; top: var(--ogpt, 230px);
-      margin: 0 44px 0 0; flex-direction: column;
-    }
-    body[data-ogarr="c"] #lb.fv3.og .lb-desc {
-      position: absolute; left: 100%; top: var(--ogpt, 230px);
-      margin: 0 0 0 44px; width: 216px; text-align: left;
-    }
-
-    /* D — THE SPREAD (2026-08-20 evening, Dylan's sketch: "the originals
-       need the whole page in light box view. no flankers"): the og
-       inspection takes the page — flanker cards out (the deknav chevrons
-       stay; they still step), the CLIP off the left shoulder (the
-       stand-in cut from the vault's originals-lab — the real clip
-       program is per-board), the extended photo set as a 2-up grid + the
-       read off the right. The strip up top goes bigger/wider via real
-       STRIP_TUNE values through the machinery (the JS half), not a
-       scale. #og-clipseat is lab-injected markup (JS half). */
     /* .live restated: the deck's own `.lbnb.live { display:block }` sits
-       later in source and ties bare `.lbnb` on specificity — the .live
-       form out-specs it so the hide wins from up here */
-    body[data-ogarr="d"] #lb.fv3.og .lbnb,
-    body[data-ogarr="d"] #lb.fv3.og .lbnb.live { display: none; }
-    body[data-ogarr="d"] #lb.fv3.og .lb-rest {
-      position: absolute; left: 100%; top: var(--ogpt, 230px);
-      margin-left: 76px; width: 224px;
+       later in source — the [data-lb] + .live form out-specs it so the
+       hide wins from up here */
+    body[data-lb="deck"] #lb.fv3.og .lbnb,
+    body[data-lb="deck"] #lb.fv3.og .lbnb.live { display: none; }
+    #lb.fv3.og .lb-desc { display: block; }
+    body[data-lb="deck"] #lb.fv3.og .lb-thumbs {
+      display: grid; grid-template-columns: repeat(2, var(--ogTile));
+      justify-content: start; gap: var(--ogTileGap); margin-top: 0;
     }
-    body[data-ogarr="d"] #lb.fv3.og .lb-thumbs {
-      display: grid; grid-template-columns: repeat(2, 107px);
-      justify-content: start; gap: 10px; margin-top: 0;
+    #lb.fv3.og .lb-thumbs img { width: var(--ogTile); height: var(--ogTile); border-radius: 6px; }
+    #lb.fv3.og .lb-rest {
+      position: absolute; left: 100%;
+      top: calc(var(--ogpt, 230px) + var(--ogColTop));
+      margin-left: var(--ogRestGap); width: var(--ogRestW);
     }
-    body[data-ogarr="d"] #lb.fv3.og .lb-thumbs img { width: 107px; height: 107px; border-radius: 6px; }
-    body[data-ogarr="d"] #lb.fv3.og .lb-desc { margin: 18px 0 0; max-width: none; text-align: left; }
-    body[data-ogarr="d"] #lb.fv3.og .lb-dims { margin: 14px 0 0; text-align: left; }
-    body[data-ogarr="d"] #lb.fv3.og #og-clipseat {
-      display: block; position: absolute; right: 100%; top: var(--ogpt, 230px);
-      margin-right: 76px; width: 200px;
+    #lb.fv3.og .lb-desc { margin: 18px 0 0; max-width: none; text-align: left; font-size: var(--ogDescSize); }
+    #lb.fv3.og .lb-dims { margin: 14px 0 0; text-align: left; }
+    #lb.fv3.og #og-clipseat {
+      display: block; position: absolute; right: 100%;
+      top: calc(var(--ogpt, 230px) + var(--ogColTop));
+      margin-right: var(--ogClipGap); width: var(--ogClipW);
     }
     #og-clipseat video {
       width: 100%; display: block; border-radius: 8px;
@@ -2111,7 +2079,6 @@
      the seat must not fall back to display:block under the card (bitten
      at the pane's 735px native width) */
   #og-clipseat { display: none; }
-  /* ===== /OGARR LAB ===== */
 
   /* THE HEADER IS ONE LINE ON A CHIP (Dylan, 2026-08-01, replacing the
      2026-07-26 stack of collection-name-over-fraction):
@@ -5700,6 +5667,13 @@
         <div class="info lb-fv3only"><span class="nm"><span class="nmt" id="lb-fv3-nmt"></span></span></div>
         <button class="fchip fc-list d7f-cta lb-fv3only" id="lb-fv3-list" type="button"><span class="fl"><span class="ft"></span><svg class="fscript" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path fill-rule="evenodd" shape-rendering="crispEdges" d="M6 2.5h13v19H6V2.5Z M7.4 4.3v15.4h10.2V4.3H7.4Z"/><rect shape-rendering="crispEdges" x="9.8" y="6.5" width="1.4" height="3"/><rect shape-rendering="crispEdges" x="9.8" y="14.5" width="1.4" height="3"/><circle cx="10.5" cy="12" r="1.2"/><path class="sh" shape-rendering="crispEdges" d="M3.5 4.5V23.5H16.5V21H6.5V4.5Z"/></svg><span class="fmini" aria-hidden="true"></span></span></button>
         <span class="fst lb-fv3only avail" id="lb-fv3-st"><span class="dot"></span><span class="sttxt" id="lb-fv3-sttxt"></span></span>
+      </div>
+      <!-- THE OG SPREAD's clip seat (2026-08-20): og desktop only (CSS-gated
+           off #lb.og). One STAND-IN cut serves every board until the
+           per-board clip program lands — the seat is what shipped. -->
+      <div id="og-clipseat">
+        <video src="site/media/og-clip.mp4" poster="site/media/og-clip-poster.jpg" autoplay muted loop playsinline></video>
+        <div class="ogclipcap">The clip &middot; in hand</div>
       </div>
       <div class="lb-rest">
         <div class="lb-thumbs" id="lb-thumbs"></div>
@@ -9798,7 +9772,12 @@
        now the house rule on both costumes). `gapB` retired with the move:
        it was the counter→card air, and nothing sits there any more.
        `prog` joins the desktop set for the line—dot—line below the band. */
-    const STRIP_TUNE = { mini: 37, gap: -10, pop: 1.3, lift: 18, foff: 0,
+    const STRIP_TUNE = { /* THE OG COSTUME (2026-08-20, the spread): the og
+         inspection's strip goes bigger and wider — "use the minis that
+         exist here but tuned. bigger minis wider spread". Merged by ST()
+         exactly like mob; desktop og only (dockActive outranks it). */
+      og: { mini: 50, gap: 8, pop: 1.2, maxw: .92 },
+      mini: 37, gap: -10, pop: 1.3, lift: 18, foff: 0,
       fade: 0, maxw: .86, dur: 900, hdur: 400, sit: 250, stag: 50,
       drop: 12, clr: 78, prog: 12, scoot: 60, dotTau: 170,
       /* THE PHONE COSTUME (2026-08-12 evening — the NB_TUNE.mob idiom):
@@ -9819,10 +9798,18 @@
                 furniture, not a scroller); agap = lane edge → arrow,
                 prog = band rest line → the line—dot—line below it */
              agap: 8, prog: 18 } };
-    /* ONE tune, two costumes — every strip read goes through ST() so a
-       boundary crossing re-dresses the same engine (deckGeom's T idiom) */
+    /* ONE tune, three costumes — every strip read goes through ST() so a
+       boundary crossing re-dresses the same engine (deckGeom's T idiom).
+       The og costume rides an OPEN og inspection only, and dock outranks
+       it: the phone's strip keeps mob even on an og board (the og mobile
+       view is the mobile pass's, unbuilt). */
     const ST = () => dockActive()
-      ? Object.assign({}, STRIP_TUNE, STRIP_TUNE.mob) : STRIP_TUNE;
+      ? Object.assign({}, STRIP_TUNE, STRIP_TUNE.mob)
+      : lb.classList.contains("og")   /* the class, not lb.hidden: populate
+           stamps it before the strip is dealt on the open path (lb still
+           hidden there), and re-stamps it per open so it can't go stale */
+        ? Object.assign({}, STRIP_TUNE, STRIP_TUNE.og)
+        : STRIP_TUNE;
     const lbStrip = document.getElementById("lbstrip");
     const lbSLane = document.getElementById("lbslane");
     const lbProg = document.getElementById("lbsprog");
@@ -15591,52 +15578,18 @@
       window.benchRepose = () => window.dispatchEvent(new Event("resize"));
     }
 
-    /* ── OGARR LAB (2026-08-20) — TEMPORARY, retires on Dylan's pick.
-       The og-dossier arrangement collider: ?ogarr=a|b|c stamps the boot
-       variant, keys 1/2/3 flick live while an og inspection is open
-       (0 = shipped). --ogpt mirrors the card's JS-written scoot padding
-       so the CSS side columns (variants b/c) top-align with the panel;
-       a variant flip fires the resize door so placeDeck re-derives the
-       neighbours around the new geometry. CSS half: the OGARR LAB block
-       by the og go-deep rules. */
-    {
-      const ogptSync = () => {
-        lbCard.style.setProperty("--ogpt", lbCard.style.paddingTop || "24px");
-      };
-      new ResizeObserver(ogptSync).observe(lbCard);
-      /* D's clip seat — lab-injected so no lab markup ships in the tree
-         proper. The stand-in cut serves EVERY board for now (the real
-         clip program is per-board — the seat is what's being judged). */
-      const clipSeat = document.createElement("div");
-      clipSeat.id = "og-clipseat";
-      clipSeat.innerHTML =
-        '<video src="site/media/og-clip.mp4" poster="site/media/og-clip-poster.jpg"' +
-        ' autoplay muted loop playsinline></video>' +
-        '<div class="ogclipcap">The clip &middot; in hand</div>';
-      lbCard.appendChild(clipSeat);
-      /* D's strip tune — REAL values through the real machinery (the
-         resize door rebuilds and re-seats), bigger minis, wider spread.
-         Saved/restored around the variant so a/b/c/shipped keep the
-         shipped strip. */
-      const OG_STRIP = { mini: 50, gap: 8, pop: 1.2, maxw: .92 };
-      const SHIPPED_STRIP = {};
-      Object.keys(OG_STRIP).forEach(k => { SHIPPED_STRIP[k] = STRIP_TUNE[k]; });
-      const ogarrApply = v => {
-        if (v) document.body.dataset.ogarr = v;
-        else delete document.body.dataset.ogarr;
-        Object.assign(STRIP_TUNE, v === "d" ? OG_STRIP : SHIPPED_STRIP);
-        ogptSync();
-        dispatchEvent(new Event("resize"));
-      };
-      const ogarrQ = new URLSearchParams(location.search).get("ogarr");
-      if (ogarrQ && "abcd".includes(ogarrQ)) ogarrApply(ogarrQ);
-      const OGARR_KEYS = { "1": "a", "2": "b", "3": "c", "4": "d", "0": "" };
-      addEventListener("keydown", e => {
-        if (lb.hidden || !lb.classList.contains("og")) return;
-        if (!(e.key in OGARR_KEYS)) return;
-        ogarrApply(OGARR_KEYS[e.key]);
-      });
-    }
+    /* ── THE OG SPREAD's column anchor (2026-08-20, shipped with the
+       spread — the ogarr lab retired the same day on Dylan's pick, D won;
+       the losing variants live in git history). The spread's side columns
+       are absolute children of #lb-card and must top-align with the
+       PANEL, but the card's padding-top is the JS-written scoot — CSS
+       can't read it, so --ogpt mirrors it. A ResizeObserver, not a hook
+       in the scoot's writer: padding moves the card's border box, so
+       every write lands here without touching placeDeck. */
+    const ogptSync = () => {
+      lbCard.style.setProperty("--ogpt", lbCard.style.paddingTop || "24px");
+    };
+    new ResizeObserver(ogptSync).observe(lbCard);
   })();
   </script>
 </body>

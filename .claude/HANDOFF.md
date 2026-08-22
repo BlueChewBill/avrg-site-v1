@@ -1,186 +1,114 @@
-# Handoff — AVRG site v1 — 2026-08-16
+# Handoff — AVRG site v1 — 2026-08-22 (LAUNCH DAY)
+
+> The 2026-08-16 handoff this file replaces (the port recipe, the port
+> baseline hash `9aca992`, the closed A/B experiment record) lives in this
+> file's git history — CLAUDE.md's references to "the HANDOFF" for that
+> history mean the pre-08-22 versions.
 
 ## Where we are
 
-**This repo was born today.** The live site — the vault's
-`redesign/k-home-dual.html` — now lives here as `index.html` with its
-asset paths repointed, beside exactly what builds it (`sources/` →
-`build_site.py` → `site/`). Two commits: THE COPY, then THE DEAD CODE
-COMES OUT (the takeover-case machine and `cardInner`'s photo branch,
-both already unreachable). Nothing about the page's behaviour changed
-in the move.
+Yesterday (08-21) was the big pre-launch session, fully landed and
+verified, **NOTHING PUSHED — main is 34+ commits ahead of origin, and
+pushing IS publishing the launch.** What landed:
 
-**Copied from the vault at `9aca992`** (`~/Projects/avrg-site`, working
-tree clean at the time). That hash is the **port baseline** — see below.
+- **THE LANDING BAKED** — the desktop arrival ceremony (draw big at .42
+  viewport, ×2 draw, sections land originals→shaped→routed, video from
+  left, clamp print below the fold) is now the default home arrival.
+  Thread 1's desktop half is CLOSED. Record: k-core.md THE LANDING.
+- **THE SOUND PASS** — one gate on the synth kit: phone fully silent
+  except video (Dylan's ruling), per-voice cooldown, one-gesture-one-voice
+  (deck add AND the lb toss), lb-open click settle-synced. Record: the new
+  `.claude/docs/sounds.md`.
+- **THE INTRO BELT** — the phone load intro can no longer strand a sealed
+  white page on a dead main script (Dylan's real stuck-page bug, reproduced
+  then killed; 13s self-contained belt in the arm). Record: mobile.md.
+- **THE BENCH LANDING WING** — 22 params charted in CompUI (commits
+  07285b6 → 9b66146), replay action, resizable stage/params splitter
+  (his ask). The wing survives the bake; every desktop stage load now arms.
+- **DOMAINS** — avrg.cards (primary, CNAME committed) + avrg.website
+  (301 forwarder, the bio joke). DNS live and verified at Porkbun.
 
-**The live site is still the VAULT's Pages deploy.** v1 is PUBLISHED at
-**https://bluechewbill.github.io/avrg-site-v1/** (verified 2026-08-16:
-zero 404s, zero console errors, all routes render, all 88 home images
-load, mobile costume correct — bay parked, ground forced white, intro
-runs, YOUR PICKS renders). Until cutover there are two public copies of
-the same page; the vault's is the one people have the link to.
+## Next task
 
-## THE A/B EXPERIMENT — RAN AND CLOSED (2026-08-16)
+**Dylan's ruling: the ORIGINALS LB round is TOP PRIORITY.** The
+anatomy-sheet direction from his PEACH/PIRO mockup: board-first spec
+sheet — big deck photo, numbered callouts doing the explaining, GRIP/TOP
++ PROFILE/CONCAVE tiles, bottom status bar (available · name · one-of-one
+· dims · WANT). It replaces the card-center og spread as the destination;
+the card stays the doorway. Done for round 1 = a static dress collision
+on Peach/Piro's REAL assets (2 anatomy variants vs the shipped spread),
+his react. Then: data wiring to per-board folders, og-wing re-chart
+(bench law — the og wings change shape → cartographer dispatch), og
+mobile view.
 
-The same 12-item prompt ran in both repos on parallel `ab-run`
-branches. **The vault's implementation won** ("vaults changes win by
-some pixels") and was ported here whole (the port-log entry below);
-this repo's losing branch is DELETED, its record preserved here.
+He is organizing per-board folders (outside the repo, likely Desktop):
+`anatomy.jpg · grip.jpg · profile.jpg · angle.jpg · clip.mp4 · info.txt`
+with info.txt lines `NAME / DIMS / 1: / 2: / 3: / COPY`. If the folders
+line up, the LB becomes data wiring. Ask if they're ready; don't block
+on them for the dress collision (Peach/Piro has shippable assets in
+`sources/originals/` + `site/img/`).
 
-**What this repo's run proved:** the scoped docs carried **11 of 12
-items without leaving the repo**. The one exception was item 2 — the
-decode-lab knob grammar was unimplementable without reading the
-vault's `redesign/decode-slowmo.html` end to end, and the cure is now
-a permanent pointer in lightbox.md (the lab is the authority for the
-collapse decode's dials). Also surfaced: the VAULT's own labs.md never
-catalogued that lab — the lean repo's scout found a hole in the rich
-repo's docs.
+## Pre-push checklist (the cutover — HIS call, target today ~noon)
 
-**The trip log (everything the run retrieved from outside this repo):**
-- `vault redesign/` (ls) — located the decode lab. CHANGED THE WORK.
-- `vault redesign/decode-slowmo.html` (read end to end) — THE trip:
-  every phrase in item 2 is a dial there. Item 2 was UNIMPLEMENTABLE
-  without it. The prescribed doc line now exists (lightbox.md).
-- `vault .claude/docs/labs.md` (grep) — no decode-slowmo entry;
-  confirmed the lab file is the sole authority. Did not change work.
-- `vault .claude/docs/open-threads.md` (grep) — context only.
-Nothing else left the repo.
-
-**The losing run, for the record** (10 commits, deleted branch): all
-12 implemented; its distinctive answers were three collideable tile
-variants behind a `?tiles=` switch (the vault's single fv3 re-dress
-won), a scrollspy it called "the spy inside the sleeping relay"
-(convergent with the vault's watcher — BOTH independently refused to
-wake RELAY_ON), and an identical 80vw call on item 6. Its four
-verification-trap gotchas were harvested into gotchas.md; the rest
-retired with the branch.
-
-## The porting recipe — vault edits come here
-
-Pre-cutover changes get made in the **vault working copy** (the page
-that is actually live) and ported into v1 at session end. Deliberate:
-it is the test of whether v1's structure survives real change.
-
-1. Get the delta (`<baseline>` = the hash recorded below, not a fixed one):
-   `git -C ~/Projects/avrg-site diff <baseline>..HEAD -- redesign/k-home-dual.html`
-2. Apply those hunks to `index.html` here. The two files are
-   **identical modulo the path repoints**, so hunk context matches
-   unless the hunk itself touches a path.
-3. Translate any path the diff introduces:
-   `../site/` → `site/` · `media/` → `site/media/` ·
-   `../videos/web/` → `site/media/` ·
-   `card-lab/canva/` → `site/img/cards/canva/` ·
-   `card-lab/cuts/` → `site/img/cards/cuts/` ·
-   `../favicon.png` → `favicon.png`
-4. **Port any new asset the diff references** — a new canva cutout, a
-   new clip, a new photo. v1 ships the live SUBSET (66 of the vault's
-   168 canva files), so a new board's card art will NOT already be here.
-5. Serve `:8124` (`avrg-v1`) and check the page actually boots — the
-   inline-script syntax check in `gotchas.md` first, then the browser.
-6. **Update the baseline hash in this file** to the vault's new HEAD.
-
-**Baseline: `9170375`.**
-
-**Port log**
-- `c54a2a2` (2026-08-20) — **THE ORIGINALS GO DEEP**, commit-scoped port (not
-  a baseline diff): the og-scoped lb photos+info (see lightbox.md's entry).
-  4 hunks, 4 clean, no new paths (CUT/IMG are runtime helpers, already
-  repointed). **NOTE: the baseline hash below is STALE** — the 2026-08-19
-  ports (S1/S2, the flip mark) were cherry-picked without updating it, and a
-  translated full-file diff now measures ~2010 divergent lines: partly v1's
-  own founding cleanups (permanent by design), partly what looks like
-  UNPORTED vault work (the Satoshi-Light face + tagline tick from
-  2026-08-17, the deck-mark T3/T4 retirement). A reconciliation pass — walk
-  the vault log since `9170375`, classify each commit ported/pending/
-  vault-only — is an open chore; until then port commit-scoped, as this one
-  and the 08-19 ports did.
-- `762f975 → 9170375` (2026-08-16) — **the A/B experiment's WINNER**: the
-  vault half's all-12 implementation (`e8774a5`) plus the chevron re-seat
-  on his react (`9170375`). 49 hunks, **49 clean** — no fuzz, no offsets,
-  no rejects; the `RELAY_ON` marker that fuzzed last time sat outside
-  this delta. **One path translated**, the only one the diff introduces:
-  the blank-card art, `../site/img/avrgbg-buttonflip.png` →
-  `site/img/avrgbg-buttonflip.png`. **The asset itself came across** —
-  the vault web-sized the raw 5.2MB export to 413201 bytes (713×800);
-  both repos now hold identical bytes (md5 `8d044a6e…`), and main's
-  5.2MB original is gone. The divergence check held again: v1-vs-vault
-  came out identical before and after **except the one expected new
-  pair** (the buttonflip repoint), which is what a newly-introduced path
-  is supposed to add. Verified headless (private CDP Chrome, own port +
-  profile — the MCP profile was another session's): zero console errors,
-  exceptions, failed requests and boot errors on all six routes; and the
-  1440×790 lightbox measured **byte-for-byte the same as the vault's own
-  served page** — card 265px, dims line identical, both chevrons seated
-  18×30 at top 402 / left 525·896.
-  **Note:** main carries the winner now; the losing `ab-run` was
-  harvested (trip log + verification gotchas above/in gotchas.md) and
-  deleted. The winner's surface laws are appended to cards / contact-
-  composer / header-bar / lightbox / mobile / home-shop docs.
-- `9aca992 → 762f975` (2026-08-16) — intro react 3 + the dims/flip card
-  pass. 18 hunks, 17 clean and 1 at fuzz 1 (v1's own `RELAY_ON` marker
-  comment sits in that hunk's trailing context, in `renderShopAll`).
-  No path translation was needed: the flip chip rides the derived
-  `m.img`/`m.bot`, so v1's repoints flow through. **The recipe held** —
-  v1's divergence from the vault came out byte-identical before and
-  after, which is the check worth repeating: diff v1 against the OLD
-  vault commit, port, diff against the NEW one, and the two divergences
-  must match.
-
-## The cutover checklist — parked, on Dylan's word, in order
-
-1. **Verify the v1 live URL** — the Pages deploy renders, boards load,
-   media plays, favicon lands.
-2. **Dylan buys the domain** — he wants **avrg.website** and
-   **avrg.cards**. His purchase, not ours.
-3. **`CNAME` file in this repo + DNS at the registrar**, per the GitHub
-   Pages custom-domain docs. No code change is needed for the domain
-   itself: `siteUrl()` derives from `location.href`, so every DM/contact
-   deep link follows the new address automatically.
-4. **Flip the vault repo private.** Its Pages URL dies with it — free
-   plans do not serve Pages from private repos. That is the point of
-   doing it after step 3, not before.
-5. **Future work happens in v1 directly** — the vault-edit→port loop
-   ends here. Optionally rename the local folders so the working repo
-   takes the familiar path; note that changes Claude's per-project
-   memory keying, so the accumulated project memory follows the folder
-   name, not the repo.
-
-## Standing constraints
-
-- **Do not wake the scroll relay.** `RELAY_ON = false` is a deliberate
-  park (one switch gates the CSS and the machine). Its tuning/feel pass
-  and phone translation are post-v1, on his ask.
-- **Dylan makes the push calls.** Pushing `main` is publishing.
-- **iPad changes are lowest priority and unenumerated** — he checked the
-  header on glass ("header looks good") and wants "a few more" changes
-  he has not listed. Wait for him to raise them; don't go hunting.
-- **Design exploration happens against the VAULT's labs**, which did not
-  come across. Ship the result here.
-- **The approved surfaces are approved** — the picks page, the select
-  ceremony, the mobile pass. Do not reopen without his ask.
+1. Page `<title>` still says "dual ground" — outward-facing, fix before push.
+2. og per-board clips: ONE stand-in cut serves all six boards — resolve
+   or gate the seat (open-threads.md's og entry).
+3. Push main → GH Pages binds avrg.cards (CNAME is in) → repo Settings →
+   Pages → Enforce HTTPS once the cert issues → verify the live URL.
+4. Flip the vault repo (`bluechewbill/avrg-site`) private — its Pages URL
+   dies with it. Future work continues here.
 
 ## Read these, skip the rest
 
-- `CLAUDE.md` — the index: layout, always-on rules, the docs map.
-- `.claude/docs/gotchas.md` — the v1 section at the bottom (port paths,
-  the canva subset, the sources-ordering law), then the newest platform
-  entries; the pane's rAF wedge is live again, so probe before trusting
-  any motion check.
-- `.claude/docs/<surface>.md` — whichever surface the task touches.
-- `index.html` — **ANCHOR SEARCH ONLY** (~14k lines). Useful anchors:
-  `THE INTRO`, `.fveil`, `#logo-draw`, `decodeInto`/`decodeTo`,
-  `DIMS_MM`, `renderPicks`, `playMenuSelect`, `RELAY_ON`.
+- `.claude/docs/lightbox.md` — the og spread record; the surface the round redesigns.
+- `.claude/docs/open-threads.md` — the ORIGINALS RETHINK history ("they
+  need a lot of explaining" is the thesis the anatomy sheet answers).
+- `context/card.md` — the card pack (regenerated 08-21) for card-adjacent work.
+- `.claude/docs/k-core.md` (THE LANDING section) — only if touching home.
+- `.claude/docs/sounds.md` — only if touching sounds (the law lives there).
 
-## Parked / later (from the vault's threads)
+Everything else is NOT needed for the originals round.
 
-- ~~His named next tasks (1) intro tweaks (2) the board-dimension
-  decode~~ — **BOTH LANDED 2026-08-16 and were PORTED here** (the
-  `762f975` port: draw ×2 + seat + specks + bleed, the mobile dims
-  decode, the flip chip — records in mobile.md + k-core.md). Awaiting
-  his react; decode TIMING/feel tuning may still follow (the lab he
-  named is in the vault).
-- Thread 1's desktop half (the landing around the draw), thread 2 (home
-  collection cards redesign), thread 3's desktop half (drop-row
-  navigations still teleport above 941).
-- The relay wake; the ORIGINALS RETHINK; the iPad feel pass; the sound
-  pass; the browser-compat sweep (Safari vs Chrome).
+## Context that isn't in the code
+
+- **Dylan-speak:** "routed" = the classic line (hand-shaped vs routed).
+- **Landing laws:** drawSpeed ships as a ride-start SMIL rescale — NEVER
+  bake the SVG clocks (the phone intro shares the SVG and derives its
+  beats from them). The clamp print below the fold is RULED a fun find —
+  don't "fix" it upward. Open design Q, low priority: the mid-session
+  home-return draw plays base speed while the arrival draws ×2 — one-liner
+  if he wants them matched.
+- **Sounds:** kbonk stays parked on his word. The lb-open click moved
+  ~130ms later (true settle) — he hasn't explicitly blessed the listen.
+- **Bench:** `land-veil-dur` stays LOCKED (a live driver needs a dual-path
+  applier Dylan would have to order). A deliberately-slowed bench ride can
+  be swept by the arm's 12s belt mid-ride (recorded find, harmless shipped).
+- **Verification laws (all in gotchas.md / sounds.md):** parallel CDP
+  harnesses need PRIVATE debug ports; parallel agents namespace their
+  scratchpad dirs; double-loading the 900KB page wedges a headless
+  renderer; a shallow deck (<3 cards) hides re-stack sound regressions.
+
+## Parked / later
+
+- **Blur-on-fades pass** — never started; the belt edge fades are
+  `::before/::after` overlays that can take backdrop-filter + a mask
+  feather; `.topbar`/`.fveil` are the in-file precedent. Collide 2–3
+  strengths.
+- **Calipers** — CL 03/06/08/12/16/19/26 + originals + resale → `DIMS_MM`
+  type-in session (he dictates).
+- **New boards** — photos land in `sources/` (ORDERING LAW: sort LAST),
+  then `build_site.py`.
+- **About page** — vault `about/ABOUT-BUILD.md`: 9 beats, his trim target
+  5–6; media exists for beats 4/5/6/8; his hunt is 1/2/3/7/9;
+  `Automatic.MP4` needs a web-compressed cut. Desktop one-screen, phone
+  vertical scroll. Low priority, his words.
+- **Chips raised, fate unknown** (re-raise if wanted): seatFly landing-rect
+  guard (card arcs to corner if deck re-renders mid-add-flight); closeLb's
+  430ms teardown vs the .55s flight.
+- **Small wrinkles on record:** clearIntro doesn't clear the pose transform
+  (the belt covers the user-visible case); the phone intro transiently
+  overflows horizontally ~900ms in (settles, pre-existing); the arm belt
+  doesn't cancel driver timers (bench-only).
+- **Post-launch tier:** the dark base CSS proven-identical sweep; the
+  Safari/browser-compat sweep; iPad pass; waking the relay (his word only);
+  the three-scheme ground picker.

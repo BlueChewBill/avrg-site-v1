@@ -5,3 +5,4 @@ __pycache__/
 
 # CompUI pilot bench (symlink to ~/projects/CompUI/pilot — local tooling, never committed)
 /bench
+.claude/worktrees/

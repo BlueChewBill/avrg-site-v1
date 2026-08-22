@@ -1,114 +1,83 @@
-# Handoff — AVRG site v1 — 2026-08-22 (LAUNCH DAY)
+# Handoff — AVRG site v1 — 2026-08-22 (post-launch)
 
-> The 2026-08-16 handoff this file replaces (the port recipe, the port
-> baseline hash `9aca992`, the closed A/B experiment record) lives in this
-> file's git history — CLAUDE.md's references to "the HANDOFF" for that
-> history mean the pre-08-22 versions.
+> Previous handoffs (the launch-day briefing, the old port recipe) live in
+> this file's git history.
 
 ## Where we are
 
-Yesterday (08-21) was the big pre-launch session, fully landed and
-verified, **NOTHING PUSHED — main is 34+ commits ahead of origin, and
-pushing IS publishing the launch.** What landed:
+**THE SITE IS LIVE at https://avrg.cards.** The cutover ran in the small
+hours of launch day: 35 commits pushed, domain bound, cert issued, Enforce
+HTTPS on, avrg.website 301-forwards, vault repo flipped private (old URL
+dead). Every push to main now publishes immediately.
 
-- **THE LANDING BAKED** — the desktop arrival ceremony (draw big at .42
-  viewport, ×2 draw, sections land originals→shaped→routed, video from
-  left, clamp print below the fold) is now the default home arrival.
-  Thread 1's desktop half is CLOSED. Record: k-core.md THE LANDING.
-- **THE SOUND PASS** — one gate on the synth kit: phone fully silent
-  except video (Dylan's ruling), per-voice cooldown, one-gesture-one-voice
-  (deck add AND the lb toss), lb-open click settle-synced. Record: the new
-  `.claude/docs/sounds.md`.
-- **THE INTRO BELT** — the phone load intro can no longer strand a sealed
-  white page on a dead main script (Dylan's real stuck-page bug, reproduced
-  then killed; 13s self-contained belt in the arm). Record: mobile.md.
-- **THE BENCH LANDING WING** — 22 params charted in CompUI (commits
-  07285b6 → 9b66146), replay action, resizable stage/params splitter
-  (his ask). The wing survives the bake; every desktop stage load now arms.
-- **DOMAINS** — avrg.cards (primary, CNAME committed) + avrg.website
-  (301 forwarder, the bio joke). DNS live and verified at Porkbun.
+Same session, the **originals LB direction SETTLED — THE ZONE ruling**
+(record: open-threads.md's og entry, 2026-08-22): card stays the constant,
+right of it a defined **480×640 zone** each original fills with its own
+hand-composed sheet. Dylan composes at 2× (960×1280) in the Figma kit —
+page **"07 · OG Sections — fill per board"** (six canvases, OG 02 seeded).
+The kit's "Originals LB Mockup" page holds the six reaction variants
+(A–F) that got us here. His per-board loop: bg-removed top+bottom cutouts
+for the card → find a clip → compose the section. Sections may differ per
+board on purpose; spec-only captions, no ply line, no color-salesman copy.
 
 ## Next task
 
-**Dylan's ruling: the ORIGINALS LB round is TOP PRIORITY.** The
-anatomy-sheet direction from his PEACH/PIRO mockup: board-first spec
-sheet — big deck photo, numbered callouts doing the explaining, GRIP/TOP
-+ PROFILE/CONCAVE tiles, bottom status bar (available · name · one-of-one
-· dims · WANT). It replaces the card-center og spread as the destination;
-the card stays the doorway. Done for round 1 = a static dress collision
-on Peach/Piro's REAL assets (2 anatomy variants vs the shipped spread),
-his react. Then: data wiring to per-board folders, og-wing re-chart
-(bench law — the og wings change shape → cartographer dispatch), og
-mobile view.
+Depends on what Dylan brings (he said the site "might be a Sunday thing"):
 
-He is organizing per-board folders (outside the repo, likely Desktop):
-`anatomy.jpg · grip.jpg · profile.jpg · angle.jpg · clip.mp4 · info.txt`
-with info.txt lines `NAME / DIMS / 1: / 2: / 3: / COPY`. If the folders
-line up, the LB becomes data wiring. Ask if they're ready; don't block
-on them for the dress collision (Peach/Piro has shippable assets in
-`sources/originals/` + `site/img/`).
-
-## Pre-push checklist (the cutover — HIS call, target today ~noon)
-
-1. Page `<title>` still says "dual ground" — outward-facing, fix before push.
-2. og per-board clips: ONE stand-in cut serves all six boards — resolve
-   or gate the seat (open-threads.md's og entry).
-3. Push main → GH Pages binds avrg.cards (CNAME is in) → repo Settings →
-   Pages → Enforce HTTPS once the cert issues → verify the live URL.
-4. Flip the vault repo (`bluechewbill/avrg-site`) private — its Pages URL
-   dies with it. Future work continues here.
+1. **If a composed section exists** (or he wants help composing): export
+   it at 2× to `site/img/og/og-NN-section.png`, then build the site-side
+   seat — og LB: card centered, zone right (480×640 @1× reference, scales
+   with the LB), clip + short text left. Done = the first board's new LB
+   live-ready on :8124, desktop. The og-wing bench re-chart
+   (cartographer dispatch) rides this landing.
+2. **The Safari sweep** — he raised it at session end, it's newly urgent
+   because the site is PUBLIC now. Good phone-free candidate. Plan already
+   given to him: desktop Safari pass on his Mac (console + walk every
+   route/ceremony), fix the small stuff (playsinline, -webkit- prefixes,
+   audio unlock timing, JS feature gates). iOS is already largely proven —
+   every iPhone browser is WebKit and the phone costume was built/tested
+   against his iPhone + the sim all along.
 
 ## Read these, skip the rest
 
-- `.claude/docs/lightbox.md` — the og spread record; the surface the round redesigns.
-- `.claude/docs/open-threads.md` — the ORIGINALS RETHINK history ("they
-  need a lot of explaining" is the thesis the anatomy sheet answers).
-- `context/card.md` — the card pack (regenerated 08-21) for card-adjacent work.
-- `.claude/docs/k-core.md` (THE LANDING section) — only if touching home.
-- `.claude/docs/sounds.md` — only if touching sounds (the law lives there).
+- `.claude/docs/open-threads.md` (og entry, 2026-08-22 tail) — THE ZONE
+  ruling record; the contract for the og work.
+- `.claude/docs/lightbox.md` — the og spread the zone build replaces.
+- `.claude/docs/gotchas.md` — before any browser verification (and the
+  Safari sweep).
+- CLAUDE.md "Where things stand" — launch + zone entries updated 08-22.
 
-Everything else is NOT needed for the originals round.
+Everything else is NOT needed. The Figma kit file is
+`2QS87sR9PBcckdYhFrPsIJ` ("AVRG — Site Kit"); mockup archaeology lives
+there, not in the repo.
 
 ## Context that isn't in the code
 
-- **Dylan-speak:** "routed" = the classic line (hand-shaped vs routed).
-- **Landing laws:** drawSpeed ships as a ride-start SMIL rescale — NEVER
-  bake the SVG clocks (the phone intro shares the SVG and derives its
-  beats from them). The clamp print below the fold is RULED a fun find —
-  don't "fix" it upward. Open design Q, low priority: the mid-session
-  home-return draw plays base speed while the arrival draws ×2 — one-liner
-  if he wants them matched.
-- **Sounds:** kbonk stays parked on his word. The lb-open click moved
-  ~130ms later (true settle) — he hasn't explicitly blessed the listen.
-- **Bench:** `land-veil-dur` stays LOCKED (a live driver needs a dual-path
-  applier Dylan would have to order). A deliberately-slowed bench ride can
-  be swept by the arm's 12s belt mid-ride (recorded find, harmless shipped).
-- **Verification laws (all in gotchas.md / sounds.md):** parallel CDP
-  harnesses need PRIVATE debug ports; parallel agents namespace their
-  scratchpad dirs; double-loading the 900KB page wedges a headless
-  renderer; a shallow deck (<3 cards) hides re-stack sound regressions.
+- **The zone contract:** the site renders exactly the 480×640 box; what's
+  inside is baked per-board in Figma. This deliberately KILLS the
+  template-consistency problem (photos no longer need to match across
+  boards). The card carries dims/AVAILABLE/WANT — the sheet never repeats
+  them.
+- **Figma mechanics:** uploaded Peach/Piro assets live in the kit (bottom
+  cutout hash reused across variants). The kit's Satoshi trap still
+  stands (Archivo Black stand-in). Loose drag-parts sit above the mockup
+  frames.
+- **Launch facts:** GH Pages API path used for the cutover:
+  `gh api repos/BlueChewBill/avrg-site-v1/pages` (status/cert), PUT with
+  `https_enforced=true` once cert approved. The og stand-in clip (one cut,
+  six boards) knowingly shipped.
+- **His energy:** pool work Saturday morning; today ran slower than he
+  hoped — keep Sunday's scope tight, one board end-to-end beats six
+  half-wired.
 
 ## Parked / later
 
-- **Blur-on-fades pass** — never started; the belt edge fades are
-  `::before/::after` overlays that can take backdrop-filter + a mask
-  feather; `.topbar`/`.fveil` are the in-file precedent. Collide 2–3
-  strengths.
-- **Calipers** — CL 03/06/08/12/16/19/26 + originals + resale → `DIMS_MM`
-  type-in session (he dictates).
-- **New boards** — photos land in `sources/` (ORDERING LAW: sort LAST),
-  then `build_site.py`.
-- **About page** — vault `about/ABOUT-BUILD.md`: 9 beats, his trim target
-  5–6; media exists for beats 4/5/6/8; his hunt is 1/2/3/7/9;
-  `Automatic.MP4` needs a web-compressed cut. Desktop one-screen, phone
-  vertical scroll. Low priority, his words.
-- **Chips raised, fate unknown** (re-raise if wanted): seatFly landing-rect
-  guard (card arcs to corner if deck re-renders mid-add-flight); closeLb's
-  430ms teardown vs the .55s flight.
-- **Small wrinkles on record:** clearIntro doesn't clear the pose transform
-  (the belt covers the user-visible case); the phone intro transiently
-  overflows horizontally ~900ms in (settles, pre-existing); the arm belt
-  doesn't cancel driver timers (bench-only).
-- **Post-launch tier:** the dark base CSS proven-identical sweep; the
-  Safari/browser-compat sweep; iPad pass; waking the relay (his word only);
-  the three-scheme ground picker.
+- og mobile view (after the first desktop board lands).
+- Per-board folders (his Desktop) — spec now: bottom-cut + top-cut +
+  free-form raw shots + clip.mp4 + info.txt (name/dims only).
+- The og-wing bench re-chart — dispatch WITH the zone landing, not before.
+- Blur-on-fades pass, calipers/DIMS_MM session, about page, thread 2
+  (home collection cards via the plate lab), thread 3 desktop half,
+  relay (his word only), iPad (lowest).
+- Post-launch tier now ACTIVE tier: the Safari/browser-compat sweep (see
+  Next task), the dark base CSS proven-identical sweep.

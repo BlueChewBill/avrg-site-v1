@@ -9722,7 +9722,16 @@
        first visible) falls forward — the right flank takes the stage; a
        collection fully in the deck closes the inspection, nothing left to
        inspect. */
-    function tossExchange() {
+    /* `quiet` (2026-08-21 fix round) — ONE GESTURE, ONE VOICE; THE LANDING
+       OWNS IT. This exchange only ever runs as the tail of a toss INTO the
+       deck (one call site, the lb-carry's toss branch), and that toss is
+       already answered by seatFly's landing beat when the card reaches its
+       shelf. Both are the same kclick on the same gesture ~400ms apart —
+       the add double-click's shape exactly (see bayQuiet at renderBay).
+       The caller passes the flag; the arrow-press exchange next door
+       (deckExchange) is a DIFFERENT gesture with no landing of its own and
+       keeps its settle voice. */
+    function tossExchange(quiet) {
       if (!cur) return;
       xactSettle();
       const ci = cur.ci, c = COLLECTIONS[ci];
@@ -9783,7 +9792,7 @@
         if (staying) lbCard.classList.add("redress", "navdraw");
         xactReveal();
         xactClear();
-        kclick();
+        if (!quiet) kclick();   /* the toss's voice is its landing on the shelf */
       }, dur);
     }
 
@@ -10961,7 +10970,10 @@
         unlockScroll();
         cur = null;
         if (lbSrc) { lbSrc.el.style.visibility = ""; lbSrc = null; }
-        if (backCard && !soft) landBeat(backCard);   /* touchdown: press + click — desktop only, the soft return lands silent */
+        if (backCard && !soft) landBeat(backCard);   /* touchdown: press + click.
+          The soft (phone) return was always silent by this branch; since the
+          sound gate the phone is silent by RULE too, so the !soft test now
+          only picks the press, not the dialect. */
         rails.forEach(r => { r.frozen = false; });   /* the line moves on once the card is home */
         /* lisst membership may have changed while the lightbox was open —
            but NEVER under a live picks ceremony (2026-08-16 A/B verify
@@ -11074,7 +11086,10 @@
     }
     /* lightbox → deck (close of a case inspection): the add's arc and
        fall, landing beat and all. The lb releases instantly — the fly
-       IS the card — and the shelf gap holds until touchdown. */
+       IS the card — and the shelf gap holds until touchdown.
+       (The beat is DESKTOP-ONLY since 2026-08-21: this arc runs on both
+       surfaces, and the sound gate mutes the phone half — the press
+       animation still plays there, only the click is gone.) */
     function lbToShelfArc(item) {
       const { ci, k } = cur;
       const b = COLLECTIONS[ci].boards[k];
@@ -11890,20 +11905,48 @@
        arrives (the animationend law in gotchas.md, same shape). First one
        through wins; the other is disarmed. Scoped to the element itself —
        transitionend BUBBLES and the card's children transition transform
-       too — and to the one property. ---- */
+       too — and to the one property.
+       AND IT MUST NOT INHERIT SOMEONE ELSE'S LANDING (2026-08-21 fix
+       round): the element is shared furniture. Interrupt the flight — a
+       strip jump, a swipe, a neighbour step all re-write the same
+       transform on the same node — and the flight's own transition is
+       CANCELLED while the interrupting one runs to its own, much shorter,
+       end. That end is the same target and the same property, so a bare
+       transitionend listener adopts it and fires the arrival beat mid-swap
+       (the lb's guard tokens can't see it: a strip jump never touches
+       lbOpenN, lbFlying or lb.hidden). So `transitioncancel` DISARMS the
+       listener without firing: an interrupted flight has no settle to
+       ride, and falls back to the timer — exactly what the bare timer did
+       before any of this. ---- */
     function onSettle(el, prop, fn, fallback) {
-      let done = false;
-      function h(e) { if (e.target === el && e.propertyName === prop) fire(); }
-      function fire() {
-        if (done) return;
-        done = true;
-        el.removeEventListener("transitionend", h);
-        fn();
+      let done = false, timer = 0;
+      function mine(e) { return e.target === el && e.propertyName === prop; }
+      function off() {
+        el.removeEventListener("transitionend", land);
+        el.removeEventListener("transitioncancel", cut);
       }
-      el.addEventListener("transitionend", h);
-      setTimeout(fire, fallback);
+      function land(e) {
+        if (done || !mine(e)) return;
+        done = true; off(); clearTimeout(timer); fn();
+      }
+      function cut(e) {
+        /* interrupted: stop listening, but leave the timer armed — it is
+           the only voice left for a flight that never lands */
+        if (done || !mine(e)) return;
+        off();
+      }
+      function late() { if (done) return; done = true; off(); fn(); }
+      el.addEventListener("transitionend", land);
+      el.addEventListener("transitioncancel", cut);
+      timer = setTimeout(late, fallback);
     }
-    const dockActive = () => matchMedia("(max-width: 940px)").matches;
+    /* the phone line, asked live. Rides the MediaQueryList `mq` already
+       built for placeVideo rather than minting a fresh one per call —
+       a retained MQL re-evaluates .matches, it is not a snapshot, so the
+       semantics are identical and bayTick stops allocating one every
+       frame. mq is declared far above this and this arrow can only run
+       after both have initialized, so there is no TDZ hazard. */
+    const dockActive = () => mq.matches;
     /* ---- sound kit: one shared context, tiny synthesized voices, no
        assets. The SND row gates every voice (placeholder mute — the real
        audio pass, incl. per-ground sound sets, is parked in CLAUDE.md
@@ -12001,15 +12044,18 @@
        the landing thunk rather than a klaxon, because a blank field is a
        "not yet", not a failure. Square wave for the dryness; the filter
        takes the buzz off so it reads as a bump, not a buzzer.
-       STILL UNCALLED, and not for want of looking (2026-08-21, the sound
-       pass): the beat it was written for RETIRED with the tray — see
+       UNCALLED, AND PARKED THAT WAY ON PURPOSE — Dylan, 2026-08-21: "its
+       from long ago, forgot what it was even for at this point. its okay
+       to leave for now." NOT an unfinished wiring job; leave it be.
+       The beat it was written for RETIRED with the tray — see
        bdmMissing/bdmNope's tombstone at bdmHref, "a reddit DM has no
        required field, so nothing can arrive half-addressed". Its gesture
        half (.bdm-prev.nope + @keyframes envNope) is orphaned in the CSS
        for the same reason. The site's one live required field is the
        lisst page's #inq-handle, which rejects through the browser's own
-       validation bubble — giving THAT a voice is a design call, not a
-       wiring job. The voice keeps its seat until there is a no to say. */
+       validation bubble — giving THAT a voice would be a new sound on a
+       new surface, a design call, and he has parked it. The voice keeps
+       its seat until there is a no to say. */
     function kbonk() {
       if (!sndOk("bonk")) return;
       try {
@@ -12557,9 +12603,15 @@
        exits LEFT through the gutter, toward the shop it's rejoining; the
        slot takes its card back out of sight. No landing beat (nothing
        landed on screen — the same ruling as the belt's off-stage exit);
-       the FLIP re-stack answers the column while the exit is mid-air,
-       and its settle click is the remove's one sound. sr/drain let the
-       drag hand over its in-hand fly; the ✕ builds its own. */
+       the FLIP re-stack answers the column while the exit is mid-air.
+       ~~and its settle click is the remove's one sound~~ — TRUE UNTIL
+       2026-08-21: this path is phone-only, and the sound gate silences it
+       with every other phone voice (Dylan's ruling — the phone is silent
+       but for video). The re-stack still runs, it just doesn't speak; the
+       buzz and the motion carry the remove now. renderBay stays LOUD here
+       on purpose — nothing about this call is desktop-suppressed, the gate
+       does the work, so a future desktop caller would still get its voice.
+       sr/drain let the drag hand over its in-hand fly; the ✕ builds its own. */
     function mobileExitFly(id, fly, sr, drain) {
       pendingHole.add(id);
       renderBay();   /* the case re-stacks; the fly IS the card now */
@@ -14817,9 +14869,11 @@
       fly.classList.add("dimsrest");   /* every seat lands on a shelf — THE DIMS REST */
       pendingSeat.add(id);
       renderBayQuiet();   /* the item now exists, hidden — its rect is the
-        target. Quiet both ways: the seat's landBeat is this add's voice,
-        and the bail below is a no-op the column shouldn't announce. */
+        target. Quiet: the seat's landBeat is this add's voice. */
       const item = bay.querySelector('.bay-item.preseat[data-id="' + id + '"]');
+      /* nothing to seat: the render below only undoes the one above, so
+         it is silent too. Returning false tells the caller no landing is
+         coming — the toss branch reads it and keeps its exchange loud. */
       if (!item) { pendingSeat.delete(id); renderBayQuiet(); return false; }
       /* the peak hangs 9px over the slot and the card falls the last of it */
       const getEnd = () => {
@@ -14830,6 +14884,14 @@
         /* re-query: a renderBay may have rebuilt the shelves mid-flight */
         const seated = bay.querySelector('.bay-item.preseat[data-id="' + id + '"]');
         pendingSeat.delete(id);
+        /* THE UNDONE ADD LANDS SILENT, DELIBERATELY (ruled 2026-08-21 fix
+           round). The seat is gone because membership went away under the
+           flight — in practice the chip was un-checked mid-air, and THAT
+           gesture already spoke: its own re-stack is a loud render (it is
+           on sounds.md's keep-the-voice list). A beat here would be a
+           second click 200-360ms behind the first — the exact artifact the
+           bayQuiet pass removed — and it would be announcing a landing
+           that did not happen. Nothing landed; nothing says so. */
         if (!seated) { updateBayCount(); if (opts.after) opts.after(null); return; }
         seated.classList.remove("preseat");
         seated.classList.add("seat-drop");
@@ -15324,12 +15386,17 @@
              keeps its open-catch-shut untouched ("thats the right call").
              A user-locked drawer never arms the flag either way. */
           const lbShut = () => { if (lb.hidden) bayCatchShut(); };
-          if (!seatFly(d.id, d.fly, d.rest, vr, { dur: DRAG_TUNE.addDur, after: lbShut })) { d.fly.remove(); lbShut(); }
+          const seating = seatFly(d.id, d.fly, d.rest, vr, { dur: DRAG_TUNE.addDur, after: lbShut });
+          if (!seating) { d.fly.remove(); lbShut(); }
           d.src.style.visibility = "";   /* clean baseline — the exchange
             re-hides for the flight and reveals the NEW hero (or closeLb,
             if the whole collection is decked, needs the card unhidden
             for its next open) */
-          tossExchange();
+          /* one gesture, one voice: the card's landing on the shelf answers
+             this toss, so the exchange behind it settles quiet. If nothing
+             seated there is no landing coming — the exchange keeps the
+             voice and the toss is not silent. */
+          tossExchange(seating);
         } else if (d.kind === "deck" && !cancelled && (tossOut || !(inZone || overDrawer))) {
           toggleLisst(d.id);
           document.querySelectorAll('.fc-list[data-id="' + d.id + '"] .ft').forEach(t => {

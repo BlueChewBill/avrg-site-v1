@@ -145,3 +145,22 @@ The button's label catches up to its function: every press in the locked state r
 ## THE CEREMONY SHIELD STRAND — the law (2026-08-16, found + root-fixed in the winning vault run)
 
 Pre-existing bug, surfaced by walking a door nobody had: tapping the picks stack FROM AN OPEN LIGHTBOX stranded the page behind the z-6700 deal shield — closeLb's landing belt re-rendered Lisst one macrotask after route's own render, detaching the ceremony's DOM; the deal stood down silently with the shield up. TWO FIXES: closeLb's belt stands down under a live ceremony (`!document.querySelector(".picks-deal")`), and playPicksDeal's `bail()` drops its own shield on every stand-down return (newest-deal-guarded). **THE GENERAL LAW: a same-page re-render belt must stand down under a live ceremony, and a ceremony that stands down without a route must drop its own shield — route() only covers the routed exits.**
+
+## THE PHONE IS SILENT — the sound ruling (2026-08-21, Dylan)
+
+**The phone makes NO sound but video.** Not a tidy-up of what was already true: the sound gate (`sndOk`, in the kit under `landBeat`) **took three phone voices that were live**. Measured at a ≤940 viewport, gate removed vs. gate on:
+
+| phone path | pre-gate | now |
+|---|---|---|
+| deck remove, the ✕ → `mobileExitFly`'s re-stack settle | click @+321ms | silent |
+| shop/lisst chip uncheck → `renderBay`'s re-stack settle | click @+320ms | silent |
+| lightbox open flip | click @+589ms | silent |
+| mobile add (`pickCatch`) | already silent | silent |
+
+The first was DOCUMENTED as deliberate before this — `mobileExitFly`'s comment read *"its settle click is the remove's one sound"* (now struck through in the file with the ruling beside it). So the phone dialect the earlier passes built by hand — the soft return landing silent, the slide exchange answering in fills, `pickCatch`'s silent landing + `buzz` — **is now the whole rule, enforced in one place**, and those three exceptions are gone.
+
+**What still answers a phone gesture:** the motion itself, and `buzz()`. Haptics are deliberately OUTSIDE the gate and outside `SNDON` — a muted Android still taps back, and iOS gets nothing either way (no web haptics; do not re-add the switch-input hack). Verified after the gate: a mobile add still reaches `navigator.vibrate(12)`.
+
+**The gate reads the 940 line LIVE at fire time** (`dockActive()`), never cached at boot — a window dragged across the boundary changes dialect with it, the same law `renderLisst`'s costume swap obeys.
+
+Full kit, the per-voice cooldown, the one-gesture-one-voice law and the trigger inventory: [sounds.md](sounds.md).

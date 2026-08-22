@@ -5665,8 +5665,13 @@
            kills that script before the driver runs strands the page
            invisible and sealed, and the driver's own 12s belt dies with
            it. This one is self-contained and cannot: it is the only
-           failsafe that survives a dead main script. Past every beat (the
-           ride clears at ~4.5s), so it never races the landing. */
+           failsafe that survives a dead main script. Past every beat: the
+           ride's clear is DERIVED from LAND_TUNE (not a constant) and
+           lands ~6s in at today's shipped values, so 12s never races the
+           landing. NOTE FOR TUNING: on an ARMED stage a slowed-down
+           benchLandPlay replay shares this one belt with the first ride,
+           so a replay still running 12s after LOAD gets swept — bench
+           concern only; a real visit rides once. */
         setTimeout(function () {
           /* the clamp photo's node is the driver's, and the driver never
              ran if we are here — so there is nothing of its to undo */
@@ -16158,9 +16163,20 @@
         });
 
         /* the clamp photo's node goes in NOW, holding its box, so its
-           arrival is a fade and never a reflow under the reader */
+           arrival is a fade and never a reflow under the reader.
+           A LANDED PRINT FROM THE LAST RIDE IS TAKEN BACK HERE, at the
+           START of the new one. Its .in is its own class precisely so it
+           survives the clear (the one beat that leaves something behind),
+           but that also carried it into the NEXT ride ALREADY ARRIVED —
+           measured on the bench at ~16ms instead of its beat, which makes
+           clampAt/clampDur unjudgeable on a warm stage. The reset belongs
+           here and not in standDown: an uninterrupted ride's print still
+           persists through its own clear, and a ride cancelled before the
+           landing still takes the node back (standDown's .in check). */
+        const stale = clamper();
+        if (stale) stale.remove();
         const vwrap = document.querySelector("#home .video-wrap");
-        if (vwrap && !clamper()) {
+        if (vwrap) {
           const fig = document.createElement("figure");
           fig.className = "land-clamp";
           const im = document.createElement("img");
@@ -16226,10 +16242,17 @@
 
         /* the clear is DERIVED, so moving any knob moves it too — a ride
            whose shield outlived its beats (or was cut before them) is the
-           bug this prevents */
+           bug this prevents. BOTH CASCADE ORGANS COUNT: the headers used
+           to be left out on the assumption their carousel always lands
+           after them, and a bench find broke it (sections[1].head 1500
+           with headDur 910 ran ~90ms past a carousel-only clear and read
+           as a cut). headDur/carDur are shared across sections, so the
+           latest offset of each organ is the latest end of each. */
         const lastCar = T.sections.reduce((m, s) => Math.max(m, s.car), 0);
+        const lastHead = T.sections.reduce((m, s) => Math.max(m, s.head), 0);
         const endAt = Math.max(
           cascadeAt + lastCar + T.carDur,
+          cascadeAt + lastHead + T.headDur,
           clampAt + T.clampDur,
           clampAt + T.tailAt + T.carDur,
           shrinkAt + T.veilAt + T.veilDur,

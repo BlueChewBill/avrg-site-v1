@@ -12256,6 +12256,31 @@
        lisstTab() fires at touchdown, not before, so the new mini appears
        exactly when the card gets there. Silent landing + buzz (the phone
        dialect); dockPing's shake answers on the minis themselves. */
+    /* THE PICKFLY COLLIDE (2026-08-22, Dylan's react: the phone add "almost
+       just reads like a glitch... happens fast, card disappears behind the
+       header"). Half of that was a real bug — the fly's box collapsed when
+       the lb closed under it and every landing parked off-screen (the pin
+       in bayFlight is the fix). This half is the FEEL: the desktop arc
+       flown verbatim from a near-full-screen phone card has no room — the
+       card hits the top corner at a third of the ride and deflates in
+       place. Three shapes to thumb, ?pickfly=a|b|c (a is the default and
+       the working pick until he rules; the param retires with the pick,
+       the ?land pattern):
+         a — THE TUNED ARC: the same ride, slowed and flattened for the
+             phone. Softer launch, low lift, gentler hook.
+         b — PINCH THEN FLY: the scale runs ahead of the travel — the card
+             pinches down toward mini size over its own seat, then the
+             small card rides a shallow arc into the stack.
+         c — THE MINI POPS: no big-card flight at all. The card leaves
+             with the lb close it already owns; a mini-sized card pops off
+             its top-right corner and rides to the stack.
+       Phone-only: dockActive() gates every caller of this flight. */
+    const PICKFLY = {
+      a: { dur: .92, ease: 2.0, hook: -60, liftCap: 46 },
+      b: { dur: .88, ease: 1.35, hook: -40, liftCap: 40, scEase: 4.2 },
+      c: { dur: .78, ease: 2.0, hook: -30, liftCap: 40, mini: 72 }
+    };
+    const pickflyV = (location.search.match(/[?&]pickfly=([abc])\b/) || [])[1] || "a";
     function pickCatch(id, srcCard, liveFly, liveRect) {
       const meta = BOARD_INDEX[id];
       const answer = () => { lisstTab(); dockPing(); };
@@ -12264,6 +12289,7 @@
         answer();
         return;
       }
+      const V = PICKFLY[pickflyV];
       let fly = liveFly, sr = liveRect;
       if (!fly) {
         /* card-box anchor (the ONE CARD law): the fly is a whole template
@@ -12272,6 +12298,14 @@
           : srcCard.querySelector(".d7f")) || srcCard;
         if (!box) { answer(); return; }
         sr = box.getBoundingClientRect();
+        /* variant c: the flight is a MINI from frame one — it launches
+           off the source card's top-right corner while the big card does
+           the lb close it was already doing */
+        if (V.mini && sr.width > V.mini) {
+          const mw = V.mini, mh = sr.height * (mw / sr.width);
+          sr = { left: sr.left + sr.width - mw * .8, top: sr.top - mh * .2,
+                 width: mw, height: mh };
+        }
         fly = buildFly(box, meta.ci, meta.b, meta.k, id).fly;
       }
       /* the new mini renders at lisstTab time — aim at the stack's LAST
@@ -12287,11 +12321,41 @@
         return { x: r.left + r.width / 2, y: r.top + Math.max(r.height, 38) / 2,
                  h: Math.max(r.height, 38) };
       };
-      bayFlight(fly, sr, getEnd, { dur: SEAT_TUNE.dur, hook: -120 }, () => {
-        fly.remove();
-        answer();
-        buzz(12);
-      });
+      /* THE BOX IS PINNED (2026-08-22 — the phone landing that never
+         landed): bayFlight's math treats sr's center as the fly's layout
+         center, so the box must not move under the transform. It did,
+         twice over — the phone lb add closes the lb mid-flight and the
+         fly's .d7f re-dressed to a different aspect, and the lb launch
+         box (#lb-card, the whole column) is taller than the card face's
+         own derived height anyway. Either way the visual center walked
+         ~130px off the beam and every landing parked OFF-SCREEN above
+         the bar: the card vanished at the top edge, and the "slide under
+         the chrome" reveal never actually played on a phone. Pinning
+         height to the measured launch box keeps the math and the picture
+         the same object for the whole ride. (Phone-only on purpose —
+         desktop flyToBay launches at the PANEL box and NEEDS the
+         aspect-derived height; the pin would squash it.) */
+      fly.style.height = sr.height + "px";
+      /* THE STACK KEEPS ITS REVEAL (2026-08-22, the pickfly pass): the
+         design here always said "lisstTab() fires at touchdown, not
+         before, so the new mini appears exactly when the card gets there"
+         — but toggleLisst calls lisstTab itself, so every caller had
+         already rendered the mini before the flight even launched: the
+         outcome appeared at tap time and the card flew after its own
+         answer, which is half of why the add read as a glitch. The bay's
+         preseat law, applied to the stack: the new mini (NEWEST FIRST —
+         the first .hpick) keeps its box but hides, so the fan and the
+         flight's target measure stay honest, and the touchdown lisstTab
+         re-render is the reveal. Any later render heals a dead flight. */
+      const pre = hpicksEl && hpicksEl.querySelector(".hpick");
+      if (pre) pre.style.visibility = "hidden";
+      bayFlight(fly, sr, getEnd,
+        { dur: V.dur, hook: V.hook, ease: V.ease, scEase: V.scEase, liftCap: V.liftCap },
+        () => {
+          fly.remove();
+          answer();
+          buzz(12);
+        });
     }
 
     /* ========= the deck drawer (the cart bay) =========
@@ -14978,20 +15042,30 @@
     function bayFlight(fly, sr, getEnd, opts, onLand) {
       fly.classList.add("bay-fly");
       fly.style.left = sr.left + "px"; fly.style.top = sr.top + "px";
-      fly.style.width = sr.width + "px";   /* height follows the card's own aspect */
+      fly.style.width = sr.width + "px";   /* height follows the card's own
+         aspect — the DESKTOP law (flyToBay launches at the PANEL box, so
+         the whole-card fly must derive its taller self from width). The
+         PHONE flight pins its height instead — pickCatch's box law. */
       document.body.appendChild(fly);
       const sx = sr.left + sr.width / 2, sy = sr.top + sr.height / 2;
       const t0 = performance.now(), dur = opts.dur * 1000;
       let drained = false;
       (function frame(now) {
         const t = Math.min(1, (now - t0) / dur);
-        const e = 1 - Math.pow(1 - t, 2.6);   /* launched hard, arrives damped */
+        /* opts.ease/scEase/liftCap: the PHONE flight's shape knobs
+           (2026-08-22, the pickfly pass) — absent, everything below is
+           the desktop flight it always was. scEase lets the SCALE run on
+           its own clock so a phone add can pinch down before it travels;
+           liftCap flattens the arc when the target is at the screen top
+           and a peak has no room to hang. */
+        const e = 1 - Math.pow(1 - t, opts.ease || 2.6);   /* launched hard, arrives damped */
         const u = 1 - e;
         /* target re-measured every frame — the drawer is still opening
            under the early flight, and the bezier converges on wherever
            the seat actually is */
         const end = getEnd();
-        const lift = Math.min(SEAT_TUNE.liftMax, 40 + Math.hypot(end.x - sx, end.y - sy) * .18) * (opts.shallow ? .5 : 1);
+        const lift = Math.min(opts.liftCap != null ? opts.liftCap : SEAT_TUNE.liftMax,
+          40 + Math.hypot(end.x - sx, end.y - sy) * .18) * (opts.shallow ? .5 : 1);
         /* control point: shallow arcs peak mid-route; steep ones hang the
            peak over the target so the last leg reads as a fall. opts.hook
            pulls the control LEFT of the start instead — the off-stage
@@ -15002,7 +15076,8 @@
         const px = u * u * sx + 2 * u * e * cx + e * e * end.x;
         const py = u * u * sy + 2 * u * e * cy + e * e * end.y;
         const s1 = end.h / sr.height;
-        const sc = 1 + (s1 - 1) * e + SEAT_TUNE.pickup * Math.sin(Math.PI * Math.min(1, e / .5)) * u;
+        const es = opts.scEase ? 1 - Math.pow(1 - t, opts.scEase) : e;
+        const sc = 1 + (s1 - 1) * es + SEAT_TUNE.pickup * Math.sin(Math.PI * Math.min(1, e / .5)) * u;
         const rot = 5 * Math.sin(Math.PI * e) + (opts.endRot || 0) * e;
         fly.style.transform = "translate(" + (px - sx).toFixed(1) + "px," + (py - sy).toFixed(1) + "px) scale(" + sc.toFixed(3) + ") rotate(" + rot.toFixed(2) + "deg)";
         if (!drained && t >= .55 && opts.drain) { drained = true; opts.drain(); }

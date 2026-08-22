@@ -5631,10 +5631,57 @@
   <script>
     (function () {
       try {
-        if (matchMedia("(max-width: 940px)").matches &&
-            !matchMedia("(prefers-reduced-motion: reduce)").matches &&
-            !(location.hash || "").replace(/^#/, ""))
-          document.body.classList.add("intro");
+        /* the gate, one term per line since the belt below hangs off it —
+           same three questions in the same order as before, and the same
+           order the landing arm asks them */
+        if (!matchMedia("(max-width: 940px)").matches) return;
+        if (matchMedia("(prefers-reduced-motion: reduce)").matches) return;
+        if ((location.hash || "").replace(/^#/, "")) return;
+        document.body.classList.add("intro");
+        /* THE ARM'S OWN BELT (2026-08-21) — HIS BUG, NOT A THEORY: "i had
+           this bug actually happen a few nights ago. page got stuck on
+           loading, had to refresh." His phone, sealed on a white page.
+           THE HAZARD: the class written one line up holds every scrap of
+           content invisible behind an opaque veil from the FIRST paint,
+           but every hand that lowers it — the driver at the main script's
+           tail, and the driver's own 12s dead-man — lives in the main
+           script at the end of body. Anything that kills that script
+           before the driver runs (a bad data.js row, an API an old phone
+           browser doesn't have, a truncated file on a flaky connection)
+           takes the intro's exits down with it and strands the phone on a
+           sealed page forever. This belt is the only failsafe that
+           survives that, so it may reference nothing from the main script
+           — same law as the arm it rides in. Ported from THE LANDING ARM's
+           belt below (the desktop half already carried one).
+           GATED ON THE CLASS, which is how it coordinates with the driver:
+           a ride that cleared normally took `intro` off first thing in
+           clearIntro, so this wakes to nothing and touches nothing. That
+           matters more on the phone than it does downstairs — `.fveil` is
+           SHARED with the menu-select ceremony (fveil.up()), which is
+           reachable seconds after the intro clears, and an ungated strip
+           would tear the frost off a ride that was going fine.
+           13000, ONE SECOND BEHIND THE DRIVER'S OWN DEAD-MAN, on purpose:
+           both clocks start at load but the main script's starts later (it
+           has the whole file to parse first), so a matching 12000 here
+           would fire FIRST and win a race it should lose — the driver's
+           clearIntro is the better exit (it snaps the veil and starts the
+           tick, this can do neither). Behind it, a stalled-but-alive
+           script still gets the full clear and this stays a no-op. Past
+           every beat either way: the ride's own clear lands ~5.1s in. */
+        setTimeout(function () {
+          if (!document.body.classList.contains("intro")) return;
+          document.body.classList.remove("intro", "intro-pose", "intro-shrink", "intro-tick", "intro-bar");
+          /* .fveil.on is UNSCOPED — dropping the intro classes alone would
+             leave the frost sheet behind if the script died after the
+             driver raised it */
+          var fv = document.getElementById("fveil");
+          if (fv) fv.classList.remove("on", "down");
+          /* and the pose is an INLINE transform the shrink beat releases;
+             a death between the two would leave the mark parked huge over
+             the page we just uncovered */
+          var br = document.querySelector(".masthead .brand");
+          if (br) br.style.transform = "";
+        }, 13000);
       } catch (e) {}
     })();
   </script>

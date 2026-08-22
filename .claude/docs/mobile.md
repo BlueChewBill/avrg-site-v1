@@ -187,3 +187,18 @@ The first was DOCUMENTED as deliberate before this — `mobileExitFly`'s comment
 **The gate reads the 940 line LIVE at fire time** (`dockActive()`), never cached at boot — a window dragged across the boundary changes dialect with it, the same law `renderLisst`'s costume swap obeys.
 
 Full kit, the per-voice cooldown, the one-gesture-one-voice law and the trigger inventory: [sounds.md](sounds.md).
+
+## THE PHONE ADD LEARNS TO LAND — the pickfly pass (2026-08-22 evening, his react)
+
+Dylan: the mobile add-to-picks *"almost just reads like a glitch at the moment (happens fast, card disappears behind the header)"*. Three finds were stacked under that sentence, all in `pickCatch`'s flight:
+
+1. **The landing never landed (a real bug, since the bar-catch shipped).** `bayFlight`'s math treats the launch rect's center as the fly's layout center — and the phone fly's box moved under the flight: the lb add closes the lightbox mid-ride and the fly's `.d7f` re-dressed to a different aspect, and the lb launch box (`#lb-card`) is the whole column, taller than the card's own derived height. Either way the visual center walked ~130px off the beam and **every phone add parked off-screen above the bar** — the card vanished at the top edge; the designed "slides under the chrome, the minis are the reveal" beat had never actually played. Fix: `pickCatch` **pins the fly's height to its measured launch box**. Phone-only on purpose — desktop `flyToBay` launches at the PANEL box and needs the aspect-derived height (the pin would squash it); the fenced comment at `bayFlight`'s width line holds both laws.
+2. **The reveal never revealed.** The design comment said the new mini appears at touchdown — but `toggleLisst` calls `lisstTab()` itself, so every caller rendered the mini at tap time and the card flew AFTER its own answer. The bay's preseat law, applied to the stack: the new mini (newest first — the FIRST `.hpick`) keeps its box but rides `visibility:hidden` through the flight; the touchdown `lisstTab()` re-render is the reveal. Any later render heals a dead flight.
+3. **The desktop arc doesn't fit a phone.** The near-full-screen card flew the desktop tune verbatim: hard launch (ease 2.6), a peak with nowhere to hang (target at the very top), the card at the corner by a third of the ride and deflating in place. `bayFlight` gained three shape knobs (`opts.ease`/`scEase`/`liftCap` — absent, the desktop flight is untouched) and `pickCatch` a **PICKFLY collide** for him to thumb, `?pickfly=`:
+   - **a — THE TUNED ARC** (default until he rules): dur .92, ease 2.0, hook −60, liftCap 46. The same ride, slowed and flattened.
+   - **b — PINCH THEN FLY**: dur .88, ease 1.35, scEase 4.2 — the scale runs ahead of the travel; the card pinches down over its seat, then the small card rides a shallow arc in.
+   - **c — THE MINI POPS**: dur .78, launch box 72px wide off the card's top-right — no big-card flight at all; the card leaves with the lb close it already owns.
+
+   The param retires with his pick (the `?land` pattern). The toss handoff (drag → `pickCatch(liveFly)`) rides the same shape. **Bench: chart the picked shape when it ships** (the landing precedent — the collide is not charted; the pick is).
+
+Verified (chrome-devtools, phone + desktop widths): all three variants fly fully on-screen and land on the stack seat, the mini stays hidden through every flight frame and reveals at touchdown, the desktop grid add still seats in the bay at card aspect (1.51), zero console errors. **Not yet judged on the sim/his phone — that's the pick.**

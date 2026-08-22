@@ -34,3 +34,7 @@ V1 close-out status, undecided directions, parked passes, the site thesis + prog
 - More board sections toward the end of the shop scroll — the full inventory goes up eventually, even the boards that aren't first-class citizens ("you never know what people will be into"). Bolt-on point undecided: a simple button somewhere, or something you discover at the bottom of the scroll. Fits naturally with the one-scroll shop model.
 - Open question: should `.colpage-inner h2` match the Satoshi Black used on `.band h2`?
 - ~~Eventually: port the blackout draft into production `site/` (see path gotcha above).~~ **DONE 2026-08-16, in a shape the old plan didn't predict:** the draft did not move into the vault's `site/` — it became `index.html` of THIS repo, with `site/` demoted to the asset folder it loads. The path fixes the plan called for are the port repoints in gotchas.md's v1 section. `PORT.md` stays in the vault as the record of the thinking.
+
+## The pickfly pick (2026-08-22 evening — awaiting his thumb)
+
+The phone add-to-picks flight got its pass on his react ("almost just reads like a glitch"): the two bugs under it are FIXED and committed (the off-screen landing + the spoiled reveal — the record is mobile.md's THE PHONE ADD LEARNS TO LAND), and the feel is a live COLLIDE: `?pickfly=a` (tuned arc, the default) · `b` (pinch then fly) · `c` (the mini pops). He thumbs them on his phone (LAN :8124) or the sim; the param retires with his pick, and the picked shape gets its bench charting then (the landing precedent). Until he rules, the site ships variant a.

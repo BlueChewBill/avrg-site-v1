@@ -5424,83 +5424,103 @@
   body.light .tile .tframe { background: #eee9df; }
 
   /* ============== DEV SWITCH — the landing, remove when it bakes =========
-     ?land=d on the desktop home arrival. ONE variant now: Dylan picked D
-     out of the four (2026-08-21) and A/B/C are deleted — this block, the
-     arm and the driver hold exactly the thing he picked, evolved on his
-     notes. It stays behind the param for one more react round; the DEFAULT
-     landing is still byte-for-byte today's, because with no param the body
-     never gains .land and not one rule below matches.
+     ?land=d on the desktop home arrival. ONE landing: Dylan picked D out of
+     four (2026-08-21), A/B/C are deleted, and this is his second react on
+     it. Still behind the param for one more round; the DEFAULT landing is
+     byte-for-byte today's, because with no param the body never gains
+     .land and not one rule below matches.
 
-     HIS NOTES, verbatim: "D is the move. move the draw in up so its 2/3 up
-     the page instead of dead center. as soon as the logo starts to makes it
-     move towards its landing lets break our site fade / load in into chunks
-     - originals - then shaped - then routed- also logo lands and video comes
-     in from left of screen. then clamp photo behind it."
+     ROUND 2, his diagnosis off the frames: "right now sections fade in top
+     to bottom (barely) and then swipe in top to bottom" — the swipe was the
+     VEIL EDGE cutting across the bands while they were still arriving. And
+     "'behind it' i meant just the clamp photo below, after."
 
-     SO THE RIDE IS: the mark draws BIG in the upper third of a white
-     screen -> it starts home, and on that same beat the page builds itself
-     in COLLECTION CHUNKS (a chunk = one band, its head and its shelf
-     together) -> the mark seats, the veil rides down, the video slides in
-     from off-screen left -> the clamp print lands behind the video.
+     SO THE RIDE IS NOW: the mark draws BIG in the upper third of a white
+     screen → it starts home AND THE VEIL LEAVES FIRST, over a page that is
+     still empty, so there is nothing for its edge to wipe → the mark seats,
+     the tick decodes, the video slides in from off-screen left → the clamp
+     photo lands BELOW the video → and on clear ground the sections land ONE
+     AT A TIME: a header, then its carousel a beat later, with the next
+     header starting while the last carousel is still finishing.
 
-     A CHUNK IS KEYED BY COLLECTION IDENTITY, never by document order: the
+     EVERY BEAT IS A KNOB. LAND_TUNE at the driver owns the clocks and is
+     handed to the bench BY REFERENCE through the shim; the visual speeds
+     ride the custom properties below so an override can drive them. The
+     fallbacks in every var() are the shipped values — if the driver never
+     runs, this block still reads as the landing it is.
+
+     A SECTION IS KEYED BY COLLECTION IDENTITY, never document order: the
      driver stamps data-land-chunk on each band by looking its id up in
-     COLLECTIONS, so the designed order (originals -> hand-shaped ->
-     classic, his "routed") survives any reshuffle of the data. The old
-     nth-of-type(2..6) ladder is gone with it — it was a fragile ceiling.
+     COLLECTIONS, so his order (originals → shaped → routed) survives any
+     reshuffle of the data.
 
      THE ARM is a second tiny script at the top of <body> (the intro arm's
      precedent and its reason: the browser can paint before the main script
-     runs, so a held page must already be held at the FIRST paint). The
-     driver walks the beats at the script's tail, beside the intro's.
+     runs, so a held page must already be held at the FIRST paint).
 
      Z RUNGS — NO NEW ONES. The ride REUSES the focus veil (.fveil, 6400)
      and the phone intro's masthead lift (6450); the input shield is the
-     shields rung (6700 — the deal / menu-select / intro idiom). Reusing
-     the veil rather than forking one is safe because every rule is scoped
-     desktop AND body.land: the phone ceremony cannot see any of it, and
-     fveil.up/down/clear already carry the snap law the organ was fixed
-     with. TODO(T1): landing beat — the draw's touchdown wants a sound. */
+     shields rung (6700). Every rule is scoped desktop AND body.land, so
+     the phone ceremony cannot see any of it.
+     TODO(T1): landing beat — the draw's touchdown wants a sound. */
   @media (min-width: 941px) {
     /* THE HOLD — everything but the masthead waits. Opacity and
-       pointer-events only (the video adds a transform of its own): the
-       boxes stay laid out, so lockCardScale and the conveyor measure the
-       same page they always did. */
-    body.land #home .spine > :not(.masthead):not(.video-wrap),
+       pointer-events only (the video and the clamp carry transforms of
+       their own): the boxes stay laid out, so lockCardScale and the
+       conveyor measure the same page they always did. */
+    body.land #home .spine > :not(.masthead):not(.video-wrap):not(.land-clamp),
     body.land #home .bandhead,
     body.land #home .belt {
       opacity: 0; pointer-events: none;
-      transition: opacity .5s ease;
     }
-    /* the head RISES as its chunk arrives; the shelf only fades — the belt
-       is the one measured organ on this page, and a transform on it would
-       hand its absolute cards a new containing box mid-conveyor for no
-       gain the eye can find. */
     body.land #home .bandhead {
       transform: translateY(10px);
-      transition: opacity .5s ease, transform .5s cubic-bezier(.22, 1, .36, 1);
+      transition: opacity var(--landHeadDur, 520ms) ease,
+                  transform var(--landHeadDur, 520ms) cubic-bezier(.22, 1, .36, 1);
+    }
+    body.land #home .belt { transition: opacity var(--landCarDur, 620ms) ease; }
+    body.land #home .spine > :not(.masthead):not(.video-wrap):not(.land-clamp) {
+      transition: opacity var(--landCarDur, 620ms) ease;
     }
     /* the tick holds its beat — startTick is deferred at boot the same way
-       the intro defers it (one starter, three callers, called once). The
-       .4s is the phone pair's; there is no base #tick transition, so
-       dropping it here is a SNAP (bitten once already). */
+       the intro defers it. The .4s is the phone pair's; there is no base
+       #tick transition, so dropping it here is a SNAP (bitten once). */
     body.land #tick { opacity: 0; }
     body.land.land-tick #tick { opacity: 1; transition: opacity .4s ease; }
+    /* THE SNAP — one frame with no transitions anywhere on the held set, so
+       the ride can take the page to its start pose INSTANTLY. A replay
+       (benchLandPlay) begins on a fully dressed page, and without this the
+       hold would be a 600ms fade-OUT before the draw. Same law as
+       fveil.clear()'s transition:none + reflow, scoped to our own organs
+       rather than inline. Never held for more than a reflow. */
+    body.land.land-snap #home .bandhead,
+    body.land.land-snap #home .belt,
+    body.land.land-snap #home .video-wrap,
+    body.land.land-snap #home .spine > :not(.masthead),
+    body.land.land-snap #tick,
+    body.land.land-snap .fveil,
+    body.land.land-snap .land-clamp { transition: none; }
 
-    /* ---- THE CHUNKS: one collection each, head + shelf together ---- */
-    body.land.land-c1 #home .band[data-land-chunk="1"] .bandhead,
-    body.land.land-c1 #home .band[data-land-chunk="1"] .belt,
-    body.land.land-c2 #home .band[data-land-chunk="2"] .bandhead,
-    body.land.land-c2 #home .band[data-land-chunk="2"] .belt,
-    body.land.land-c3 #home .band[data-land-chunk="3"] .bandhead,
-    body.land.land-c3 #home .band[data-land-chunk="3"] .belt {
+    /* ---- THE SECTIONS LAND ONE AT A TIME ----
+       header and carousel are SEPARATE beats now (his spec: "the section
+       header and its carousel land a section at a time ... originals lands
+       just before its carousel / the carousel lands / next section has
+       started"). Six classes, three sections, two organs each. */
+    body.land.land-h1 #home .band[data-land-chunk="1"] .bandhead,
+    body.land.land-h2 #home .band[data-land-chunk="2"] .bandhead,
+    body.land.land-h3 #home .band[data-land-chunk="3"] .bandhead {
       opacity: 1; transform: none; pointer-events: auto;
+    }
+    body.land.land-c1 #home .band[data-land-chunk="1"] .belt,
+    body.land.land-c2 #home .band[data-land-chunk="2"] .belt,
+    body.land.land-c3 #home .band[data-land-chunk="3"] .belt {
+      opacity: 1; pointer-events: auto;
     }
     /* a band the stamp missed (a new collection, a renamed id) must not be
        stranded invisible — the tail beat sweeps up whatever has no chunk */
     body.land.land-tail #home .band:not([data-land-chunk]) .bandhead,
     body.land.land-tail #home .band:not([data-land-chunk]) .belt,
-    body.land.land-tail #home .spine > :not(.masthead):not(.video-wrap) {
+    body.land.land-tail #home .spine > :not(.masthead):not(.video-wrap):not(.land-clamp) {
       opacity: 1; transform: none; pointer-events: auto;
     }
 
@@ -5517,48 +5537,12 @@
     body.land #home .video-wrap {
       opacity: 0; pointer-events: none;
       transform: translateX(-120%);
-      transition: opacity .5s ease, transform .62s cubic-bezier(.22, 1, .36, 1);
+      transition: opacity var(--landVidDur, 620ms) ease,
+                  transform var(--landVidDur, 620ms) cubic-bezier(.22, 1, .36, 1);
     }
     body.land.land-vid #home .video-wrap {
       opacity: 1; transform: none; pointer-events: auto;
     }
-
-    /* ---- THE CLAMP PRINT LANDS BEHIND THE VIDEO (his note) ----
-       A PSEUDO, not a new node: the plate is pure dress, and a ::before on
-       the seat means the markup never learns about it and the whole idea
-       lifts out with this block. It rides UP-AND-RIGHT rather than the
-       site's usual down-right, because down is the note's line and right
-       is the empty column gutter — an L of backing print into space that
-       is already blank. Same ring and radius as the video it backs, so it
-       reads as a second print in the stack, not a panel.
-       The file is already fetched on every home visit (the made-row figure
-       below the fold uses it), so the plate costs no new request.
-
-       IT IS SIZED BY ASPECT-RATIO, NOT BY ITS SEAT: .video-wrap is TALLER
-       than the video (it carries the caption below it), so an inset-based
-       box hung off the wrap reached down over that line. left/right fix
-       the width to the video's, 9/14 gives it the video's own height, and
-       the print lands squarely behind the picture and nothing else.
-
-       AND ITS CLASS OUTLIVES THE RIDE. body.landed is deliberately NOT in
-       clearLand's list: this is the one beat that LEAVES something rather
-       than revealing markup that was always there, and a print that lands
-       and then blinks out of existence at the clear is not what "then
-       clamp photo behind it" asks for. Two classes because a pseudo cannot
-       be transitioned into existence — .landed creates it in its out pose,
-       .landed-in flies it home, and both persist. clearLand still takes
-       .landed back if the ride was cancelled BEFORE the print landed. */
-    body.landed #home .video-wrap { position: relative; }
-    body.landed #home .video-wrap video { position: relative; z-index: 1; }
-    body.landed #home .video-wrap::before {
-      content: ""; position: absolute; z-index: 0;
-      top: -14px; left: 26px; right: -26px; aspect-ratio: 9 / 14;
-      background: url("site/media/story-clamps.jpg") center / cover;
-      border-radius: 6px; box-shadow: 0 0 0 2px var(--ink);
-      opacity: 0; transform: translate(-16px, 12px);
-      transition: opacity .42s ease, transform .5s cubic-bezier(.22, 1, .36, 1);
-    }
-    body.landed.landed-in #home .video-wrap::before { opacity: 1; transform: none; }
 
     /* ---- the veil, the pose, the bar ---- */
     body.land::after {
@@ -5583,10 +5567,43 @@
     body.land .masthead { position: relative; z-index: 6450; }
     body.land:not(.land-pose) .masthead { opacity: 0; }
     body.land .masthead .brand { transition: none; }
-    /* .85s IS COUPLED TO LAND_SHRINK at the driver, which derives the seat
-       beat (and therefore the veil drop and the video) from it. Move one
-       and re-derive the other. The phone's own copy carries the same note. */
-    body.land.land-shrink .masthead .brand { transition: transform .85s cubic-bezier(.22, 1, .36, 1); }
+    /* --landTravel IS LAND_TUNE.travel — the driver writes it and derives
+       the seat beat (and therefore the tick, the video and the cascade)
+       from the same number, so the flight and the clock cannot drift. */
+    body.land.land-shrink .masthead .brand {
+      transition: transform var(--landTravel, 850ms) cubic-bezier(.22, 1, .36, 1);
+    }
+
+    /* ---- THE CLAMP PHOTO, BELOW THE VIDEO (his correction: "'behind it'
+       i meant just the clamp photo below, after. so video comes in then
+       the clamp photo. my bad") ----
+       A REAL element the driver builds and inserts after .video-wrap, not
+       a pseudo and not markup: it exists only while the switch does, and
+       it takes its box at ARM time so its arrival is a fade, never a
+       reflow under the reader. Dressed to the video it follows — same
+       radius, same ink ring, same hard shadow, column width.
+       ITS STATE IS ITS OWN CLASS, not the body's, so it SURVIVES the
+       clear: this is the one beat that leaves something behind rather
+       than revealing markup that was always there. A ride cancelled
+       before it lands removes the node instead.
+       IT IS EXCLUDED FROM THE SHARED SPINE HOLD for the same reason the
+       video is — it lands inside .spine, and that selector (1,4,1) far
+       outranks .land-clamp.in (0,2,0), so the photo was being held past
+       its own beat and only appearing when the TAIL swept the spine.
+       It looked right on a first run and read 0 on a replay, which is
+       how it was caught. One organ, one hold. */
+    .land-clamp {
+      display: block; margin: 14px 0 0; width: 100%;
+      opacity: 0; transform: translateY(14px);
+      transition: opacity var(--landClampDur, 520ms) ease,
+                  transform var(--landClampDur, 520ms) cubic-bezier(.22, 1, .36, 1);
+    }
+    .land-clamp img {
+      display: block; width: 100%; aspect-ratio: 5 / 4; object-fit: cover;
+      border-radius: 6px;
+      box-shadow: 0 0 0 2px var(--ink), 9px 11px 0 -1px rgba(32, 26, 21, .34);
+    }
+    .land-clamp.in { opacity: 1; transform: none; }
   }
   /* ================== end DEV SWITCH — the landing ====================== */
 </style>
@@ -5651,12 +5668,12 @@
            failsafe that survives a dead main script. Past every beat (the
            ride clears at ~4.5s), so it never races the landing. */
         setTimeout(function () {
-          /* .landed / .landed-in are the driver's, and the driver never
-             ran if we are here — so there is nothing of theirs to undo */
+          /* the clamp photo's node is the driver's, and the driver never
+             ran if we are here — so there is nothing of its to undo */
           document.body.classList.remove(
             "land", "land-d", "land-pose", "land-shrink", "land-tick",
-            "land-bar", "land-c1", "land-c2", "land-c3",
-            "land-vid", "land-tail");
+            "land-bar", "land-vid", "land-tail",
+            "land-h1", "land-h2", "land-h3", "land-c1", "land-c2", "land-c3");
           /* .fveil.on is UNSCOPED — dropping the land classes alone would
              leave the frost sheet behind if the script died after the
              driver raised it */
@@ -15963,147 +15980,269 @@
     })();
 
     /* ---- DEV SWITCH — the landing, remove when it bakes ------------------
-       The desktop arrival Dylan picked, behind ?land=d. The arm script at
-       the top of <body> did the gating and wrote body.land before the first
-       paint; this driver walks the beats. Nothing here runs without the
-       class, so the default landing is untouched — same shape as the intro
-       driver above, same clocks.
+       The desktop arrival Dylan picked, behind ?land=d, on his second react.
+       The arm script at the top of <body> did the gating and wrote body.land
+       before the first paint; this walks the beats. Nothing here runs
+       without the class, so the default landing is untouched.
 
-       TWO DERIVED NUMBERS, no third: DRAW_HOME is the shared const above
-       (the SMIL draw's ~2.28s end plus a 100ms hold) and LAND_SHRINK is the
-       .85s flight it starts, written in CSS at .masthead .brand. The SEAT —
-       when the mark is home — is their sum, and the veil, the bar, the tick
-       and the video all hang off it. Nothing below invents a clock.
+       EVERY CLOCK IS A KNOB — this is the round that made the landing a
+       tunable surface ("give this the bench treatment"). LAND_TUNE below is
+       the one table; the driver derives every beat from it and writes the
+       visual speeds out as custom properties so a bench override drives the
+       same numbers the ride does. LAND_TUNE goes to the bench BY REFERENCE
+       through the shim at the IIFE's foot, and benchLandPlay replays the
+       ride in place so a knob can be judged without a reload.
 
-       EVERY BEAT RIDES at(), so clearLand can flush the whole ride: a hash
-       navigation, a width crossing, or the belt stands the landing down
-       ATOMICALLY. Cancel puts the video and the plate at REST, not
-       half-slid — the classes come off together and the CSS resting state
-       IS the settled page.
+       THREE DERIVATIONS, and nothing invents a clock:
+         drawEnd  = DRAW_BASE_END / drawSpeed   (the pen actually lifting)
+         shrinkAt = drawEnd + DRAW_HOLD         (the mark starts home)
+         seatAt   = shrinkAt + travel           (the mark IS home)
+       and the cascade, the video, the clamp and the clear all hang off
+       seatAt. Change travel and the whole back half follows, in the CSS
+       flight too — --landTravel is the same number.
 
-       THE MAP (his notes drive the shape; see the CSS block for the quotes)
-         0     pose — the mark draws BIG at ONE THIRD viewport height
-                      ("2/3 up the page"), on bare white
-         2375  DRAW_HOME: the mark starts home AND chunk 1 arrives
-                      — ORIGINALS, head + shelf together
-         2615  chunk 2 — SHAPED
-         2855  chunk 3 — ROUTED (the classic band; his word)
-         3225  SEAT (DRAW_HOME + LAND_SHRINK): the mark is home — the tick
-                      decodes, the bar arrives, the veil rides down, and the
-                      video slides in from off-screen left
-         3850  the clamp print lands behind the video, and the spine's tail
-                      (below the fold) sweeps in with it
-         4450  clear
-       The last chunk lands ~3355, just past the veil drop — the build
-       happens UNDER the frost and the focus line passes pieces already
-       arriving, which is what made D read the way it did.
-       The print's classes (.landed / .landed-in) are the one thing the
-       clear does NOT take back — see the CSS for why. */
+       THE VEIL LEAVES FIRST, at shrinkAt, while the page is still empty.
+       That is the fix for his "and then swipe in top to bottom": the wipe
+       he saw was the veil's own edge crossing bands that were still
+       arriving. Sections now land on clear ground, one at a time. */
+    const LAND_TUNE = {
+      /* THE POSE — the big draw's stage. poseW/poseH are the shares of the
+         viewport the mark may span (the smaller wins, so it fits both
+         ways); poseY is where its CENTRE sits as a share of viewport
+         height — .333 is his "2/3 up the page". TRANSFORM ONLY: the
+         masthead svg width is the bench's own logo-size param and is not
+         ours to move. */
+      poseW: .34, poseH: .52, poseY: .333,
+
+      /* drawSpeed multiplies the SMIL clocks (2 = twice as fast). The
+         driver rewrites the svg's begin/dur from the BASE values it caches
+         on first run, so repeated changes never compound, and drawEnd is
+         derived from it — the shrink always waits for the pen. */
+      drawSpeed: 1,
+
+      /* travel — the shrink flight home. Mirrored into --landTravel for
+         the CSS transition, and seatAt is built on it. */
+      travel: 850,
+
+      /* THE CASCADE — a section at a time, his shape: "originals lands
+         just before its carousel / the carousel lands / next section has
+         started". cascade is the air after the mark seats before section
+         one; head/car are per-section offsets from THAT, so the whole
+         cascade slides as a unit and each section keeps its own rhythm.
+         Section order is identity-keyed (originals → shaped → routed). */
+      cascade: 420,
+      sections: [
+        { head: 0,    car: 260 },
+        { head: 620,  car: 880 },
+        { head: 1240, car: 1500 }
+      ],
+      headDur: 520, carDur: 620,
+
+      /* THE SPINE — the video slides in as the mark seats, the clamp photo
+         follows it in. clampAt counts from the VIDEO's start, so the two
+         stay a pair when either moves. */
+      vidAt: 0, vidDur: 620,
+      clampAt: 700, clampDur: 520,
+
+      /* the veil goes first now; veilDur mirrors .fveil's own transform
+         transition (.8s) and exists so the derivation can wait for it */
+      veilAt: 0, veilDur: 800,
+
+      /* the tail sweep (the spine below the clamp, and any band the
+         identity stamp missed) and the air after the last beat */
+      tailAt: 700, clearPad: 200
+    };
+    /* the play door, replaced below — the bench calls it to replay a tuned
+       ride in place. Defined out here so the shim can hand it over even on
+       a page that never armed. */
+    let landPlay = () => false;
+
     (function () {
-      if (!document.body.classList.contains("land")) return;
       const brand = document.querySelector(".masthead .brand");
       const desk = matchMedia("(min-width: 941px)");
-      const step = (...cls) => document.body.classList.add(...cls);
-      const LAND_SHRINK = 850;              /* the .85s brand flight, in CSS */
-      const SEAT = DRAW_HOME + LAND_SHRINK; /* the mark is home here */
-      /* EVERY BEAT IS CANCELLABLE. Without this a route mid-landing left
-         the arrived page under the opaque veil and the 6700 shield for the
-         rest of the ride, and fveil.down() fired onto a page that had never
-         raised it. The shield blocks pointers, not FOCUS — a
-         keyboard-activated bar link is a real door through it. */
-      const timers = [];
+      const T = LAND_TUNE;
+      const step = (...c) => document.body.classList.add(...c);
+      const RS = document.documentElement.style;
+      const CLS = ["land", "land-d", "land-snap", "land-pose", "land-shrink",
+                   "land-tick", "land-bar", "land-vid", "land-tail",
+                   "land-h1", "land-h2", "land-h3", "land-c1", "land-c2", "land-c3"];
+      let played = false;
+      const VARS = ["--landTravel", "--landHeadDur", "--landCarDur",
+                    "--landVidDur", "--landClampDur"];
+      const DRAW_BASE_END = 2275;   /* the SMIL draw's own end at base clocks */
+      const DRAW_HOLD = DRAW_HOME - DRAW_BASE_END;   /* the 100ms the intro holds */
+
+      /* EVERY BEAT IS CANCELLABLE. Without this a route mid-ride left the
+         arrived page under the opaque veil and the 6700 shield, and the
+         veil dropped onto a page that never raised it. The shield blocks
+         pointers, not FOCUS — a keyboard-activated bar link is a real door
+         through it. */
+      let timers = [];
       const at = (ms, fn) => timers.push(setTimeout(fn, ms));
-      let cleared = false;
-      const clearLand = () => {
-        if (cleared) return;
-        cleared = true;
+
+      /* THE SMIL CLOCKS. Cached from the markup on first touch so a
+         rescale is always base/speed and can never compound. Written back
+         BEFORE playLogo's rewind, so the new interval is what replays.
+         NOTE the mutation outlives the ride on purpose: while a bench
+         operator is tuning the draw, the arrival draw should show the
+         speed being tuned. A reload restores the markup's own clocks. */
+      function drawScale(speed) {
+        const svg = document.getElementById("logo-draw");
+        if (!svg) return;
+        svg.querySelectorAll("animate, set").forEach(n => {
+          if (!n.dataset.landB) n.dataset.landB = n.getAttribute("begin") || "";
+          if (!n.dataset.landD && n.getAttribute("dur")) n.dataset.landD = n.getAttribute("dur");
+          const b = parseFloat(n.dataset.landB), d = parseFloat(n.dataset.landD || "");
+          if (!isNaN(b)) n.setAttribute("begin", (b / speed).toFixed(4) + "s");
+          if (!isNaN(d)) n.setAttribute("dur", (d / speed).toFixed(4) + "s");
+        });
+      }
+
+      function clamper() { return document.querySelector(".land-clamp"); }
+
+      /* stand the ride down whole. `keepClamp` is the landed case: the
+         photo is the one beat that LEAVES something, so it survives the
+         clear — but a ride cancelled before it landed takes its node back
+         rather than parking an empty box in the column. */
+      function standDown() {
         timers.forEach(clearTimeout);
-        timers.length = 0;
-        removeEventListener("hashchange", clearLand);
-        if (desk.removeEventListener) desk.removeEventListener("change", clearLand);
-        document.body.classList.remove(
-          "land", "land-d", "land-pose", "land-shrink", "land-tick",
-          "land-bar", "land-c1", "land-c2", "land-c3",
-          "land-vid", "land-tail");
-        /* .landed / .landed-in are NOT in that list — the clamp print is
-           the one beat that leaves something behind, and it has to survive
-           the clear (see the CSS). The exception is a ride cancelled
-           BEFORE the print landed: then the seat it built is unused, so
-           take it back rather than leave a pseudo nobody asked for. */
-        if (!document.body.classList.contains("landed-in"))
-          document.body.classList.remove("landed");
-        /* the stamps are the switch's too — leave the bands as we found them */
+        timers = [];
+        removeEventListener("hashchange", standDown);
+        if (desk.removeEventListener) desk.removeEventListener("change", standDown);
+        document.body.classList.remove(...CLS);
+        VARS.forEach(v => RS.removeProperty(v));
         document.querySelectorAll("#cols .band[data-land-chunk]")
           .forEach(b => { delete b.dataset.landChunk; });
+        const c = clamper();
+        if (c && !c.classList.contains("in")) c.remove();
         if (brand) brand.style.transform = "";
         startTick();   /* belt, and FIRST: nothing after it may strand the tick */
         if (fveilEl) fveil.clear();   /* the deref the bail branch could not survive */
-      };
-      /* THE WIDTH IS RE-READ LIVE. The arm cached it at the first paint,
-         every landing rule is media-gated, and .fveil.on is NOT — so a
-         stale yes leaves frost over a phone layout. Two holes, two guards:
-         the LOAD RACE (a classic scrollbar landing after the arm can drop
-         a ~941-956 viewport under the gate — the lockScroll comment's
-         ~15px gutter) is this check; a mid-ride resize/rotate is the
-         change listener. Either way the landing stands down whole. */
-      if (!desk.matches || !brand || !fveilEl) { clearLand(); return; }
-      addEventListener("hashchange", clearLand);
-      if (desk.addEventListener) desk.addEventListener("change", clearLand);
+      }
 
-      /* THE CHUNKS ARE KEYED BY COLLECTION IDENTITY (his order), never by
-         document order: data-col indexes COLLECTIONS, so the id is what we
-         match on and a reshuffle of the data cannot silently reorder his
-         ceremony. A collection that is absent (or has no boards, so HOME
-         filtered its band out) simply leaves a gap — the tail beat sweeps
-         up any band that never got a stamp. */
-      ["originals", "hand-shaped", "classic"].forEach((cid, i) => {
-        const ci = COLLECTIONS.findIndex(c => c.id === cid);
-        const band = ci < 0 ? null : document.querySelector('#cols .band[data-col="' + ci + '"]');
-        if (band) band.dataset.landChunk = String(i + 1);
-      });
+      function playLanding() {
+        /* THE WIDTH IS RE-READ LIVE. The arm cached it at the first paint,
+           every landing rule is media-gated, and .fveil.on is NOT — so a
+           stale yes leaves frost over a phone layout. The load race (a
+           classic scrollbar landing after the arm can drop a ~941-956
+           viewport under the gate) is this check; a mid-ride resize is the
+           change listener below. */
+        if (!desk.matches || !brand || !fveilEl) { standDown(); return false; }
+        /* ONLY A REPLAY RESETS. The first run is already held — the arm did
+           it at the first paint — and standDown's fveil.clear() carries a
+           forced reflow, which would COMMIT the undressed page to the
+           transition engine and then fade the whole thing out under the
+           draw (measured: sections at .79 and the video mid-slide 200ms
+           in). Don't flush a page that is already where you want it. */
+        if (played) standDown();
+        played = true;
 
-      /* the print's SEAT goes up now, empty and invisible: a pseudo cannot
-         be transitioned into existence, so it has to exist before its beat */
-      document.body.classList.add("landed");
-      fveilEl.classList.add("on");
-      /* a 0-TIMEOUT, not rAF (the intro's reasoning): it still runs after
-         route() has booted the page, but a frozen frame loop must not be
-         able to stall the whole ride */
-      at(0, () => {
-        const r = brand.getBoundingClientRect();
-        if (!r.width) { clearLand(); return; }
-        /* the desktop stage is WIDE — .78 of the viewport width would put a
-           1100px mark on a 1440 screen. Height leads up here instead.
-           THE CENTRE IS ONE THIRD DOWN, not half: "2/3 up the page" (his
-           note) — measured from the bottom, which is a third from the top.
-           TRANSFORM ONLY, so the bench's logo-size anchor never moves. */
-        const s = Math.min((innerWidth * .34) / r.width, (innerHeight * .52) / r.height);
-        const dx = innerWidth / 2 - (r.left + r.width / 2);
-        const dy = innerHeight / 3 - (r.top + r.height / 2);
-        brand.style.transform = "translate(" + dx.toFixed(1) + "px," + dy.toFixed(1) + "px) scale(" + s.toFixed(3) + ")";
-        step("land-pose");
-        playLogo();   /* own the clock — the draw starts at the pose */
-        /* the mark starts home AND the page starts building on the SAME
-           beat — his "as soon as the logo starts to makes it move towards
-           its landing lets break our site fade / load in into chunks" */
-        at(DRAW_HOME, () => {
-          step("land-shrink", "land-c1");
+        /* the knobs the CSS reads. One write per ride, so an override that
+           lands between rides is picked up by the next one. */
+        RS.setProperty("--landTravel", T.travel + "ms");
+        RS.setProperty("--landHeadDur", T.headDur + "ms");
+        RS.setProperty("--landCarDur", T.carDur + "ms");
+        RS.setProperty("--landVidDur", T.vidDur + "ms");
+        RS.setProperty("--landClampDur", T.clampDur + "ms");
+
+        /* THE SECTIONS ARE KEYED BY COLLECTION IDENTITY, never by document
+           order: data-col indexes COLLECTIONS, so the id is what we match
+           on and a reshuffle of the data cannot silently reorder his
+           ceremony. A collection with no boards has no band (HOME filtered
+           it out) and simply leaves a gap; the tail beat sweeps up any
+           band that never got a stamp. */
+        ["originals", "hand-shaped", "classic"].forEach((cid, i) => {
+          const ci = COLLECTIONS.findIndex(c => c.id === cid);
+          const band = ci < 0 ? null : document.querySelector('#cols .band[data-col="' + ci + '"]');
+          if (band) band.dataset.landChunk = String(i + 1);
+        });
+
+        /* the clamp photo's node goes in NOW, holding its box, so its
+           arrival is a fade and never a reflow under the reader */
+        const vwrap = document.querySelector("#home .video-wrap");
+        if (vwrap && !clamper()) {
+          const fig = document.createElement("figure");
+          fig.className = "land-clamp";
+          const im = document.createElement("img");
+          im.src = "site/media/story-clamps.jpg";
+          im.alt = "A deck clamped up with every clamp in the shop";
+          im.loading = "eager";   /* chrome by definition — the lazy 0x0 law */
+          fig.appendChild(im);
+          vwrap.insertAdjacentElement("afterend", fig);
+        }
+
+        /* take the start pose in ONE frame, transitions off (see .land-snap) */
+        document.body.classList.add("land", "land-d", "land-snap");
+        void document.body.offsetWidth;
+        document.body.classList.remove("land-snap");
+        addEventListener("hashchange", standDown);
+        if (desk.addEventListener) desk.addEventListener("change", standDown);
+        fveilEl.classList.add("on");
+
+        const drawEnd = DRAW_BASE_END / (T.drawSpeed || 1);
+        const shrinkAt = drawEnd + DRAW_HOLD;
+        const seatAt = shrinkAt + T.travel;
+        const cascadeAt = seatAt + T.cascade;
+        const vidAt = seatAt + T.vidAt;
+        const clampAt = vidAt + T.clampAt;
+        drawScale(T.drawSpeed || 1);
+
+        /* a 0-TIMEOUT, not rAF (the intro's reasoning): it still runs after
+           route() has booted the page, but a frozen frame loop must not be
+           able to stall the whole ride */
+        at(0, () => {
+          const r = brand.getBoundingClientRect();
+          if (!r.width) { standDown(); return; }
+          const s = Math.min((innerWidth * T.poseW) / r.width,
+                             (innerHeight * T.poseH) / r.height);
+          const dx = innerWidth / 2 - (r.left + r.width / 2);
+          const dy = innerHeight * T.poseY - (r.top + r.height / 2);
+          brand.style.transform = "translate(" + dx.toFixed(1) + "px," +
+            dy.toFixed(1) + "px) scale(" + s.toFixed(3) + ")";
+          step("land-pose");
+          playLogo();   /* own the clock — the draw starts at the pose */
+        });
+
+        /* the mark starts home, and THE VEIL GOES WITH IT — over an empty
+           page, so its edge has nothing to wipe (his "swipe" note) */
+        at(shrinkAt, () => {
+          step("land-shrink", "land-bar");
           void brand.offsetWidth;   /* commit the pose under the new transition, then release */
           brand.style.transform = "";
         });
-        at(DRAW_HOME + 240, () => step("land-c2"));
-        at(DRAW_HOME + 480, () => step("land-c3"));
-        /* the seat: everything that answers the mark landing */
-        at(SEAT, () => {
-          step("land-tick", "land-bar", "land-vid");
-          fveil.down();
-          startTick();
+        at(shrinkAt + T.veilAt, () => fveil.down());
+
+        /* the seat: the mark is home, its line decodes, the video arrives */
+        at(seatAt, () => { step("land-tick"); startTick(); });
+        at(vidAt, () => step("land-vid"));
+        at(clampAt, () => { const c = clamper(); if (c) c.classList.add("in"); });
+        at(clampAt + T.tailAt, () => step("land-tail"));
+
+        /* the cascade: header, then its carousel, next section overlapping */
+        T.sections.forEach((sec, i) => {
+          at(cascadeAt + sec.head, () => step("land-h" + (i + 1)));
+          at(cascadeAt + sec.car, () => step("land-c" + (i + 1)));
         });
-        at(SEAT + 625, () => step("landed-in", "land-tail"));
-        at(SEAT + 1225, clearLand);
-      });
-      /* the dead-man's switch — free, since clearLand flushes it */
-      at(12000, clearLand);
+
+        /* the clear is DERIVED, so moving any knob moves it too — a ride
+           whose shield outlived its beats (or was cut before them) is the
+           bug this prevents */
+        const lastCar = T.sections.reduce((m, s) => Math.max(m, s.car), 0);
+        const endAt = Math.max(
+          cascadeAt + lastCar + T.carDur,
+          clampAt + T.clampDur,
+          clampAt + T.tailAt + T.carDur,
+          shrinkAt + T.veilAt + T.veilDur,
+          seatAt
+        ) + T.clearPad;
+        at(endAt, standDown);
+        at(endAt + 8000, standDown);   /* the dead-man's belt, free since standDown flushes */
+        return true;
+      }
+
+      landPlay = playLanding;
+      if (!document.body.classList.contains("land")) return;   /* no param: nothing runs */
+      playLanding();
     })();
     /* ------------------ end DEV SWITCH — the landing --------------------- */
 
@@ -16128,6 +16267,15 @@
     if (location.hostname === "localhost" || location.hostname === "127.0.0.1") {
       window.BENCH = { STRIP_TUNE, NB_TUNE, SUN };
       window.benchRepose = () => window.dispatchEvent(new Event("resize"));
+      /* DEV SWITCH — the landing (2026-08-21, his "give this the bench
+         treatment"): LAND_TUNE joins the shim BY REFERENCE like the rest,
+         and benchLandPlay REPLAYS the arrival in place. The replay door is
+         what makes the tune usable at all — the ride runs once at boot, so
+         without it a knob written from the bench could never be seen
+         without a reload, and a reload throws the write away. Both lines
+         go when the landing bakes (or move to the baked const). */
+      window.BENCH.LAND_TUNE = LAND_TUNE;
+      window.benchLandPlay = () => landPlay();
     }
 
     /* ── THE OG SPREAD's column anchor (2026-08-20, shipped with the

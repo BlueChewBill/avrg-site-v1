@@ -5423,25 +5423,30 @@
   /* mobile tiles */
   body.light .tile .tframe { background: #eee9df; }
 
-  /* ============== DEV SWITCH — the landing, remove when it bakes =========
-     ?land=d on the desktop home arrival. ONE landing: Dylan picked D out of
-     four (2026-08-21), A/B/C are deleted, and this is his second react on
-     it. Still behind the param for one more round; the DEFAULT landing is
-     byte-for-byte today's, because with no param the body never gains
-     .land and not one rule below matches.
+  /* ===================== THE LANDING — THE DESKTOP ARRIVAL ==============
+     BAKED 2026-08-22 (Dylan's bench index). This IS the desktop home
+     arrival — it plays on every fresh desktop home boot, and the switch
+     that carried it here is gone. ONE landing: he picked D out of four
+     (2026-08-21), A/B/C were deleted, he reacted on it twice, tuned it on
+     the bench, and called the bake. Nothing below is provisional.
 
      ROUND 2, his diagnosis off the frames: "right now sections fade in top
      to bottom (barely) and then swipe in top to bottom" — the swipe was the
      VEIL EDGE cutting across the bands while they were still arriving. And
      "'behind it' i meant just the clamp photo below, after."
 
-     SO THE RIDE IS NOW: the mark draws BIG in the upper third of a white
+     SO THE RIDE IS: the mark draws BIG in the upper third of a white
      screen → it starts home AND THE VEIL LEAVES FIRST, over a page that is
      still empty, so there is nothing for its edge to wipe → the mark seats,
      the tick decodes, the video slides in from off-screen left → the clamp
      photo lands BELOW the video → and on clear ground the sections land ONE
      AT A TIME: a header, then its carousel a beat later, with the next
      header starting while the last carousel is still finishing.
+
+     THE SECTION CHOREOGRAPHY IS FINAL — his bake note: "you guys nailed
+     the section load in ask. no tweaks there. its solid." The cascade
+     knobs ship exactly as they were tuned; four clocks moved at the bake
+     (travel, poseY, drawSpeed, vidAt) and nothing else did.
 
      EVERY BEAT IS A KNOB. LAND_TUNE at the driver owns the clocks and is
      handed to the bench BY REFERENCE through the shim; the visual speeds
@@ -5456,7 +5461,11 @@
 
      THE ARM is a second tiny script at the top of <body> (the intro arm's
      precedent and its reason: the browser can paint before the main script
-     runs, so a held page must already be held at the FIRST paint).
+     runs, so a held page must already be held at the FIRST paint). It arms
+     on desktop 941+ · motion allowed · bare home route — the phone intro
+     arm's shape, one gate up. Off any of those the body never gains .land
+     and not one rule below matches, so a deep link, a phone and a
+     reduced-motion visit each read exactly as they always did.
 
      Z RUNGS — NO NEW ONES. The ride REUSES the focus veil (.fveil, 6400)
      and the phone intro's masthead lift (6450); the input shield is the
@@ -5605,7 +5614,7 @@
     }
     .land-clamp.in { opacity: 1; transform: none; }
   }
-  /* ================== end DEV SWITCH — the landing ====================== */
+  /* ======================= end THE LANDING ============================== */
 </style>
 </head>
 <!-- class="light" ships in markup: LIGHT IS THE ONE GROUND (2026-08-20 ruling)
@@ -5629,21 +5638,22 @@
       } catch (e) {}
     })();
   </script>
-  <!-- DEV SWITCH — the landing, remove when it bakes.
-       ?land=d arms the desktop arrival Dylan picked (the CSS block at the
-       foot of the sheet has the whole ride). Same reason the intro arm sits
-       up here: a landing that HOLDS the page must hold it at the first
-       paint, and the main script does not run until the end of body.
-       Desktop only (941+ — the phone's own intro owns anything narrower),
-       motion only, bare home route only; no param and nothing below this
-       line happens. ONLY d IS LIVE — a, b and c were the losing variants
-       and are deleted, so ?land=a now reads exactly like no param at all.
-       AN EXPLICIT ?land=d ALWAYS PLAYS — typing it IS the intent, and a
-       switch he reloads to watch twice must not answer with the plain
-       landing and read as broken. (An earlier build gated it once-per-
-       session on sessionStorage: that is a BAKE-TIME policy call about the
-       shipped ceremony, not the switch's, and it does not belong in
-       temporary code — the phone intro replays every load too.)
+  <!-- THE LANDING ARM (baked 2026-08-22 — the desktop half of the intro
+       arm above, and deliberately its mirror image).
+       Arms the desktop home arrival on EVERY fresh boot that qualifies (the
+       CSS block at the foot of the sheet has the whole ride). Same reason
+       the intro arm sits up here: a landing that HOLDS the page must hold it
+       at the first paint, and the main script does not run until the end of
+       body. THE GATES ARE THE INTRO'S, one width apart: desktop 941+ (the
+       phone's own intro owns anything narrower), motion allowed, bare home
+       route only. Off any of them nothing below this line happens and the
+       page arrives exactly as it always did.
+       REPLAY POLICY, ruled at the bake: the ceremony is a FRESH-BOOT beat.
+       A mid-session return home gets the plain in-place rewind draw
+       (route's home branch calls playLogo either way) — this arm runs once
+       per load, which is what makes that true without a stitch of state.
+       The param that carried this here (?land=d, the four-variant collide)
+       is GONE: any ?land value is now inert query string.
        The width check here is a SNAPSHOT; the tail driver re-reads it live
        and a crossing clears the ride (see the driver's guards).
        Self-contained, like the intro arm — it may reference nothing from
@@ -5651,32 +5661,29 @@
   <script>
     (function () {
       try {
-        if (!/[?&]land=d\b/i.test(location.search)) return;
         if (!matchMedia("(min-width: 941px)").matches) return;
         if (matchMedia("(prefers-reduced-motion: reduce)").matches) return;
         if ((location.hash || "").replace(/^#/, "")) return;
-        /* land-d is kept beside .land purely so the DOM says WHICH landing
-           is live while more than one is still imaginable; every selector
-           keys off .land now that exactly one exists */
-        document.body.classList.add("land", "land-d");
-        /* THE ARM'S OWN BELT. These classes hold the page and raise a veil
-           + a 6700 shield from the FIRST paint, but the hand that lowers
-           them is in the main script at the end of body — so anything that
-           kills that script before the driver runs strands the page
-           invisible and sealed, and the driver's own 12s belt dies with
-           it. This one is self-contained and cannot: it is the only
-           failsafe that survives a dead main script. Past every beat: the
-           ride's clear is DERIVED from LAND_TUNE (not a constant) and
-           lands ~6s in at today's shipped values, so 12s never races the
-           landing. NOTE FOR TUNING: on an ARMED stage a slowed-down
-           benchLandPlay replay shares this one belt with the first ride,
-           so a replay still running 12s after LOAD gets swept — bench
-           concern only; a real visit rides once. */
+        document.body.classList.add("land");
+        /* THE ARM'S OWN BELT — MORE LOAD-BEARING SINCE THE BAKE, because
+           what it guards is now the DEFAULT arrival rather than a param
+           somebody typed. These classes hold the page and raise a veil + a
+           6700 shield from the FIRST paint, but the hand that lowers them
+           is in the main script at the end of body — so anything that kills
+           that script before the driver runs strands the page invisible and
+           sealed, and the driver's own belt dies with it. This one is
+           self-contained and cannot: it is the only failsafe that survives
+           a dead main script. Past every beat: the ride's clear is DERIVED
+           from LAND_TUNE (not a constant) and lands ~5s in at the baked
+           values, so 12s never races the landing. NOTE FOR TUNING: a
+           slowed-down benchLandPlay replay shares this one belt with the
+           first ride, so a replay still running 12s after LOAD gets swept —
+           bench concern only; a real visit rides once. */
         setTimeout(function () {
           /* the clamp photo's node is the driver's, and the driver never
              ran if we are here — so there is nothing of its to undo */
           document.body.classList.remove(
-            "land", "land-d", "land-pose", "land-shrink", "land-tick",
+            "land", "land-pose", "land-shrink", "land-tick",
             "land-bar", "land-vid", "land-tail",
             "land-h1", "land-h2", "land-h3", "land-c1", "land-c2", "land-c3");
           /* .fveil.on is UNSCOPED — dropping the land classes alone would
@@ -6250,10 +6257,11 @@
         decodeTo(tags[ti]);
       }, 4400);
     }
-    /* DEV SWITCH — the landing, remove when it bakes: the .land term is
-       the desktop arrival's seat at the same deferral (it holds the first
-       decode until the mark is home). No param, no class, and this line
-       reads exactly as it did. */
+    /* THE LANDING (permanent, baked 2026-08-22): the .land term is the
+       desktop arrival's seat at the same deferral the phone intro uses —
+       it holds the first decode until the mark is home. Unarmed (a deep
+       link, a phone, reduced motion) neither class is on the body and this
+       line reads exactly as it did before either ceremony existed. */
     if (!document.body.classList.contains("intro") &&
         !document.body.classList.contains("land")) startTick();
 
@@ -15932,8 +15940,9 @@
        COUPLED, and NOT expressible here: the shrink's own .85s transition
        on .masthead .brand — the flight this beat starts. It is written at
        two CSS sites (body.intro.intro-shrink, and body.land.land-shrink in
-       the DEV SWITCH block, where the driver mirrors it as LAND_SHRINK and
-       derives the seat from it); move this number and re-derive both. */
+       THE LANDING block, where the driver derives the seat from
+       LAND_TUNE.travel and the CSS reads the same number through
+       --landTravel); move this number and re-derive both. */
     const DRAW_HOME = 2375;
 
     /* ---- THE INTRO ------------------------------------------------------
@@ -15984,19 +15993,25 @@
       setTimeout(() => { if (document.body.classList.contains("intro")) clearIntro(); }, 12000);
     })();
 
-    /* ---- DEV SWITCH — the landing, remove when it bakes ------------------
-       The desktop arrival Dylan picked, behind ?land=d, on his second react.
-       The arm script at the top of <body> did the gating and wrote body.land
+    /* ---- THE LANDING — THE DESKTOP ARRIVAL (baked 2026-08-22) -----------
+       The arrival Dylan picked, tuned on the bench, and baked. The arm
+       script at the top of <body> does the gating and writes body.land
        before the first paint; this walks the beats. Nothing here runs
-       without the class, so the default landing is untouched.
+       without the class, so an unarmed boot is untouched.
 
-       EVERY CLOCK IS A KNOB — this is the round that made the landing a
-       tunable surface ("give this the bench treatment"). LAND_TUNE below is
-       the one table; the driver derives every beat from it and writes the
-       visual speeds out as custom properties so a bench override drives the
-       same numbers the ride does. LAND_TUNE goes to the bench BY REFERENCE
-       through the shim at the IIFE's foot, and benchLandPlay replays the
-       ride in place so a knob can be judged without a reload.
+       HIS BAKE INDEX (2026-08-22), the four clocks that moved — travel
+       850 → 1000 · poseY .333 → .420 · drawSpeed 1 → 2 · vidAt 0 → 300.
+       Everything else ships exactly as tuned; the section choreography he
+       ruled final ("you guys nailed the section load in ask. no tweaks
+       there. its solid").
+
+       EVERY CLOCK IS A KNOB — the landing is a tunable surface ("give this
+       the bench treatment"). LAND_TUNE below is the one table; the driver
+       derives every beat from it and writes the visual speeds out as custom
+       properties so a bench override drives the same numbers the ride does.
+       LAND_TUNE goes to the bench BY REFERENCE through the shim at the
+       IIFE's foot, and benchLandPlay replays the ride in place so a knob
+       can be judged without a reload — the wing outlives the bake.
 
        THREE DERIVATIONS, and nothing invents a clock:
          drawEnd  = DRAW_BASE_END / drawSpeed   (the pen actually lifting)
@@ -16014,27 +16029,40 @@
       /* THE POSE — the big draw's stage. poseW/poseH are the shares of the
          viewport the mark may span (the smaller wins, so it fits both
          ways); poseY is where its CENTRE sits as a share of viewport
-         height — .333 is his "2/3 up the page". TRANSFORM ONLY: the
+         height. BAKED .420 (2026-08-22) — his first react asked for "2/3
+         up the page" and .333 was that read literally; on the bench he
+         settled it lower, still clearly above centre. TRANSFORM ONLY: the
          masthead svg width is the bench's own logo-size param and is not
          ours to move. */
-      poseW: .34, poseH: .52, poseY: .333,
+      poseW: .34, poseH: .52, poseY: .420,
 
-      /* drawSpeed multiplies the SMIL clocks (2 = twice as fast). The
-         driver rewrites the svg's begin/dur from the BASE values it caches
-         on first run, so repeated changes never compound, and drawEnd is
-         derived from it — the shrink always waits for the pen. */
-      drawSpeed: 1,
+      /* drawSpeed multiplies the SMIL clocks (2 = twice as fast). BAKED 2
+         (2026-08-22). IT SHIPS AS A RESCALE, NEVER AS A MARKUP REWRITE:
+         the driver rewrites #logo-draw's begin/dur from the BASE values it
+         caches on first run (so repeated changes never compound) and puts
+         the base back when the ride stands down. THE REASON IS THE PHONE —
+         both surfaces share this one inline svg, and the phone intro's
+         whole beat map is derived from the MARKUP's clocks (DRAW_HOME,
+         mobile.md). Bake the 2 into the svg and the phone's draw would
+         finish a second before an intro that still waits 2375ms for it.
+         drawEnd is derived from this number, so the shrink always waits
+         for the pen. */
+      drawSpeed: 2,
 
-      /* travel — the shrink flight home. Mirrored into --landTravel for
-         the CSS transition, and seatAt is built on it. */
-      travel: 850,
+      /* travel — the shrink flight home. BAKED 1000 (2026-08-22). Mirrored
+         into --landTravel for the CSS transition, and seatAt is built on
+         it, so the flight and the clock cannot drift. */
+      travel: 1000,
 
       /* THE CASCADE — a section at a time, his shape: "originals lands
          just before its carousel / the carousel lands / next section has
          started". cascade is the air after the mark seats before section
          one; head/car are per-section offsets from THAT, so the whole
          cascade slides as a unit and each section keeps its own rhythm.
-         Section order is identity-keyed (originals → shaped → routed). */
+         Section order is identity-keyed (originals → shaped → routed).
+         RULED FINAL AT THE BAKE (2026-08-22): "you guys nailed the section
+         load in ask. no tweaks there. its solid" — these seven numbers did
+         not move and are not an open question. */
       cascade: 420,
       sections: [
         { head: 0,    car: 260 },
@@ -16043,10 +16071,12 @@
       ],
       headDur: 520, carDur: 620,
 
-      /* THE SPINE — the video slides in as the mark seats, the clamp photo
-         follows it in. clampAt counts from the VIDEO's start, so the two
-         stay a pair when either moves. */
-      vidAt: 0, vidDur: 620,
+      /* THE SPINE — the video slides in just after the mark seats, the
+         clamp photo follows it in. vidAt BAKED 300 (2026-08-22): the seat
+         gets its own moment before the column starts moving. clampAt
+         counts from the VIDEO's start, so the two stay a pair when either
+         moves. */
+      vidAt: 300, vidDur: 620,
       clampAt: 700, clampDur: 520,
 
       /* the veil goes first now; veilDur mirrors .fveil's own transform
@@ -16068,7 +16098,7 @@
       const T = LAND_TUNE;
       const step = (...c) => document.body.classList.add(...c);
       const RS = document.documentElement.style;
-      const CLS = ["land", "land-d", "land-snap", "land-pose", "land-shrink",
+      const CLS = ["land", "land-snap", "land-pose", "land-shrink",
                    "land-tick", "land-bar", "land-vid", "land-tail",
                    "land-h1", "land-h2", "land-h3", "land-c1", "land-c2", "land-c3"];
       let played = false;
@@ -16085,12 +16115,23 @@
       let timers = [];
       const at = (ms, fn) => timers.push(setTimeout(fn, ms));
 
-      /* THE SMIL CLOCKS. Cached from the markup on first touch so a
-         rescale is always base/speed and can never compound. Written back
-         BEFORE playLogo's rewind, so the new interval is what replays.
-         NOTE the mutation outlives the ride on purpose: while a bench
-         operator is tuning the draw, the arrival draw should show the
-         speed being tuned. A reload restores the markup's own clocks. */
+      /* THE SMIL CLOCKS — drawSpeed IS A RESCALE, NEVER A MARKUP REWRITE.
+         Each animate/set node's shipped begin/dur is cached on the node the
+         first time we touch it, so a rescale is always base/speed and can
+         never compound; the write lands BEFORE playLogo's rewind, so the
+         new interval is what replays; and the base goes back when the ride
+         stands down (drawRestore, at the foot of standDown).
+
+         THE RESTORE IS THE LOAD-BEARING HALF, and it is why the baked
+         drawSpeed of 2 ships HERE and not in the svg (2026-08-22). Both
+         surfaces share this one inline svg, and the phone intro derives its
+         whole beat map from the MARKUP's clocks (DRAW_HOME, mobile.md) —
+         halve them at the source and the phone's pen would lift a second
+         before an intro still waiting 2375ms for it. Restoring also keeps
+         the plain mid-session home draw (route's playLogo rewind, no
+         ceremony) on the pace it has always had. Only what OUTLIVES the
+         ride goes back to base: the ride itself always draws at the speed
+         in LAND_TUNE, which is what makes the knob judgeable on the bench. */
       function drawScale(speed) {
         const svg = document.getElementById("logo-draw");
         if (!svg) return;
@@ -16100,6 +16141,16 @@
           const b = parseFloat(n.dataset.landB), d = parseFloat(n.dataset.landD || "");
           if (!isNaN(b)) n.setAttribute("begin", (b / speed).toFixed(4) + "s");
           if (!isNaN(d)) n.setAttribute("dur", (d / speed).toFixed(4) + "s");
+        });
+      }
+      /* nothing to put back until something was cached — an unarmed page and
+         a ride that stood down before drawScale both no-op here */
+      function drawRestore() {
+        const svg = document.getElementById("logo-draw");
+        if (!svg) return;
+        svg.querySelectorAll("animate, set").forEach(n => {
+          if (n.dataset.landB) n.setAttribute("begin", n.dataset.landB);
+          if (n.dataset.landD) n.setAttribute("dur", n.dataset.landD);
         });
       }
 
@@ -16123,6 +16174,12 @@
         if (brand) brand.style.transform = "";
         startTick();   /* belt, and FIRST: nothing after it may strand the tick */
         if (fveilEl) fveil.clear();   /* the deref the bail branch could not survive */
+        /* LAST on purpose: the tick and the veil are the two things a
+           stand-down owes the reader, and a clock rewrite owes them
+           nothing. A cancel mid-draw lands here too — the pen jumps to
+           where the base clocks put it and finishes at the shipped pace,
+           which is the right answer for a ceremony that is over. */
+        drawRestore();
       }
 
       function playLanding() {
@@ -16188,7 +16245,7 @@
         }
 
         /* take the start pose in ONE frame, transitions off (see .land-snap) */
-        document.body.classList.add("land", "land-d", "land-snap");
+        document.body.classList.add("land", "land-snap");
         void document.body.offsetWidth;
         document.body.classList.remove("land-snap");
         addEventListener("hashchange", standDown);
@@ -16264,10 +16321,10 @@
       }
 
       landPlay = playLanding;
-      if (!document.body.classList.contains("land")) return;   /* no param: nothing runs */
+      if (!document.body.classList.contains("land")) return;   /* unarmed: nothing runs */
       playLanding();
     })();
-    /* ------------------ end DEV SWITCH — the landing --------------------- */
+    /* --------------------- end THE LANDING ------------------------------- */
 
     /* the fixed span is measured at boot, re-measured when the fonts land
        (mono metrics shift the word widths) and on a settled resize (the
@@ -16290,13 +16347,15 @@
     if (location.hostname === "localhost" || location.hostname === "127.0.0.1") {
       window.BENCH = { STRIP_TUNE, NB_TUNE, SUN };
       window.benchRepose = () => window.dispatchEvent(new Event("resize"));
-      /* DEV SWITCH — the landing (2026-08-21, his "give this the bench
-         treatment"): LAND_TUNE joins the shim BY REFERENCE like the rest,
+      /* THE LANDING (2026-08-21, his "give this the bench treatment"; kept
+         at the bake): LAND_TUNE joins the shim BY REFERENCE like the rest,
          and benchLandPlay REPLAYS the arrival in place. The replay door is
          what makes the tune usable at all — the ride runs once at boot, so
          without it a knob written from the bench could never be seen
-         without a reload, and a reload throws the write away. Both lines
-         go when the landing bakes (or move to the baked const). */
+         without a reload, and a reload throws the write away. The wing
+         OUTLIVED the bake by design: LAND_TUNE is the shipped table now,
+         not a switch's scratch pad, so these two lines retire with the
+         pilot like the rest of the shim — not with the ceremony. */
       window.BENCH.LAND_TUNE = LAND_TUNE;
       window.benchLandPlay = () => landPlay();
     }

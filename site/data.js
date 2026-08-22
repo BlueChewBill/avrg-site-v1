@@ -116,6 +116,20 @@ const COLLECTIONS = [
           "img/full/originals-06-2.jpg",
           "img/full/originals-06-3.jpg"
         ]
+      },
+      {
+        "id": "originals-07",
+        "name": "Bluepiro",
+        "description": "Bluepiro\n\nDRAFT — Claude wrote this from the photos, replace it with your own words.\n\nBlue-stained deck on a Piro mould. Piro wheels in mint, teal anodised\nbaseplates on silver trucks, black foam grip with a teal patch at the tail.",
+        "thumb": "img/thumb/originals-07-1.jpg",
+        "thumbs": [
+          "img/thumb/originals-07-1.jpg",
+          "img/thumb/originals-07-2.jpg"
+        ],
+        "photos": [
+          "img/full/originals-07-1.jpg",
+          "img/full/originals-07-2.jpg"
+        ]
       }
     ]
   },

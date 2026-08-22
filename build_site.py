@@ -8,7 +8,7 @@ Folder rules inside each collection folder (sources/originals, sources/classic, 
 Outputs optimized images into site/img/ and writes site/data.js.
 Re-run any time you add/remove/move photos:   python3 build_site.py
 """
-import os, subprocess, json
+import os, re, subprocess, json
 from concurrent.futures import ThreadPoolExecutor
 
 # >>> SET YOUR REDDIT HANDLE HERE (powers every "DM ... on Reddit" link) <<<
@@ -53,6 +53,11 @@ def imgs(folder):
                   if not f.startswith(".") and os.path.splitext(f)[1].lower() in IMG_EXT)
 
 def prettify(slug):
+    """Folder name -> display name. A leading "NN-" is an ORDERING PREFIX, not part
+    of the name: ids are positional (see gotchas.md), so board folders carry a number
+    that pins their slot and gets stripped here. Add a new board as the next number
+    and nothing before it moves."""
+    slug = re.sub(r"^\d+[-_]", "", slug)
     out = []
     for w in slug.replace("_", " ").replace("-", " ").split():
         if w.isupper():

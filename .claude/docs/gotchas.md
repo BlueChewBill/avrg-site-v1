@@ -147,6 +147,19 @@ Note the collapse: the vault's `redesign/media/` (cover card + story clamps) and
 
 **THE LAW: add new boards so they sort LAST** (the existing naming already does this — keep the convention when adding). If a board genuinely has to land mid-order, re-map `CANVA` and the sibling maps in the same pass, and diff `site/data.js` before and after to see exactly which ids moved. Note the inventory refs are non-contiguous on purpose (`classic-01` is CL 3), so the ref number cannot be used to sanity-check the ordinal — it is derived from the map, not from position.
 
+**THE ORIGINALS CARRY ORDERING PREFIXES (2026-08-22).** `sources/originals/` board
+folders are named `NN-slug` (`01-og-orange-piro` … `07-bluepiro`). The number pins the
+slot; `prettify()` in `build_site.py` strips a leading `\d+[-_]` so it never reaches the
+display name. **Adding an original is now just "next number"** — no thinking about where
+the name falls alphabetically, no remapping. This was landed as a provable no-op: the six
+existing folders were prefixed in their already-sorted order and `site/data.js` came out
+**byte-identical**, so `originals-01`…`06` (and the `cuts/originals-0N-1-cut.png` files
+keyed to them) never moved. Originals are the only collection using subfolders, and the
+only positional coupling they have is those cut PNGs — they are absent from `CANVA`,
+`INVREF` and `DIMS_MM`, and their `#01`-style refs are computed at render time from the
+view index, not stored. **Do the same for `classic`/`hand-shaped` if they ever gain
+subfolders; loose-file collections still rely on filename order alone.**
+
 ## `site/` is build output for the images — but not for everything in it
 
 `build_site.py` writes `site/img/thumb`, `site/img/full` and `site/data.js` and nothing else. `site/media/`, `site/fonts/`, `site/img/cards/` and the two logo PNGs are **committed assets** the build never touches — deleting `site/` and rebuilding does not bring them back. Re-run the build freely; just don't treat the whole folder as regenerable.

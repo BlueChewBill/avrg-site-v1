@@ -52,3 +52,29 @@ The flip chip (`.fflipc`, top right — the hidden face as a mini) had carried n
 **THE DESKTOP GHOST CAME WITH IT (2026-08-19, his call: "lets fix the v1 ghost too").** Porting the mark surfaced that T9's ghost had never reached this repo at all — the lb chip's display rule still sat inside the `max-width: 940px` block, so the desktop lightbox had no corner and still wore the Top/Bottom words the ghost was built to replace. Ported in full: `#lb-card.canflip .fflipc` and `#lb-card .find { display: none }` move to top level (the words are now hidden at every width — their retirement reached without ripping the markup out, so their click door is inert rather than gone), and the ≥941 block gains the ghost's dress — face opacity .6 rising to .85 on hover (**on the FACE, never the button**, or it ghosts the mark too), the 0.379-ratio slot, and the mark's own 4.3399cqw. **The CSS was only half of it:** the chip's click door opened with `if (!chip || !dockActive()) return`, so a desktop ghost would have been a dead button — T9 moves that gate BELOW the lb branch (the lb chip answers on every width; grid chips stay the phone's flip door). A ported ghost without that line looks right and does nothing, which is exactly how it read on first verification.
 
 Verified served (:8124, own headless Chrome with touch emulation) at 393×852: the mark renders on the phone grid card and the phone lb, the chip's tap still flips the face, no console errors.
+
+## THE ORIGINALS GET THEIR FLIP — the reshoot starts landing (2026-08-22)
+
+Since 2026-07-25 originals were the one collection with **no card flip**: `BOT()`
+resolves the *other* face of a CANVA pair, originals had no canva batch, so
+`canflip` never armed and their card was one-sided. Dylan's removed top+bottom
+camera-roll shots are that reshoot. **Bluepiro (`originals-07`) is the first one
+through**, and it needed **zero new code** — `canflip` is toggled purely on
+whether `BOT()` resolves, so a pair in `site/img/cards/canva/` plus one CANVA row
+is the entire switch. Verified end-to-end: card face `og7-bottom`, corner chip
+mini `og7-top`, lightbox turns to UNDERSIDE, strip thumb follows.
+
+**THE NUMBER IN THE FILENAME IS THE BOARD'S POSITION, and that is load-bearing.**
+Adding an original to CANVA moves it off the `PREFIX + (k+1)` fallback and onto
+`INVREF`, which reads the ref back out of the filename — `og7-bottom` → `OG 07`.
+Match the position and the ref is unchanged (verified: OG 01–07 all print the same
+strings as before, so `JSPARK`/`PH_DIMS`/`DIMS_MM` keys keep resolving). Get it
+wrong and you have silently renumbered a board's ref everywhere at once.
+
+**Front face = whichever face the board leads with.** Bluepiro leads bottom-up
+(`"originals-07":"og7-bottom"`), the same shape as the `hs*-bottom` rows.
+
+**The canva pair SUPERSEDES `cuts/`.** Once a board has a CANVA row, `CUT()` never
+reaches `site/img/cards/cuts/` again — delete the orphaned `originals-NN-1-cut.png`
+in the same pass rather than leaving a dead asset in a public repo. 01–06 still
+ride their cuts until their pairs land.

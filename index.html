@@ -1514,8 +1514,10 @@
      Board click flips to the underside — the object is the control.
      THE FLIP LIVES IN THE LIGHTBOX ONLY, as the carousel — see the
      #lb.fv3 block, which is `.frame`-scoped. Only .canflip cards flip
-     (BOT() resolves a canva pair's other face; originals ride the interim
-     no-flip until their reshoot).
+     (BOT() resolves a canva pair's other face; an original flips once its
+     reshoot pair lands in CANVA — 07 has one, 01-06 still ride the interim
+     no-flip). Nothing here is collection-aware: canflip is toggled purely
+     on whether BOT() resolves, so a pair is the whole switch.
      GRID/SHELF CARDS DO NOT FLIP (Dylan, 2026-07-26): "i dont think kick
      belongs on a collections board click. it gets in the way of the
      lightbox / could inadvertently hide a card click to inspect." So
@@ -6693,7 +6695,8 @@
        Face = the one that pixel-matched the current thumb, so the swap changes edge quality,
        not the look. Mapping derivation + confidence per row:
        card-lab/canva-review.html (vault repo).
-       Originals have no canva batch — they fall through to Vision cuts + data.js refs. */
+       Originals had no canva batch — they fall through to Vision cuts + data.js refs,
+       EXCEPT where the 2026-08-22 reshoot has landed a pair (see the og rows). */
     const CANVA = {
       "classic-01":"cl3-top","classic-02":"cl4-top","classic-03":"cl5-top","classic-04":"cl6-top",
       "classic-05":"cl7-top","classic-06":"cl8-top","classic-07":"cl11-top","classic-08":"cl12-top",
@@ -6705,6 +6708,15 @@
       "hand-shaped-07":"hs9-top","hand-shaped-08":"hs15-top","hand-shaped-09":"hs16-top",
       "hand-shaped-10":"hs6-top","hand-shaped-11":"hs17-top","hand-shaped-12":"hs7-top",
       "hand-shaped-13":"hs18-top","hand-shaped-14":"hs8-top",
+      /* THE ORIGINALS' RESHOOT STARTS LANDING (2026-08-22). Removed top+bottom
+         shots, so originals join the pair machinery instead of the one-faced
+         Vision cuts — same flip, same card, no new mechanism. The number MUST
+         match the board's position in the collection: jref reads it back out
+         (og7-bottom -> "OG 07"), which is exactly what the fallback already
+         printed, so refs do not move. Front face is whichever the board leads
+         with — Bluepiro leads bottom-up, like the hs bottoms above.
+         01-06 keep falling through to cuts/ until their pairs arrive. */
+      "originals-07":"og7-bottom",
     };
     const STEM = b => b.thumb.split("/").pop().replace(/\.jpg$/, "").replace(/-\d+$/, "");
     /* inventory ref from the canva file name: "cl3-top" -> "CL 3" */
@@ -6752,8 +6764,8 @@
     };
     /* the underside: the canva pair's OTHER face (a few hs boards show
        their -bottom as the card front — the flip shows whichever face the
-       front isn't). No canva pair (originals, resale) = no flip until the
-       reshoot lands (the interim, 2026-07-25). */
+       front isn't). No canva pair = no flip — resale, and any original whose
+       reshoot pair has not landed yet (the interim, 2026-07-25). */
     const BOT = b => {
       const cv = CANVA[STEM(b)];
       if (!cv) return null;

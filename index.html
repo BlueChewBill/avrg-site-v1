@@ -16212,6 +16212,27 @@
           if (n.dataset.landB) n.setAttribute("begin", n.dataset.landB);
           if (n.dataset.landD) n.setAttribute("dur", n.dataset.landD);
         });
+        /* THE HEAL SEEK — without it the restore HALF-ERASES the mark
+           (2026-08-22, Dylan's catch post-bake). Blink keeps a frozen
+           animate's elapsed ACTIVE TIME through a dur rewrite, so a pen
+           frozen at the scaled end (active 1.025s) re-freezes at
+           1.025/2.05 = exactly half once the base dur is back — and it
+           never rejoins a still-live interval, so every completed ride
+           ended half-drawn until the next playLogo rewind healed it.
+           Nudge seeks around the current time do NOT recompute the stale
+           value (measured: ±1ms..±500ms all no-ops, same-turn or
+           deferred). The one reliable heal is the pair below: the rewind
+           to 0 resets every element to unbegun — the stale active time
+           cannot survive a state where nothing has begun — and the jump
+           past the end is playLogo's own reduced-motion idiom, landing
+           every element frozen at its true end value. Both freeze values
+           are clock-independent, so this holds whichever attr set a
+           pending rebuild sees. The timeline parks at 9s, which every
+           arrival's playLogo rewind already owns. Measured across
+           repeated ride/replay cycles and a cancel mid-draw: finished
+           mark, opacity 1, stable. */
+        if (svg.setCurrentTime)
+          try { svg.setCurrentTime(0); svg.setCurrentTime(9); } catch (e) {}
       }
 
       function clamper() { return document.querySelector(".land-clamp"); }
@@ -16236,9 +16257,11 @@
         if (fveilEl) fveil.clear();   /* the deref the bail branch could not survive */
         /* LAST on purpose: the tick and the veil are the two things a
            stand-down owes the reader, and a clock rewrite owes them
-           nothing. A cancel mid-draw lands here too — the pen jumps to
-           where the base clocks put it and finishes at the shipped pace,
-           which is the right answer for a ceremony that is over. */
+           nothing. A cancel mid-draw lands here too — the mark COMPLETES
+           INSTANTLY (drawRestore's heal seeks past the end; the old
+           finish-at-shipped-pace promise was never real — Blink froze the
+           pen at half instead, the 2026-08-22 find), which is the right
+           answer for a ceremony that is over. */
         drawRestore();
       }
 

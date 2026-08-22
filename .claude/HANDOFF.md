@@ -37,6 +37,15 @@ Depends on what Dylan brings (he said the site "might be a Sunday thing"):
    audio unlock timing, JS feature gates). iOS is already largely proven —
    every iPhone browser is WebKit and the phone costume was built/tested
    against his iPhone + the sim all along.
+   **His remembered symptoms (start here):** the board grow + cursor-chase
+   interactions misbehaving, and Safari treating the board image like a
+   copyable photo — selecting/highlighting it mid-interaction. That last
+   one is the classic macOS Safari image-drag/selection behavior; the
+   known-cheap fixes are `-webkit-user-select: none` +
+   `-webkit-user-drag: none` (+ `-webkit-touch-callout: none`) on the
+   interactive imagery and their hover containers. Grow/chase jank likely
+   wants transform/will-change checks in Safari's compositor. He may run
+   a walkthrough himself and bring notes.
 
 ## Read these, skip the rest
 

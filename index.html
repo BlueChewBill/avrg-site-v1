@@ -5420,6 +5420,111 @@
 
   /* mobile tiles */
   body.light .tile .tframe { background: #eee9df; }
+
+  /* ============== DEV SWITCH — landing variants, remove when winner bakes
+     ?land=a|b|c|d on the desktop home arrival. FOUR VARIANTS TO REACT TO;
+     nothing here is a decision. With no param the body never gains .land
+     and not one rule below matches — the landing is byte-for-byte today's.
+
+       A  STAGE WHAT EXISTS — the tick holds until the draw lands and the
+          page fades up under it. The smallest possible staging.
+       B  THE PAGE ASSEMBLES — the draw runs in place while the page builds
+          itself behind it: masthead settles, section heads, shelves, spine.
+       C  THE PHONE CEREMONY, PORTED — veil from the first paint, the logo
+          draws BIG centre-stage, shrinks into its seat, the veil rides down.
+       D  THE COMBO (his lean) — C's pose and shrink flowing into B's
+          staggered assembly instead of a flat reveal.
+
+     THE ARM is a second tiny script at the top of <body> (the intro arm's
+     precedent and its reason: the browser can paint before the main script
+     runs, so a held page must already be held at the FIRST paint). The
+     driver walks the beats at the script's tail, beside the intro's.
+
+     Z RUNGS — NO NEW ONES. C/D REUSE the focus veil (.fveil, 6400) and the
+     phone intro's masthead lift (6450); the input shield is the shields
+     rung (6700 — the deal / menu-select / intro idiom). Reusing the veil
+     rather than forking one is safe here because every rule is scoped
+     desktop AND body.land-*: the phone ceremony cannot see any of it, and
+     fveil.up/down/clear already carry the snap law the organ was fixed
+     with. TODO(T1): landing beat — the draw's touchdown wants a sound. */
+  @media (min-width: 941px) {
+    /* THE HOLD — everything but the masthead waits, on all four. Opacity
+       and pointer-events only: the boxes stay laid out, so lockCardScale
+       and the conveyor measure the same page they always did. */
+    body.land #home .spine > :not(.masthead),
+    body.land #home .bandhead,
+    body.land #home .belt {
+      opacity: 0; pointer-events: none;
+      transition: opacity .62s ease var(--landd, 0s);
+    }
+    /* the per-band lag: one property on the section, inherited by its head
+       and its shelf, so the two stages stagger in the same order. B and D
+       ONLY — A and C reveal flat, and a shelf arriving late in a flat fade
+       is a stagger nobody asked for (caught on A's first timeline). */
+    body.land-b #home .band:nth-of-type(2), body.land-d #home .band:nth-of-type(2) { --landd: .11s; }
+    body.land-b #home .band:nth-of-type(3), body.land-d #home .band:nth-of-type(3) { --landd: .22s; }
+    body.land-b #home .band:nth-of-type(4), body.land-d #home .band:nth-of-type(4) { --landd: .33s; }
+    body.land-b #home .band:nth-of-type(5), body.land-d #home .band:nth-of-type(5) { --landd: .44s; }
+    body.land-b #home .band:nth-of-type(6), body.land-d #home .band:nth-of-type(6) { --landd: .55s; }
+    /* the tick holds on every variant — startTick is deferred at boot the
+       same way the intro defers it (one starter, three callers, called once) */
+    body.land #tick { opacity: 0; }
+    body.land.land-tick #tick { opacity: 1; }
+
+    /* ---- A + C: the flat reveal ---- */
+    body.land.land-in #home .spine > :not(.masthead),
+    body.land.land-in #home .bandhead,
+    body.land.land-in #home .belt { opacity: 1; pointer-events: auto; }
+    /* A's fade is the whole variant, so it gets the longer breath */
+    body.land-a #home .spine > :not(.masthead),
+    body.land-a #home .bandhead,
+    body.land-a #home .belt { transition-duration: .8s; }
+
+    /* ---- B + D: the staggered assembly ----
+       the heads and the spine's tail RISE as they arrive; the shelf only
+       fades — the belt is the one measured organ on this page, and a
+       transform on it would hand its absolute cards a new containing box
+       mid-conveyor for no gain the eye can find. */
+    body.land-b #home .bandhead, body.land-b #home .spine > :not(.masthead),
+    body.land-d #home .bandhead, body.land-d #home .spine > :not(.masthead) {
+      transform: translateY(10px);
+      transition: opacity .62s ease var(--landd, 0s),
+                  transform .62s cubic-bezier(.22, 1, .36, 1) var(--landd, 0s);
+    }
+    body.land.land-heads #home .bandhead { opacity: 1; transform: none; pointer-events: auto; }
+    body.land.land-belts #home .belt { opacity: 1; pointer-events: auto; }
+    body.land.land-tail #home .spine > :not(.masthead) { opacity: 1; transform: none; pointer-events: auto; }
+
+    /* ---- C + D: the veil, the pose, the bar ---- */
+    body.land-c::after, body.land-d::after {
+      content: ""; position: fixed; inset: 0; z-index: 6700;
+    }
+    /* visibility/opacity restated here for the same reason the intro
+       restates them: the arm script runs before any of the main JS, and
+       the first paint must already be the opaque veil */
+    body.land-c .fveil, body.land-d .fveil {
+      visibility: visible; opacity: 1; top: 0; background: rgba(255, 255, 255, 1);
+    }
+    body.land-c.land-shrink .fveil,
+    body.land-d.land-shrink .fveil { background: rgba(255, 255, 255, .62); }
+    /* the bar rides at 6600, ABOVE the veil, so it would sit on the white
+       through the whole draw. The phone parks its two pieces off-screen;
+       up here the drawn bar is one object over a full-width seat, so it
+       simply holds and arrives — the ladder is untouched either way. */
+    body.land-c .topbar, body.land-d .topbar { opacity: 0; }
+    body.land-c.land-bar .topbar,
+    body.land-d.land-bar .topbar { opacity: 1; transition: opacity .55s ease; }
+    /* the masthead rides above the veil (the drawing logo is the only
+       actor up there); the pose gate hides it until the big transform
+       has landed, so no frame paints the mark at its seat first */
+    body.land-c .masthead, body.land-d .masthead { position: relative; z-index: 6450; }
+    body.land-c:not(.land-pose) .masthead,
+    body.land-d:not(.land-pose) .masthead { opacity: 0; }
+    body.land-c .masthead .brand, body.land-d .masthead .brand { transition: none; }
+    body.land-c.land-shrink .masthead .brand,
+    body.land-d.land-shrink .masthead .brand { transition: transform .85s cubic-bezier(.22, 1, .36, 1); }
+  }
+  /* ==================== end DEV SWITCH — landing variants =============== */
 </style>
 </head>
 <!-- class="light" ships in markup: LIGHT IS THE ONE GROUND (2026-08-20 ruling)
@@ -5440,6 +5545,35 @@
             !matchMedia("(prefers-reduced-motion: reduce)").matches &&
             !(location.hash || "").replace(/^#/, ""))
           document.body.classList.add("intro");
+      } catch (e) {}
+    })();
+  </script>
+  <!-- DEV SWITCH — landing variants, remove when winner bakes.
+       ?land=a|b|c|d arms one of the four desktop arrivals (the CSS block at
+       the foot of the sheet has the map). Same reason the intro arm sits up
+       here: a variant that HOLDS the page must hold it at the first paint,
+       and the main script does not run until the end of body. Desktop only
+       (941+ — the phone's own intro owns anything narrower), motion only,
+       bare home route only; no param and nothing below this line happens.
+       C and D are ONCE PER SESSION — sessionStorage, so a reload gets the
+       plain in-place draw. To watch one again: new tab, or clear the key.
+       Self-contained, like the intro arm — it may reference nothing from
+       the main script (the TDZ law's seat). -->
+  <script>
+    (function () {
+      try {
+        var v = (location.search.match(/[?&]land=([abcd])\b/i) || [])[1];
+        if (!v) return;
+        v = v.toLowerCase();
+        if (!matchMedia("(min-width: 941px)").matches) return;
+        if (matchMedia("(prefers-reduced-motion: reduce)").matches) return;
+        if ((location.hash || "").replace(/^#/, "")) return;
+        if (v === "c" || v === "d") {
+          var k = "avrg-land-" + v;
+          if (sessionStorage.getItem(k)) return;
+          sessionStorage.setItem(k, "1");
+        }
+        document.body.classList.add("land", "land-" + v);
       } catch (e) {}
     })();
   </script>
@@ -6005,7 +6139,12 @@
         decodeTo(tags[ti]);
       }, 4400);
     }
-    if (!document.body.classList.contains("intro")) startTick();
+    /* DEV SWITCH — landing variants, remove when winner bakes: the .land
+       term is the desktop arrivals' seat at the same deferral (every
+       variant holds the first decode for its own beat). No param, no
+       class, and this line reads exactly as it did. */
+    if (!document.body.classList.contains("intro") &&
+        !document.body.classList.contains("land")) startTick();
 
     /* quiet decode on button hovers: a shorter, calmer cousin of the tagline
        scramble. Delegated so re-rendered pages (colnav, lisst, shop-all) stay
@@ -15559,6 +15698,107 @@
       }, 0);
       setTimeout(() => { if (document.body.classList.contains("intro")) clearIntro(); }, 12000);
     })();
+
+    /* ---- DEV SWITCH — landing variants, remove when winner bakes --------
+       The desktop arrival, four ways, behind ?land=a|b|c|d. The arm script
+       at the top of <body> did the gating and wrote body.land + body.land-x
+       before the first paint; this driver reads which one and walks it.
+       Nothing here runs without the class, so the default landing is
+       untouched — same shape as the intro driver above, same clocks.
+
+       THE ONE FIXED POINT is the draw: the inline SMIL ends ~2.28s (the ×2
+       cut, k-core) and every beat below is derived from it, never from a
+       clock of its own. C/D re-fire the draw at the pose (playLogo owns it,
+       exactly as the intro does) — the svg's own timings are untouched.
+
+         A  1900 content fades up  ·  2380 tick (draw end + 100)  ·  3100 clear
+         B   900 tick  ·  1250 heads  ·  1520 shelves  ·  1850 spine  ·  2700 clear
+         C  pose  ·  2375 shrink + the page behind the frost  ·  3375 tick +
+            bar  ·  4125 the veil rides down  ·  5075 clear    (the phone map)
+         D  pose  ·  2375 shrink (the page stays EMPTY behind the frost)  ·
+            3225 tick + bar, as the mark seats  ·  3400 the veil rides down
+            AND the heads start  ·  3600 shelves  ·  3800 spine  ·  4650 clear
+            — the build begins under the frost, so the focus line passes
+            pieces already arriving rather than a page it has to wait for. */
+    (function () {
+      const V = (document.body.className.match(/\bland-([abcd])\b/) || [])[1];
+      if (!V) return;
+      const posed = V === "c" || V === "d";
+      const brand = document.querySelector(".masthead .brand");
+      const step = (...cls) => document.body.classList.add(...cls);
+      const clearLand = () => {
+        document.body.classList.remove(
+          "land", "land-a", "land-b", "land-c", "land-d",
+          "land-pose", "land-shrink", "land-tick", "land-bar",
+          "land-in", "land-heads", "land-belts", "land-tail");
+        if (brand) brand.style.transform = "";
+        if (posed) fveil.clear();
+        startTick();   /* belt: however we exit, the tick lives */
+      };
+      if (!brand || (posed && !fveilEl)) { clearLand(); return; }
+
+      if (V === "a") {
+        setTimeout(() => step("land-in"), 1900);
+        setTimeout(() => { step("land-tick"); startTick(); }, 2380);
+        setTimeout(clearLand, 3100);
+        return;
+      }
+      if (V === "b") {
+        setTimeout(() => { step("land-tick"); startTick(); }, 900);
+        setTimeout(() => step("land-heads"), 1250);
+        setTimeout(() => step("land-belts"), 1520);
+        setTimeout(() => step("land-tail"), 1850);
+        setTimeout(clearLand, 2700);
+        return;
+      }
+
+      /* C + D: the posed pair. Same FLIP the phone measures — the seat is
+         read off the real layout and the pose is TRANSFORM ONLY, so the
+         .masthead svg width (the bench's logo-size anchor) never moves. */
+      fveilEl.classList.add("on");
+      /* a 0-TIMEOUT, not rAF (the intro's reasoning): it still runs after
+         route() has booted the page, but a frozen frame loop must not be
+         able to stall the whole ceremony */
+      setTimeout(() => {
+        const r = brand.getBoundingClientRect();
+        if (!r.width) { clearLand(); return; }
+        /* the desktop stage is WIDE — .78 of the viewport width would put a
+           1100px mark on a 1440 screen. Height leads up here instead. */
+        const s = Math.min((innerWidth * .34) / r.width, (innerHeight * .52) / r.height);
+        const dx = innerWidth / 2 - (r.left + r.width / 2);
+        const dy = innerHeight * .46 - (r.top + r.height / 2);
+        brand.style.transform = "translate(" + dx.toFixed(1) + "px," + dy.toFixed(1) + "px) scale(" + s.toFixed(3) + ")";
+        step("land-pose");
+        playLogo();   /* own the clock — the draw starts at the pose */
+        setTimeout(() => {   /* the draw is done (~2.28s) — come home */
+          step("land-shrink");
+          if (V === "c") step("land-in");   /* C reveals flat, behind the frost */
+          void brand.offsetWidth;   /* commit the pose under the new transition, then release */
+          brand.style.transform = "";
+        }, 2375);
+        if (V === "c") {
+          setTimeout(() => { step("land-tick", "land-bar"); startTick(); }, 3375);
+          setTimeout(() => fveil.down(), 4125);
+          setTimeout(clearLand, 5075);
+        } else {
+          /* D's tick lands WITH the mark (the .85s shrink ends at 3225).
+             The assembly then starts UNDER the frost, on the same beat the
+             veil is released — the veil's ease is heavily front-loaded
+             (87% of its travel in the first 400ms, measured), so a build
+             that waits for the reveal only ever chases it. Starting
+             beneath it puts the pieces mid-arrival as the focus line
+             passes them, which is the phone's own "the page appears
+             behind the frost" grammar carried into the assembly. */
+          setTimeout(() => { step("land-tick", "land-bar"); startTick(); }, 3225);
+          setTimeout(() => { fveil.down(); step("land-heads"); }, 3400);
+          setTimeout(() => step("land-belts"), 3600);
+          setTimeout(() => step("land-tail"), 3800);
+          setTimeout(clearLand, 4650);
+        }
+      }, 0);
+      setTimeout(() => { if (document.body.classList.contains("land")) clearLand(); }, 12000);
+    })();
+    /* -------------- end DEV SWITCH — landing variants ------------------- */
 
     /* the fixed span is measured at boot, re-measured when the fonts land
        (mono metrics shift the word widths) and on a settled resize (the

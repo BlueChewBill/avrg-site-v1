@@ -5266,6 +5266,8 @@
     body.intro .masthead { position: relative; z-index: 6450; }
     body.intro:not(.intro-pose) .masthead { opacity: 0; }
     body.intro .masthead .brand { transition: none; }
+    /* .85s IS COUPLED TO DRAW_HOME (the shared const at the drivers): this
+       is the flight that beat starts — move one and re-derive the other */
     body.intro.intro-shrink .masthead .brand { transition: transform .85s cubic-bezier(.22, 1, .36, 1); }
     body.intro #tick { opacity: 0; }
     body.intro.intro-tick #tick { opacity: 1; transition: opacity .4s ease; }
@@ -5469,7 +5471,10 @@
     /* the tick holds on every variant — startTick is deferred at boot the
        same way the intro defers it (one starter, three callers, called once) */
     body.land #tick { opacity: 0; }
-    body.land.land-tick #tick { opacity: 1; }
+    /* the fade is the phone pair's (body.intro.intro-tick #tick) — the
+       first build dropped it and there is no base #tick transition, so
+       the tagline SNAPPED in on all four where the phone eases it */
+    body.land.land-tick #tick { opacity: 1; transition: opacity .4s ease; }
 
     /* ---- A + C: the flat reveal ---- */
     body.land.land-in #home .spine > :not(.masthead),
@@ -5521,6 +5526,9 @@
     body.land-c:not(.land-pose) .masthead,
     body.land-d:not(.land-pose) .masthead { opacity: 0; }
     body.land-c .masthead .brand, body.land-d .masthead .brand { transition: none; }
+    /* .85s IS COUPLED TO DRAW_HOME (the shared const at the drivers): this
+       is the flight that beat starts, and D's tick beat is derived from
+       where it LANDS. The phone's own copy carries the same note. */
     body.land-c.land-shrink .masthead .brand,
     body.land-d.land-shrink .masthead .brand { transition: transform .85s cubic-bezier(.22, 1, .36, 1); }
   }
@@ -5555,8 +5563,14 @@
        and the main script does not run until the end of body. Desktop only
        (941+ — the phone's own intro owns anything narrower), motion only,
        bare home route only; no param and nothing below this line happens.
-       C and D are ONCE PER SESSION — sessionStorage, so a reload gets the
-       plain in-place draw. To watch one again: new tab, or clear the key.
+       AN EXPLICIT ?land= ALWAYS PLAYS — typing it IS the intent, and a
+       switch he reloads to watch twice must not answer with the plain
+       landing and read as broken. (The first build gated C/D once-per-
+       session on sessionStorage: that is a BAKE-TIME policy call about the
+       shipped ceremony, not the switch's, and it does not belong in
+       temporary code — the phone intro replays every load too.)
+       The width check here is a SNAPSHOT; the tail driver re-reads it live
+       and a crossing clears the ride (see the driver's guards).
        Self-contained, like the intro arm — it may reference nothing from
        the main script (the TDZ law's seat). -->
   <script>
@@ -5568,12 +5582,26 @@
         if (!matchMedia("(min-width: 941px)").matches) return;
         if (matchMedia("(prefers-reduced-motion: reduce)").matches) return;
         if ((location.hash || "").replace(/^#/, "")) return;
-        if (v === "c" || v === "d") {
-          var k = "avrg-land-" + v;
-          if (sessionStorage.getItem(k)) return;
-          sessionStorage.setItem(k, "1");
-        }
         document.body.classList.add("land", "land-" + v);
+        /* THE ARM'S OWN BELT. These classes hold the page (and for C/D
+           raise a veil + a 6700 shield) from the FIRST paint, but the hand
+           that lowers them is in the main script at the end of body — so
+           anything that kills that script before the driver runs strands
+           the page invisible and sealed, and the driver's own 12s belt
+           dies with it. This one is self-contained and cannot: it is the
+           only failsafe that survives a dead main script. Past every beat
+           (the longest ride clears at ~5.1s), so it never races the ride. */
+        setTimeout(function () {
+          document.body.classList.remove(
+            "land", "land-a", "land-b", "land-c", "land-d",
+            "land-pose", "land-shrink", "land-tick", "land-bar",
+            "land-in", "land-heads", "land-belts", "land-tail");
+          /* .fveil.on is UNSCOPED — dropping the land classes alone would
+             leave the frost sheet behind if the script died after the
+             driver raised it */
+          var fv = document.getElementById("fveil");
+          if (fv) fv.classList.remove("on", "down");
+        }, 12000);
       } catch (e) {}
     })();
   </script>
@@ -15744,6 +15772,19 @@
       playMenuSelect(a);
     });
 
+    /* THE MARK COMES HOME — ONE derivation, two drivers (2026-08-21).
+       The inline SMIL draw ends ~2.28s (the ×2 cut — the clocks live in
+       the svg, k-core.md) and the shrink beat is that end plus a 100ms
+       hold. It had already been retuned once when the draw was halved,
+       and it lived as a bare 2375 in the phone intro that the desktop
+       landing variants then copied — two literals, no link, free to drift.
+       Hoisted so they cannot.
+       COUPLED, and NOT expressible here: the shrink's own .85s transition
+       on .masthead .brand — the flight this beat starts. It is written at
+       two CSS sites (body.intro.intro-shrink, and the land-c/d pair in the
+       DEV SWITCH block); move this number and re-derive both. */
+    const DRAW_HOME = 2375;
+
     /* ---- THE INTRO ------------------------------------------------------
        Armed by the top-of-body script (phone + home + motion): the first
        paint is the opaque veil with everything parked. This driver poses
@@ -15773,15 +15814,15 @@
         brand.style.transform = "translate(" + dx.toFixed(1) + "px," + dy.toFixed(1) + "px) scale(" + s.toFixed(3) + ")";
         document.body.classList.add("intro-pose");
         playLogo();   /* own the clock — the draw starts at the pose */
-        /* the beat map rides the draw's ×2 cut (2026-08-16): SMIL ends
-           ~2.28s now, shrink = draw end + the same 100ms hold, and the
-           post-draw offsets (+1000 / +750 / +950) are the approved
-           choreography untouched — only the draw got faster */
-        setTimeout(() => {   /* the draw is done (SMIL ends ~2.28s) — come home */
+        /* the beat map rides the draw's ×2 cut (2026-08-16): the shrink is
+           DRAW_HOME (the shared derivation above), and the post-draw
+           offsets (+1000 / +750 / +950) are the approved choreography
+           untouched — only the draw got faster */
+        setTimeout(() => {   /* the draw is done — come home */
           document.body.classList.add("intro-shrink");
           void brand.offsetWidth;   /* commit the pose under the new transition, then release it */
           brand.style.transform = "";
-        }, 2375);
+        }, DRAW_HOME);
         setTimeout(() => {   /* the decode's first run + the bar arrives */
           document.body.classList.add("intro-tick", "intro-bar");
           startTick();
@@ -15801,14 +15842,20 @@
 
        THE ONE FIXED POINT is the draw: the inline SMIL ends ~2.28s (the ×2
        cut, k-core) and every beat below is derived from it, never from a
-       clock of its own. C/D re-fire the draw at the pose (playLogo owns it,
+       clock of its own — the shrink reads DRAW_HOME, the shared const the
+       phone intro uses. C/D re-fire the draw at the pose (playLogo owns it,
        exactly as the intro does) — the svg's own timings are untouched.
+
+       EVERY BEAT RIDES at(), so clearLand can flush the whole ride: a hash
+       navigation, a width crossing, or the belt stands the ceremony down
+       ATOMICALLY rather than leaving later beats to fire on a page that
+       has moved on.
 
          A  1900 content fades up  ·  2380 tick (draw end + 100)  ·  3100 clear
          B   900 tick  ·  1250 heads  ·  1520 shelves  ·  1850 spine  ·  2700 clear
-         C  pose  ·  2375 shrink + the page behind the frost  ·  3375 tick +
+         C  pose  ·  DRAW_HOME shrink + the page behind the frost  ·  3375 tick +
             bar  ·  4125 the veil rides down  ·  5075 clear    (the phone map)
-         D  pose  ·  2375 shrink (the page stays EMPTY behind the frost)  ·
+         D  pose  ·  DRAW_HOME shrink (the page stays EMPTY behind the frost)  ·
             3225 tick + bar, as the mark seats  ·  3400 the veil rides down
             AND the heads start  ·  3600 shelves  ·  3800 spine  ·  4650 clear
             — the build begins under the frost, so the focus line passes
@@ -15818,30 +15865,54 @@
       if (!V) return;
       const posed = V === "c" || V === "d";
       const brand = document.querySelector(".masthead .brand");
+      const desk = matchMedia("(min-width: 941px)");
       const step = (...cls) => document.body.classList.add(...cls);
+      /* EVERY BEAT IS CANCELLABLE. Without this a route mid-ceremony left
+         the arrived page under the opaque veil and the 6700 shield for the
+         rest of the ride, and fveil.down() fired at 4125 onto a page that
+         had never raised it. The shield blocks pointers, not FOCUS — a
+         keyboard-activated bar link is a real door through it. */
+      const timers = [];
+      const at = (ms, fn) => timers.push(setTimeout(fn, ms));
+      let cleared = false;
       const clearLand = () => {
+        if (cleared) return;
+        cleared = true;
+        timers.forEach(clearTimeout);
+        timers.length = 0;
+        removeEventListener("hashchange", clearLand);
+        if (desk.removeEventListener) desk.removeEventListener("change", clearLand);
         document.body.classList.remove(
           "land", "land-a", "land-b", "land-c", "land-d",
           "land-pose", "land-shrink", "land-tick", "land-bar",
           "land-in", "land-heads", "land-belts", "land-tail");
         if (brand) brand.style.transform = "";
-        if (posed) fveil.clear();
-        startTick();   /* belt: however we exit, the tick lives */
+        startTick();   /* belt, and FIRST: nothing after it may strand the tick */
+        if (fveilEl) fveil.clear();   /* the deref the bail branch could not survive */
       };
-      if (!brand || (posed && !fveilEl)) { clearLand(); return; }
+      /* THE WIDTH IS RE-READ LIVE. The arm cached it at the first paint,
+         every ceremony rule is media-gated, and .fveil.on is NOT — so a
+         stale yes leaves frost over a phone layout. Two holes, two guards:
+         the LOAD RACE (a classic scrollbar landing after the arm can drop
+         a ~941-956 viewport under the gate — the lockScroll comment's
+         ~15px gutter) is this check; a mid-ceremony resize/rotate is the
+         change listener. Either way the ride stands down whole. */
+      if (!desk.matches || !brand || (posed && !fveilEl)) { clearLand(); return; }
+      addEventListener("hashchange", clearLand);
+      if (desk.addEventListener) desk.addEventListener("change", clearLand);
 
       if (V === "a") {
-        setTimeout(() => step("land-in"), 1900);
-        setTimeout(() => { step("land-tick"); startTick(); }, 2380);
-        setTimeout(clearLand, 3100);
+        at(1900, () => step("land-in"));
+        at(2380, () => { step("land-tick"); startTick(); });
+        at(3100, clearLand);
         return;
       }
       if (V === "b") {
-        setTimeout(() => { step("land-tick"); startTick(); }, 900);
-        setTimeout(() => step("land-heads"), 1250);
-        setTimeout(() => step("land-belts"), 1520);
-        setTimeout(() => step("land-tail"), 1850);
-        setTimeout(clearLand, 2700);
+        at(900, () => { step("land-tick"); startTick(); });
+        at(1250, () => step("land-heads"));
+        at(1520, () => step("land-belts"));
+        at(1850, () => step("land-tail"));
+        at(2700, clearLand);
         return;
       }
 
@@ -15852,7 +15923,7 @@
       /* a 0-TIMEOUT, not rAF (the intro's reasoning): it still runs after
          route() has booted the page, but a frozen frame loop must not be
          able to stall the whole ceremony */
-      setTimeout(() => {
+      at(0, () => {
         const r = brand.getBoundingClientRect();
         if (!r.width) { clearLand(); return; }
         /* the desktop stage is WIDE — .78 of the viewport width would put a
@@ -15863,16 +15934,16 @@
         brand.style.transform = "translate(" + dx.toFixed(1) + "px," + dy.toFixed(1) + "px) scale(" + s.toFixed(3) + ")";
         step("land-pose");
         playLogo();   /* own the clock — the draw starts at the pose */
-        setTimeout(() => {   /* the draw is done (~2.28s) — come home */
+        at(DRAW_HOME, () => {   /* the draw is done — come home */
           step("land-shrink");
           if (V === "c") step("land-in");   /* C reveals flat, behind the frost */
           void brand.offsetWidth;   /* commit the pose under the new transition, then release */
           brand.style.transform = "";
-        }, 2375);
+        });
         if (V === "c") {
-          setTimeout(() => { step("land-tick", "land-bar"); startTick(); }, 3375);
-          setTimeout(() => fveil.down(), 4125);
-          setTimeout(clearLand, 5075);
+          at(3375, () => { step("land-tick", "land-bar"); startTick(); });
+          at(4125, () => fveil.down());
+          at(5075, clearLand);
         } else {
           /* D's tick lands WITH the mark (the .85s shrink ends at 3225).
              The assembly then starts UNDER the frost, on the same beat the
@@ -15882,14 +15953,15 @@
              beneath it puts the pieces mid-arrival as the focus line
              passes them, which is the phone's own "the page appears
              behind the frost" grammar carried into the assembly. */
-          setTimeout(() => { step("land-tick", "land-bar"); startTick(); }, 3225);
-          setTimeout(() => { fveil.down(); step("land-heads"); }, 3400);
-          setTimeout(() => step("land-belts"), 3600);
-          setTimeout(() => step("land-tail"), 3800);
-          setTimeout(clearLand, 4650);
+          at(3225, () => { step("land-tick", "land-bar"); startTick(); });
+          at(3400, () => { fveil.down(); step("land-heads"); });
+          at(3600, () => step("land-belts"));
+          at(3800, () => step("land-tail"));
+          at(4650, clearLand);
         }
-      }, 0);
-      setTimeout(() => { if (document.body.classList.contains("land")) clearLand(); }, 12000);
+      });
+      /* the dead-man's switch — now free, since clearLand flushes it */
+      at(12000, clearLand);
     })();
     /* -------------- end DEV SWITCH — landing variants ------------------- */
 

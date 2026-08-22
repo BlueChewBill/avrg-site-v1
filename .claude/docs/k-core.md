@@ -22,3 +22,20 @@ Dylan's ruling ("light is the direction") executed for the Saturday launch. **Th
 Bench: charted same-session per the change-with-charting law (page-chrome wing + ogth-ring note, the CompUI side).
 
 **THE DRAW IS ×2 AND EVERY PATH IS OPACITY-GATED (2026-08-16).** Every SMIL begin/dur is HALF the drawn original — monogram begin .225s dur 2.05s, arcs begin .568s dur 1.707s, everything landing at ~2.28s (keyTimes are fractions of dur, so the per-segment hand pacing rode along; both surfaces share the one inline svg, so the desktop arrival draw runs the same clocks — the intro's beat map is derived from the draw end, mobile.md). **Each animated path carries `opacity="0"` + a `<set to="1" begin=<its own draw begin> fill="freeze"/>`** — WebKit paints a round line-cap as a speck at zero dash progress (the gotcha), and at intro scale the arcs' parked caps read as stray dots; the gate means nothing exists before its pen touches down, the set re-fires on playLogo's rewind, and freeze holds through reduced-motion's jump-past-end. **The phone seat is 188px** (`.masthead svg` in the ≤940 block; base stays 150 / 72 narrow-desktop) — the intro pose MEASURES the seat, so the seat is the one knob for the landed size and the big pose derives itself.
+
+## THE LANDING VARIANTS — `?land=a|b|c|d`, UNDER REACT (2026-08-21, T2)
+
+**A DEV SWITCH, not a decision.** The desktop home arrival had no ceremony — `startTick()` raced the logo draw and the page sat there fully dressed while the mark drew in place (thread 1's open desktop half). Four collideable arrivals now ride a URL param so Dylan can react on the served page; **nothing is picked, and the whole thing is fenced to come out in one sweep when a winner bakes.**
+
+- **A — stage what exists:** the tick holds to the draw's end, the page fades up under it. The smallest possible staging, and the only one shippable as-is.
+- **B — the page assembles:** the draw runs in place while the page builds behind it — masthead settles, section heads, shelves, spine, staggered per band.
+- **C — the phone ceremony, ported:** veil from the first paint, the mark draws BIG centre-stage, shrinks into its seat, the veil rides down. The phone's own beat map (mobile.md's THE LOAD INTRO).
+- **D — the combo (his lean):** C's pose and shrink flowing into B's assembly, the build starting UNDER the frost so the focus line passes pieces already arriving.
+
+**Gates:** desktop 941+, motion allowed, bare home route. No param → the body never gains `.land`, not one rule or timer fires, and the landing is exactly what it was. An explicit `?land=` **always plays** — typing it is the intent (once-per-session is a bake-time policy call about a shipped ceremony, deliberately kept out of temporary code).
+
+**The fence, four sites in `index.html`** (all marked `DEV SWITCH — landing variants, remove when winner bakes`): the CSS block at the foot of the sheet (inside `@media (min-width: 941px)`, every rule scoped `body.land` / `body.land-*`); the arm script at the top of `<body>` beside THE INTRO ARM; the `.land` term on the `startTick` boot gate; the driver at the script's tail beside the intro's.
+
+**No new z rungs** — C/D reuse the focus veil (6400) and the intro's masthead lift (6450); the shield is the shields rung (6700). **The pose is TRANSFORM ONLY**, so the bench's `logo-size` anchor never moves, and `playLogo`'s rewind is the whole replay mechanism (the SMIL clocks are untouched).
+
+**What the fix round hardened (same day):** every beat rides a cancellable handle so a hash navigation, a width crossing below 941, or the belt stands the ride down **atomically** — the first build could strand an arrived page under the opaque veil + shield and then lower a veil the page never raised. The width is re-read live in the driver (the arm's check is a snapshot, and `.fveil.on` is unscoped — a classic scrollbar landing after the arm can drop a 941–956 viewport under the gate). **`DRAW_HOME`** (2375 = SMIL draw end ~2.28s + a 100ms hold) is now ONE const both drivers read, with the coupled `.85s` shrink flight noted at both CSS sites.

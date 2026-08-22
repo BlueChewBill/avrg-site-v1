@@ -10745,13 +10745,14 @@
         /* the arrival seats with the deck's settle voice (Dylan, 2026-08-01:
            the open "deserves the same sound as a side card ... taking center
            stage" — it read naked beside the exchange's click). One kclick at
-           the flight's landing — 430ms is the .lb-card transform transition
-           closeLb also waits on. Tokened: a close or re-open inside the
-           flight voids it, and a return flight already mid-air blocks it. */
+           the flight's landing — ON the flip's own transitionend now, not a
+           430ms guess against a .55s transition (see onSettle). Tokened: a
+           close or re-open inside the flight voids it, and a return flight
+           already mid-air blocks it. */
         const myOpen = ++lbOpenN;
-        setTimeout(() => {
+        onSettle(lbCard, "transform", () => {
           if (myOpen === lbOpenN && !lb.hidden && !lbFlying) kclick();
-        }, 430);
+        }, 700);
       }
       if (sourceEl) {
         /* the case stays live above the open lb (bay z 5500 > lb 5000),
@@ -11851,6 +11852,29 @@
       /* NO flourish (Dylan's pick 2026-07-26): the landing is the press and
          the click, felt rather than annotated. */
     }
+    /* ---- THE SOUND LANDS WITH THE THING (2026-08-21, the sound pass): a
+       voice pinned to a bare setTimeout drifts the moment its choreography
+       is retuned, and the lb open's click had already drifted — 430ms
+       against a .lb-card whose transform transition is .55s, so it fired
+       ~120ms BEFORE the card came to rest. Ride the element's own
+       transitionend instead and keep the timer only as the fallback for a
+       tab hidden mid-flight, where transitions freeze and the event never
+       arrives (the animationend law in gotchas.md, same shape). First one
+       through wins; the other is disarmed. Scoped to the element itself —
+       transitionend BUBBLES and the card's children transition transform
+       too — and to the one property. ---- */
+    function onSettle(el, prop, fn, fallback) {
+      let done = false;
+      function h(e) { if (e.target === el && e.propertyName === prop) fire(); }
+      function fire() {
+        if (done) return;
+        done = true;
+        el.removeEventListener("transitionend", h);
+        fn();
+      }
+      el.addEventListener("transitionend", h);
+      setTimeout(fire, fallback);
+    }
     const dockActive = () => matchMedia("(max-width: 940px)").matches;
     /* ---- sound kit: one shared context, tiny synthesized voices, no
        assets. The SND row gates every voice (placeholder mute — the real
@@ -11867,6 +11891,35 @@
     const SND_KEY = "avrg-k-snd";
     let SNDON = "on";
     try { SNDON = localStorage.getItem(SND_KEY) || "on"; } catch (e) {}
+    /* ---- THE GATE (2026-08-21, the sound pass). Every synth voice asks
+       here first, so there is ONE place that decides whether a sound
+       happens at all. Three rules, in order:
+         · the SND gate above, unchanged — a muted browser stays muted;
+         · THE PHONE IS SILENT. The percussion is desktop's: the phone
+           dialect has been answering gestures with fills and buzz since
+           the slide exchange (the soft return, the mobile exit, the
+           silent pickCatch landing all say so in their own comments),
+           and every touch path was authored AROUND the voices. This
+           makes the absence a rule instead of a habit. Read LIVE off
+           dockActive()'s own 940 line, never cached at boot — a window
+           dragged across the boundary changes dialect with it;
+         · ONE VOICE, ONE COOLDOWN. Per voice, deliberately NOT global:
+           the composer's seal thunk and stamp click are a designed PAIR
+           landing inside a beat of each other and both must sound. What
+           this stops is the SAME voice re-firing on top of itself — a
+           rapid open/close, two settles colliding on one gesture.
+       buzz() is not here: haptics are not sound (see the HAPTICS note
+       below) — they stay on the phone and stay off the SND gate. ---- */
+    const SND_GAP = 100;   /* ms — the floor between two fires of one voice */
+    const sndLast = Object.create(null);
+    function sndOk(voice) {
+      if (SNDON !== "on") return false;
+      if (dockActive()) return false;   /* the phone dialect: no percussion */
+      const t = performance.now();
+      if (t - (sndLast[voice] || -1e9) < SND_GAP) return false;
+      sndLast[voice] = t;
+      return true;
+    }
     let kactx = null;
     function kctx() {
       kactx = kactx || new (window.AudioContext || window.webkitAudioContext)();
@@ -11875,7 +11928,7 @@
     }
     /* landing thunk: low sine drop — the dock seat */
     function kthunk() {
-      if (SNDON !== "on") return;
+      if (!sndOk("thunk")) return;
       try {
         const c = kctx(), t = c.currentTime;
         const o = c.createOscillator(), g = c.createGain();
@@ -11891,7 +11944,7 @@
     /* landing click: a button press, not an object drop — a 10ms filtered
        noise tick (the snap) over a small triangle pitch-drop (the body) */
     function kclick() {
-      if (SNDON !== "on") return;
+      if (!sndOk("click")) return;
       try {
         const c = kctx(), t = c.currentTime;
         const len = Math.round(c.sampleRate * .01);
@@ -11919,9 +11972,18 @@
        the kit: two short low blips through a lowpass — a muted version of
        the landing thunk rather than a klaxon, because a blank field is a
        "not yet", not a failure. Square wave for the dryness; the filter
-       takes the buzz off so it reads as a bump, not a buzzer. */
+       takes the buzz off so it reads as a bump, not a buzzer.
+       STILL UNCALLED, and not for want of looking (2026-08-21, the sound
+       pass): the beat it was written for RETIRED with the tray — see
+       bdmMissing/bdmNope's tombstone at bdmHref, "a reddit DM has no
+       required field, so nothing can arrive half-addressed". Its gesture
+       half (.bdm-prev.nope + @keyframes envNope) is orphaned in the CSS
+       for the same reason. The site's one live required field is the
+       lisst page's #inq-handle, which rejects through the browser's own
+       validation bubble — giving THAT a voice is a design call, not a
+       wiring job. The voice keeps its seat until there is a no to say. */
     function kbonk() {
-      if (SNDON !== "on") return;
+      if (!sndOk("bonk")) return;
       try {
         const c = kctx(), t = c.currentTime;
         [[0, 128, 96], [.085, 96, 72]].forEach(([off, f1, f2]) => {
@@ -12220,6 +12282,22 @@
       bayGeom();   /* the manifest can wrap — the head owns the shelf top */
       if (bay.classList.contains("out")) bayDmRefresh();   /* hrefs track membership live */
     }
+    /* THE LANDING OWNS THE VOICE (2026-08-21, Dylan's double-click catch:
+       adding a card to the deck clicked twice). An add or a remove
+       re-stacks the column on its way past, and the re-stack's settle
+       click landed ~360ms ahead of the flight's OWN landing beat — two
+       sounds for one gesture. So the mover raises this flag around its
+       render and the settle sits that one out; the beat that answers is
+       the landing, where the card actually arrives. A FLAG, not a timing
+       window: 360ms is far outside any cooldown, and only the mover knows
+       a beat is already booked. Every OTHER re-stack keeps its voice —
+       the lisst-page uncheck, the lb un-deck, the off-stage exits, all
+       re-stacks whose click IS their one sound. */
+    let bayQuiet = false;
+    function renderBayQuiet() {
+      bayQuiet = true;
+      try { renderBay(); } finally { bayQuiet = false; }
+    }
     function renderBay() {
       updateBayCount();
       /* FLIP capture (2026-07-24, Dylan): a removal re-stacks the column
@@ -12340,7 +12418,17 @@
             setTimeout(clear, 400);
           }, 320);
         });
-        if (moved) setTimeout(kclick, 320);   /* the settle answers once */
+        /* the settle answers once — unless a landing beat is already
+           booked for this same gesture (bayQuiet). This one KEEPS its
+           timer, unlike the lb open's (audited 2026-08-21, the sound
+           pass): 320 is not a guess here, it is the .3s transition plus
+           the two rAFs that arm it, and the same 320 is what the cleanup
+           above runs on. Measured on the served page, the moved item's
+           transitionend lands within a frame of this timer — so riding
+           it would move the click ~0-20ms and hand the beat to an event
+           the cleanup is racing. Nothing to win; the drift risk the lb
+           had (a 430 guess against a .55s transition) does not exist. */
+        if (moved && !bayQuiet) setTimeout(kclick, 320);
       }
     }
 
@@ -12415,7 +12503,10 @@
       };
       if (!getEnd()) { if (rail) rail.frozen = false; renderBay(); fly.remove(); return; }
       pendingHole.add(id);
-      renderBay();   /* the case re-stacks; the fly IS the card now */
+      renderBayQuiet();   /* the case re-stacks; the fly IS the card now.
+        Quiet: this remove lands on screen and landBeat below is its voice
+        (the off-stage branch above keeps its settle click — nothing lands
+        there, so the re-stack is the whole sound). */
       bayFlight(fly, sr, getEnd, { dur: SEAT_TUNE.dur, drain: drain }, () => {
         pendingHole.delete(id);
         applyDeckHoles();   /* the slot takes its card back */
@@ -14697,9 +14788,11 @@
     function seatFly(id, fly, rest, sr, opts) {
       fly.classList.add("dimsrest");   /* every seat lands on a shelf — THE DIMS REST */
       pendingSeat.add(id);
-      renderBay();   /* the item now exists, hidden — its rect is the target */
+      renderBayQuiet();   /* the item now exists, hidden — its rect is the
+        target. Quiet both ways: the seat's landBeat is this add's voice,
+        and the bail below is a no-op the column shouldn't announce. */
       const item = bay.querySelector('.bay-item.preseat[data-id="' + id + '"]');
-      if (!item) { pendingSeat.delete(id); renderBay(); return false; }
+      if (!item) { pendingSeat.delete(id); renderBayQuiet(); return false; }
       /* the peak hangs 9px over the slot and the card falls the last of it */
       const getEnd = () => {
         const tr = item.getBoundingClientRect();

@@ -2035,15 +2035,21 @@
      the panel. */
   @media (min-width: 941px) {
     #lb.fv3.og {
-      --ogClipW: 200px;    /* clip column width (height rides the video's ratio) */
-      --ogClipGap: 76px;   /* card edge -> clip column (clears the stepper's seat) */
-      --ogTile: 107px;     /* photo tile width */
-      --ogTileRatio: 1;    /* tile height as a ratio of width — 1 square, 1.33 portrait (the angled-shoot shapes) */
-      --ogTileGap: 10px;   /* photo grid gutter */
-      --ogRestW: 224px;    /* right column width (photos + read) */
-      --ogRestGap: 76px;   /* card edge -> right column */
-      --ogDescSize: 13px;  /* the read's type size */
-      --ogColTop: 0px;     /* both columns' extra drop below the panel top */
+      /* BENCH BAKE 2026-08-23 (Dylan's index, tuned against the zone
+         landing): clip 200→300 · clipGap 76→140 · colTop 0→80, plus the
+         strip's og costume at STRIP_TUNE.og. The tile/rest/desc moves
+         rode the same index — they dress the LEGACY right column, which
+         sheetless boards still wear (his note: "the old right side...
+         can be ignored" — baked faithfully anyway, they cost nothing). */
+      --ogClipW: 300px;    /* clip column width (height rides the video's ratio) */
+      --ogClipGap: 140px;  /* card edge -> clip column (clears the stepper's seat) */
+      --ogTile: 150px;     /* photo tile width */
+      --ogTileRatio: 1.52; /* tile height as a ratio of width — 1 square, 1.33 portrait (the angled-shoot shapes) */
+      --ogTileGap: 15px;   /* photo grid gutter */
+      --ogRestW: 326px;    /* right column width (photos + read) */
+      --ogRestGap: 140px;  /* card edge -> right column */
+      --ogDescSize: 15.5px; /* the read's type size */
+      --ogColTop: 80px;    /* both columns' extra drop below the panel top (the ZONE rides this too) */
       /* THE ZONE's dials (2026-08-22): 480 wide at the 1440×900 reference,
          riding a viewport share below it (480/1440 = 33.33vw); height is
          the sheet's own 3:4. NO fold-fit clamp on purpose: the ruling
@@ -10160,7 +10166,7 @@
          inspection's strip goes bigger and wider — "use the minis that
          exist here but tuned. bigger minis wider spread". Merged by ST()
          exactly like mob; desktop og only (dockActive outranks it). */
-      og: { mini: 50, gap: 8, pop: 1.2, maxw: .92 },
+      og: { mini: 49, gap: 22, pop: 1.225, maxw: .92 },   /* BENCH BAKE 2026-08-23 (his index: mini 50→49 · gap 8→22 · pop 1.2→1.225) */
       mini: 37, gap: -10, pop: 1.3, lift: 18, foff: 0,
       fade: 0, maxw: .86, dur: 900, hdur: 400, sit: 250, stag: 50,
       drop: 12, clr: 78, prog: 12, scoot: 60, dotTau: 170,

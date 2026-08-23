@@ -968,10 +968,10 @@
     box-shadow: 0 0 0 2.5px var(--bone), 0 34px 90px rgba(0, 0, 0, .6);
   }
   .lb-card .frame img { pointer-events: auto; cursor: pointer; object-fit: contain; }
-  .lb-rest, #og-clipseat { opacity: 0; transition: opacity .4s ease .18s; }
-  .lb.in .lb-rest, .lb.in #og-clipseat { opacity: 1; }
+  .lb-rest, #og-clipseat, #og-zone { opacity: 0; transition: opacity .4s ease .18s; }
+  .lb.in .lb-rest, .lb.in #og-clipseat, .lb.in #og-zone { opacity: 1; }
   /* closing: the card flies home — thumbs/rest/clip must not ride along */
-  .lb:not(.in) .lb-rest, .lb:not(.in) #og-clipseat { transition: opacity .1s ease; }
+  .lb:not(.in) .lb-rest, .lb:not(.in) #og-clipseat, .lb:not(.in) #og-zone { transition: opacity .1s ease; }
   .lb-thumbs { display: flex; justify-content: center; gap: 12px; margin-top: 20px; }
   .lb-thumbs:empty { display: none; }
   .lb-thumbs img {
@@ -2044,7 +2044,39 @@
       --ogRestGap: 76px;   /* card edge -> right column */
       --ogDescSize: 13px;  /* the read's type size */
       --ogColTop: 0px;     /* both columns' extra drop below the panel top */
+      /* THE ZONE's dials (2026-08-22): 480 wide at the 1440×900 reference,
+         riding a viewport share below it (480/1440 = 33.33vw); height is
+         the sheet's own 3:4. NO fold-fit clamp on purpose: the ruling
+         defines the box at the reference and the spread's sibling
+         columns run past small folds too — if the tail below the fold
+         bothers Dylan on a real screen, that's a react, not a law to
+         pre-invent (a first clamp attempt also can't be done honestly in
+         CSS here: it needs the card's viewport top, and --ogpt lives on
+         #lb-card while this dial is #lb's — vars don't inherit upward). */
+      --ogZoneW: min(480px, 33.33vw);
+      --ogZoneGap: 40px;   /* card edge -> the zone. Tighter than the old
+         column's 76 on purpose: card-right + 76 + 480 overran the
+         viewport at the reference (measured ~16px over; ~40 at a 960
+         window) — 40 seats the sheet's right edge inside 1440. */
     }
+    /* THE ZONE (lb.ogz — populate sets it when OG_SHEETS carries the open
+       board): the sheet takes the right column whole; the spread's
+       photo grid + read + dims stand down under it (their content is
+       baked into the sheet — the zone contract). .lb-product keeps its
+       own fv3 rules untouched. */
+    #lb.fv3.og.ogz #og-zone {
+      display: block; position: absolute; left: 100%;
+      top: calc(var(--ogpt, 230px) + var(--ogColTop));
+      margin-left: var(--ogZoneGap); width: var(--ogZoneW);
+    }
+    #og-zone img { width: 100%; display: block; }
+    /* the thumbs hide must MATCH the spread's show compound (the
+       body[data-lb] grid rule above) or it silently loses the
+       specificity fight — the .lbhead lesson, hit again here */
+    body[data-lb="deck"] #lb.fv3.og.ogz .lb-thumbs,
+    #lb.fv3.og.ogz .lb-thumbs,
+    #lb.fv3.og.ogz .lb-desc,
+    #lb.fv3.og.ogz .lb-dims { display: none; }
     /* .live restated: the deck's own `.lbnb.live { display:block }` sits
        later in source — the [data-lb] + .live form out-specs it so the
        hide wins from up here */
@@ -2080,8 +2112,8 @@
   }
   /* the base hide lives OUTSIDE the ≥941 block on purpose: below the gate
      the seat must not fall back to display:block under the card (bitten
-     at the pane's 735px native width) */
-  #og-clipseat { display: none; }
+     at the pane's 735px native width) — the zone obeys the same law */
+  #og-clipseat, #og-zone { display: none; }
 
   /* THE HEADER IS ONE LINE ON A CHIP (Dylan, 2026-08-01, replacing the
      2026-07-26 stack of collection-name-over-fraction):
@@ -5981,6 +6013,15 @@
         <video src="site/media/og-clip.mp4" poster="site/media/og-clip-poster.jpg" preload="none" muted loop playsinline></video>
         <div class="ogclipcap">The clip &middot; in hand</div>
       </div>
+      <!-- THE ZONE (2026-08-22, the og LB ruling): right of the card, the
+           board's own hand-composed sheet — 480×640 at the 1440×900
+           reference, baked per-board in Figma (no template law). Engaged
+           by lb.ogz only when OG_SHEETS carries this board's ref; boards
+           without a sheet keep the spread's photo-grid right column.
+           src is written by populate on demand — no boot cost. -->
+      <div id="og-zone">
+        <img id="og-zone-img" alt="" />
+      </div>
       <div class="lb-rest">
         <div class="lb-thumbs" id="lb-thumbs"></div>
         <p class="lb-desc" id="lb-desc"></p>
@@ -6824,6 +6865,17 @@
       "HS 16": [33.3, 95.7, 32.7, 32.3],
       "HS 17": [36, 94.75, 32, 33.3],
       "HS 18": [28.7, 94.6]
+    };
+    /* THE OG SHEETS (2026-08-22 — the zone ruling's manifest, the DIMS_MM
+       idiom): hand-authored, keyed by padded ref, one entry per original
+       whose hand-composed 960×1280 sheet has landed in site/img/og/.
+       The zone contract: the site renders exactly the box; what's inside
+       is baked per-board in Figma (the kit's "07 · OG Sections" page,
+       exported at the canvas's own 2× size). A board with no entry keeps
+       the spread's photo-grid right column. Add a line as each export
+       lands — the sheet never repeats the card's dims/AVAILABLE/WANT. */
+    const OG_SHEETS = {
+      "OG 05": "site/img/og/og-05-section.png"
     };
     const dimsStr = d => d ? d[0] + " × " + d[1] + " MM" : "";
     const jref = (c, b, k) => {
@@ -10714,6 +10766,21 @@
       const fv3 = CARD === "framev3";
       lb.classList.toggle("fv3", fv3);
       lb.classList.toggle("og", fv3 && c.id === "originals");
+      /* THE ZONE (2026-08-22): a board with a landed sheet swaps the
+         spread's right column for it — lb.ogz gates the CSS, populate is
+         the one writer. src lands here on demand (first sheeted open
+         fetches it, the clip-gate philosophy) and per-board exchanges
+         swap it; a sheetless board drops the class and the spread's
+         grid returns. */
+      const ogSheet = (fv3 && c.id === "originals" && OG_SHEETS[ref]) || null;
+      lb.classList.toggle("ogz", !!ogSheet);
+      const ozi = document.getElementById("og-zone-img");
+      if (ogSheet) {
+        if (ozi.getAttribute("src") !== ogSheet) ozi.src = ogSheet;
+        ozi.alt = (b.name || ref) + " — the board's own sheet";
+      } else if (ozi.getAttribute("src")) {
+        ozi.removeAttribute("src"); ozi.alt = "";
+      }
       lbCard.classList.toggle("d7f", fv3);
       lbCard.classList.remove("left");
       if (!fv3) lbCard.classList.remove("tset", "stay", "dressed", "redress", "navdraw");

@@ -12249,38 +12249,28 @@
     /* THE BAR CATCHES THE CARD (react round 6; the phone's old catch lives
        in vault repo history, 473b4bc): the mobile add flies the REAL
        fv3 card from its source box up into the header's mini stack — the
-       same bayFlight arc every desktop add rides, negative hook so the
-       swing reads up-and-right toward the seat. The bar sits ABOVE the
-       flights (z 6600 > 6500, the house ladder), so the card slides UNDER
-       the chrome at arrival and the re-rendered minis ARE the reveal —
-       lisstTab() fires at touchdown, not before, so the new mini appears
-       exactly when the card gets there. Silent landing + buzz (the phone
-       dialect); dockPing's shake answers on the minis themselves. */
-    /* THE PICKFLY COLLIDE (2026-08-22, Dylan's react: the phone add "almost
-       just reads like a glitch... happens fast, card disappears behind the
-       header"). Half of that was a real bug — the fly's box collapsed when
-       the lb closed under it and every landing parked off-screen (the pin
-       in bayFlight is the fix). This half is the FEEL: the desktop arc
-       flown verbatim from a near-full-screen phone card has no room — the
-       card hits the top corner at a third of the ride and deflates in
-       place. Three shapes to thumb, ?pickfly=a|b|c (a is the default and
-       the working pick until he rules; the param retires with the pick,
-       the ?land pattern):
-         a — THE TUNED ARC: the same ride, slowed and flattened for the
-             phone. Softer launch, low lift, gentler hook.
-         b — PINCH THEN FLY: the scale runs ahead of the travel — the card
-             pinches down toward mini size over its own seat, then the
-             small card rides a shallow arc into the stack.
-         c — THE MINI POPS: no big-card flight at all. The card leaves
-             with the lb close it already owns; a mini-sized card pops off
-             its top-right corner and rides to the stack.
-       Phone-only: dockActive() gates every caller of this flight. */
-    const PICKFLY = {
-      a: { dur: .92, ease: 2.0, hook: -60, liftCap: 46 },
-      b: { dur: .88, ease: 1.35, hook: -40, liftCap: 40, scEase: 4.2 },
-      c: { dur: .78, ease: 2.0, hook: -30, liftCap: 40, mini: 72 }
-    };
-    const pickflyV = (location.search.match(/[?&]pickfly=([abc])\b/) || [])[1] || "a";
+       same bayFlight engine every desktop add rides, negative hook so the
+       swing reads up-and-right toward the seat. Since 2026-08-22 the
+       phone flight rides OVER the bar (the 6650 rung below) and lands on
+       the new mini's own seat; the touchdown swap is the card becoming
+       the mini (the reveal law at the launch). Silent landing + buzz (the
+       phone dialect); dockPing's shake answers on the minis themselves.
+
+       PICK_TUNE IS THE BAKED SHAPE — variant A of the pickfly collide,
+       Dylan's pick 2026-08-22 evening ("ohh this one is actually the
+       winner"). His react opened the pass ("almost just reads like a
+       glitch... happens fast, card disappears behind the header"): half
+       was a real bug (the off-screen landing — the pinned-box law below),
+       half was the desktop arc flown verbatim from a near-full-screen
+       phone card. Three shapes collided behind ?pickfly=a|b|c — A the
+       tuned arc, B pinch-then-fly (scale ran ahead of travel), C the
+       mini-pop (no big-card flight) — he thumbed them on the sim and A
+       won: the whole card sails, shrinking along the arc. The param and
+       the B/C machinery (scEase, the mini launch box) retired with the
+       pick, the ?land pattern. Phone-only: dockActive() gates every
+       caller. Charted on the bench (the pick-flight wing) — a value
+       change here updates the manifest, the change-with-charting law. */
+    const PICK_TUNE = { dur: .92, ease: 2.0, hook: -60, liftCap: 46 };
     function pickCatch(id, srcCard, liveFly, liveRect) {
       const meta = BOARD_INDEX[id];
       const answer = () => { lisstTab(); dockPing(); };
@@ -12289,7 +12279,6 @@
         answer();
         return;
       }
-      const V = PICKFLY[pickflyV];
       let fly = liveFly, sr = liveRect;
       if (!fly) {
         /* card-box anchor (the ONE CARD law): the fly is a whole template
@@ -12298,14 +12287,6 @@
           : srcCard.querySelector(".d7f")) || srcCard;
         if (!box) { answer(); return; }
         sr = box.getBoundingClientRect();
-        /* variant c: the flight is a MINI from frame one — it launches
-           off the source card's top-right corner while the big card does
-           the lb close it was already doing */
-        if (V.mini && sr.width > V.mini) {
-          const mw = V.mini, mh = sr.height * (mw / sr.width);
-          sr = { left: sr.left + sr.width - mw * .8, top: sr.top - mh * .2,
-                 width: mw, height: mh };
-        }
         fly = buildFly(box, meta.ci, meta.b, meta.k, id).fly;
       }
       /* aim at the FIRST .hpick — newest first, so during a pickCatch
@@ -12365,7 +12346,8 @@
          CLAUDE.md. */
       fly.style.zIndex = 6650;
       bayFlight(fly, sr, getEnd,
-        { dur: V.dur, hook: V.hook, ease: V.ease, scEase: V.scEase, liftCap: V.liftCap },
+        { dur: PICK_TUNE.dur, hook: PICK_TUNE.hook,
+          ease: PICK_TUNE.ease, liftCap: PICK_TUNE.liftCap },
         () => {
           fly.remove();
           answer();
@@ -15067,12 +15049,12 @@
       let drained = false;
       (function frame(now) {
         const t = Math.min(1, (now - t0) / dur);
-        /* opts.ease/scEase/liftCap: the PHONE flight's shape knobs
-           (2026-08-22, the pickfly pass) — absent, everything below is
-           the desktop flight it always was. scEase lets the SCALE run on
-           its own clock so a phone add can pinch down before it travels;
-           liftCap flattens the arc when the target is at the screen top
-           and a peak has no room to hang. */
+        /* opts.ease/liftCap: the PHONE flight's shape knobs (2026-08-22,
+           the pickfly pass; PICK_TUNE at pickCatch) — absent, everything
+           below is the desktop flight it always was. A softer ease slows
+           the launch; liftCap flattens the arc when the target is at the
+           screen top and a peak has no room to hang. (scEase — B's
+           scale-runs-ahead clock — retired with the A pick.) */
         const e = 1 - Math.pow(1 - t, opts.ease || 2.6);   /* launched hard, arrives damped */
         const u = 1 - e;
         /* target re-measured every frame — the drawer is still opening
@@ -15091,8 +15073,7 @@
         const px = u * u * sx + 2 * u * e * cx + e * e * end.x;
         const py = u * u * sy + 2 * u * e * cy + e * e * end.y;
         const s1 = end.h / sr.height;
-        const es = opts.scEase ? 1 - Math.pow(1 - t, opts.scEase) : e;
-        const sc = 1 + (s1 - 1) * es + SEAT_TUNE.pickup * Math.sin(Math.PI * Math.min(1, e / .5)) * u;
+        const sc = 1 + (s1 - 1) * e + SEAT_TUNE.pickup * Math.sin(Math.PI * Math.min(1, e / .5)) * u;
         const rot = 5 * Math.sin(Math.PI * e) + (opts.endRot || 0) * e;
         fly.style.transform = "translate(" + (px - sx).toFixed(1) + "px," + (py - sy).toFixed(1) + "px) scale(" + sc.toFixed(3) + ") rotate(" + rot.toFixed(2) + "deg)";
         if (!drained && t >= .55 && opts.drain) { drained = true; opts.drain(); }
@@ -16531,6 +16512,11 @@
          pilot like the rest of the shim — not with the ceremony. */
       window.BENCH.LAND_TUNE = LAND_TUNE;
       window.benchLandPlay = () => landPlay();
+      /* THE PICK-FLIGHT (2026-08-22, baked with the A pick): PICK_TUNE
+         joins by reference like the rest. Phone-only surface — judge it
+         at a ≤940 stage width; the flight replays on any add, so no
+         replay door is needed. */
+      window.BENCH.PICK_TUNE = PICK_TUNE;
     }
 
     /* ── THE OG SPREAD's column anchor (2026-08-20, shipped with the

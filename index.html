@@ -2076,13 +2076,17 @@
       margin-left: var(--ogZoneGap); width: var(--ogZoneW);
     }
     #og-zone img { width: 100%; display: block; }
-    /* the thumbs hide must MATCH the spread's show compound (the
-       body[data-lb] grid rule above) or it silently loses the
-       specificity fight — the .lbhead lesson, hit again here */
-    body[data-lb="deck"] #lb.fv3.og.ogz .lb-thumbs,
-    #lb.fv3.og.ogz .lb-thumbs,
-    #lb.fv3.og.ogz .lb-desc,
-    #lb.fv3.og.ogz .lb-dims { display: none; }
+    /* the WHOLE column stands down, not just its organs (the
+       cartographer's C8 find, 2026-08-23): hiding only thumbs/desc/dims
+       left .lb-rest itself as an invisible 326px box floating over the
+       zone — empty today, a real overlap the moment anything in it
+       gains a background or min-height. Every .lb-product child is
+       already display:none under fv3 (the slim-down at the fv3 block),
+       so the parent hide is behavior-identical and removes the ghost.
+       A parent display:none also ends the old thumbs specificity fight
+       (the body[data-lb] grid rule can't render inside it) — the
+       .lbhead-lesson compound that stood here is no longer needed. */
+    #lb.fv3.og.ogz .lb-rest { display: none; }
     /* .live restated: the deck's own `.lbnb.live { display:block }` sits
        later in source — the [data-lb] + .live form out-specs it so the
        hide wins from up here */

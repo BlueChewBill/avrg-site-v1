@@ -12308,14 +12308,17 @@
         }
         fly = buildFly(box, meta.ci, meta.b, meta.k, id).fly;
       }
-      /* the new mini renders at lisstTab time — aim at the stack's LAST
-         slot if it exists, else the picon box; re-measured per frame so a
-         mid-flight layout change stays tracked (the getEnd law).
-         .hpick:last-of-type, NOT lastElementChild — the count span sits
-         after the minis since the tidy react, and a flight aimed at a
-         9px number is a landing nobody meant */
+      /* aim at the FIRST .hpick — newest first, so during a pickCatch
+         flight that IS the new mini, riding hidden in its seat (the
+         reveal law below): the card lands exactly where it will become
+         the mini, which matters now that the landing happens ON the bar
+         in plain sight (the 6650 rung) instead of under the chrome. Was
+         .hpick:last-of-type when the landing was invisible — the seat
+         choice only had to dodge the count span (a flight aimed at a 9px
+         number is a landing nobody meant); first-of-type still does.
+         Fallbacks stand, re-measured per frame (the getEnd law). */
       const getEnd = () => {
-        const t = hpicksEl && hpicksEl.querySelector(".hpick:last-of-type") || hpicksEl ||
+        const t = hpicksEl && hpicksEl.querySelector(".hpick") || hpicksEl ||
           document.getElementById("picon");
         const r = t.getBoundingClientRect();
         return { x: r.left + r.width / 2, y: r.top + Math.max(r.height, 38) / 2,
@@ -12349,6 +12352,18 @@
          re-render is the reveal. Any later render heals a dead flight. */
       const pre = hpicksEl && hpicksEl.querySelector(".hpick");
       if (pre) pre.style.visibility = "hidden";
+      /* THE PHONE FLIGHT RIDES OVER THE BAR — z 6650, its own rung
+         (2026-08-22, Dylan's react to the b variant mid-ride: "have the
+         card actually overlap the header... right now it cuts it in half
+         on the ride up"). The house ladder parks flights at 6500 UNDER
+         the topbar's 6600 — a desktop law (the card slides under the
+         chrome at the drawer) that at phone scale guillotines the card
+         mid-air. Here the card owns the air, lands ON the bar at the new
+         mini's own seat, and the touchdown swap IS it becoming the mini.
+         6650 sits below the shields (6700) and the true modal (#vlb
+         7000); desktop flights keep their rung. Ladder updated in
+         CLAUDE.md. */
+      fly.style.zIndex = 6650;
       bayFlight(fly, sr, getEnd,
         { dur: V.dur, hook: V.hook, ease: V.ease, scEase: V.scEase, liftCap: V.liftCap },
         () => {

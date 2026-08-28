@@ -2705,7 +2705,12 @@
      hover-built nav they are visible at rest, so tappable is honest. */
   @media (max-width: 940px) { #lb.fv3 .lb-deknav { display: none; } }
   #lb.fv3 .lb-card .frame img { transition: transform .3s ease, filter .3s ease; }
-  @media (hover: hover) { #lb.fv3 .lb-card:hover .frame img {
+  /* .panel:hover, not .lb-card:hover (2026-08-28, Dylan's catch): the og
+     clip seat + zone are CHILDREN of .lb-card, so a card-level :hover
+     counted the flanks as "on card" and grew the board from either side.
+     The panel is the card's actual body — the flanks and the gaps are
+     both cold now. The sun's pointermove gates on the same boundary. */
+  @media (hover: hover) { #lb.fv3 .lb-card .panel:hover .frame img {
     transform: scale(1.08);
     filter: drop-shadow(11px 14px 0 rgba(0, 0, 0, .3));
     filter: drop-shadow(4.7414cqw 6.0345cqw 0 rgba(0, 0, 0, .3));
@@ -11528,8 +11533,18 @@
         if (e.pointerType === "touch") return;
         if (!lb.classList.contains("fv3") || dockActive()) return;
         if (lbCard.classList.contains("flipping")) return;   /* the carousel owns the board mid-gesture */
+        const panel = lbCard.querySelector(".panel");
+        /* the PANEL is the sun's world (2026-08-28, Dylan's catch): the og
+           clip seat + zone are .lb-card children, so card-level moves made
+           the board chase a cursor parked on a flank — and the gaps between
+           read as leaves, so the chase dropped and picked back up. Off the
+           panel = a leave: same targets the pointerleave hands over. */
+        if (!panel.contains(e.target)) {
+          if (sunOn) { sunOn = false; sunTX = 7; sunTY = 9; sunAT = .3; }
+          return;
+        }
         const fr = lbCard.querySelector(".frame").getBoundingClientRect();
-        const pr = lbCard.querySelector(".panel").getBoundingClientRect();
+        const pr = panel.getBoundingClientRect();
         if (!pr.width) return;
         if (!sunRaf) {
           /* fresh takeover: seed shadow AND pose from wherever CSS has them

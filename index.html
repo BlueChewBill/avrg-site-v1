@@ -2049,7 +2049,7 @@
       --ogRestW: 326px;    /* right column width (photos + read) */
       --ogRestGap: 140px;  /* card edge -> right column */
       --ogDescSize: 15.5px; /* the read's type size */
-      --ogColTop: 80px;    /* both columns' extra drop below the panel top (the ZONE rides this too) */
+      --ogColTop: 80px;    /* both columns' extra drop below the panel top (clip + legacy column; the ZONE left this dial 2026-08-27 — it v-centers on the panel now) */
       /* THE ZONE's dials (2026-08-22): 480 wide at the 1440×900 reference,
          riding a viewport share below it (480/1440 = 33.33vw); height is
          the sheet's own 3:4. NO fold-fit clamp on purpose: the ruling
@@ -2060,10 +2060,12 @@
          CSS here: it needs the card's viewport top, and --ogpt lives on
          #lb-card while this dial is #lb's — vars don't inherit upward). */
       --ogZoneW: min(480px, 33.33vw);
-      --ogZoneGap: 40px;   /* card edge -> the zone. Tighter than the old
-         column's 76 on purpose: card-right + 76 + 480 overran the
-         viewport at the reference (measured ~16px over; ~40 at a 960
-         window) — 40 seats the sheet's right edge inside 1440. */
+      --ogZoneGap: 140px;  /* card edge -> the zone. Matched to --ogClipGap
+         (Dylan 2026-08-27: the sheet breathes like the clip does) —
+         supersedes the launch-week 40, which existed to seat the sheet
+         inside the 1440 reference. At 1440 the sheet's right edge now
+         runs ~80px past the viewport; reacted to at 1920, not clamped
+         (the zone's no-clamp ruling). */
     }
     /* THE ZONE (lb.ogz — populate sets it when OG_SHEETS carries the open
        board): the sheet takes the right column whole; the spread's
@@ -2072,7 +2074,14 @@
        own fv3 rules untouched. */
     #lb.fv3.og.ogz #og-zone {
       display: block; position: absolute; left: 100%;
-      top: calc(var(--ogpt, 230px) + var(--ogColTop));
+      /* v-centered on the CARD PANEL, not top-aligned like the legacy
+         columns (Dylan 2026-08-27). The card element wraps the panel in
+         --ogpt top padding (the JS scoot mirror) + a static 24px bottom
+         pad, so the panel's center from the card top is
+         (100% + --ogpt - 24px) / 2; translateY finishes the centering.
+         --ogColTop no longer touches the zone. */
+      top: calc((100% + var(--ogpt, 230px) - 24px) / 2);
+      transform: translateY(-50%);
       margin-left: var(--ogZoneGap); width: var(--ogZoneW);
     }
     #og-zone img { width: 100%; display: block; }
@@ -6885,7 +6894,7 @@
        the spread's photo-grid right column. Add a line as each export
        lands — the sheet never repeats the card's dims/AVAILABLE/WANT. */
     const OG_SHEETS = {
-      "OG 05": "site/img/og/og-05-section.png"
+      "OG 05": "site/img/og/og-05-section-b.png"
     };
     const dimsStr = d => d ? d[0] + " × " + d[1] + " MM" : "";
     const jref = (c, b, k) => {

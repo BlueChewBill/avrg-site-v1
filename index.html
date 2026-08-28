@@ -1929,14 +1929,14 @@
      mechanism that built it: every actor (.lbnb covers hero, flankers,
      the exchange's clones) wears this IDENTICAL two-layer throw in cqw,
      so the landing swap is still shadow-identical — the pop was the
-     actors DIFFERING, never the slab itself. Rest transition .3s eases
-     the hover grow back down, the img idiom's clock. */
+     actors DIFFERING, never the slab itself. The slab is STATIC: the
+     same-day grow experiment was pulled (see the tombstone at the
+     suntrack rule) — the board is the only thing that answers hover. */
   @media (min-width: 941px) {
     #lb.fv3 .lb-card .panel,
     #lb .lbnb .panel {
       box-shadow: 7px 9px 0 -1px rgba(0, 0, 0, .85), 0 18px 48px rgba(0, 0, 0, .35);
       box-shadow: 3.0172cqw 3.8793cqw 0 -.431cqw rgba(0, 0, 0, .85), 0 4.186cqw 11.163cqw rgba(0, 0, 0, .35);
-      transition: box-shadow .3s ease;
     }
   }
   #lb.fv3 .lb-card .frame {
@@ -2717,28 +2717,13 @@
      transitions; the JS lerps do all easing. The :hover grow above still
      serves reduced-motion and the pre-takeover instant. */
   #lb.fv3 .lb-card.suntrack .frame img { transition-property: none; }
-  /* THE CARD SHADOW GROWS WITH THE BOARD (2026-08-28, with the slab
-     restore above: "board shadow AND card shadow grow on hover. card is
-     stationary"). The panel's slab swells to the collections-hover depth
-     on the SAME states that grow the board — :hover on its .94s clock,
-     .blift (the cursorless arrival) on blift's own .8s — the ambient
-     layer rides unchanged so only the body deepens. Deliberately NOT in
-     the .hold/.redress chrome mirrors: this is the BOARD's dimension
-     (grow/sun family), and like the img grow it eases home through the
-     close on the rest rule's .3s. The sun never touches the panel — a
-     hovered card keeps the grown slab static while the sun plays. */
-  @media (hover: hover) { #lb.fv3 .lb-card:hover .panel {
-    box-shadow: 12px 15px 0 -1px rgba(0, 0, 0, .85), 0 18px 48px rgba(0, 0, 0, .35);
-    box-shadow: 5.1724cqw 6.4655cqw 0 -.431cqw rgba(0, 0, 0, .85), 0 4.186cqw 11.163cqw rgba(0, 0, 0, .35);
-    transition: box-shadow .94s ease;
-  } }
-  /* ≥941 like the slab itself: the phone's blift keeps growing only the
-     BOARD — its panel rides the mobile softout grammar, untouched. */
-  @media (min-width: 941px) { #lb.fv3 .lb-card.blift .panel {
-    box-shadow: 12px 15px 0 -1px rgba(0, 0, 0, .85), 0 18px 48px rgba(0, 0, 0, .35);
-    box-shadow: 5.1724cqw 6.4655cqw 0 -.431cqw rgba(0, 0, 0, .85), 0 4.186cqw 11.163cqw rgba(0, 0, 0, .35);
-    transition: box-shadow .8s ease;
-  } }
+  /* (THE CARD-SHADOW GROW: built and pulled the same day, 2026-08-28 —
+     hover/blift rules swelled the panel slab to the collections-hover
+     depth alongside the board grow. Dylan's react: "the card shadow
+     growing actually just distracts from the board, the cooler effect,
+     and where you want the eye anyways." The slab stays STATIC — the
+     board's grow/sun family is the only hover answer, the panel holds
+     still. The rules live in b0ba3a1 if the idea ever comes back.) */
   /* THE PINCH'S STAGE (2026-08-17 — the board-only zoom): per-frame writes
      ride muted transitions (suntrack's touch cousin), and the panel's
      load-bearing clip OPENS for the session so the lifted board can

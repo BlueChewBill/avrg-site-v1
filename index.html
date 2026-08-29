@@ -1624,6 +1624,25 @@
       width: 4.3399cqw; height: 4.3399cqw;
     }
   }
+  /* THE GRID MINI JOINS THE DESKTOP DRESS (2026-08-29, Dylan: "have the
+     flip side mini board fade in and out in collections on hover") — the
+     phone's corner mini shows on desktop grid cards as a PASSIVE PREVIEW:
+     seated at rest but fully transparent, fading up with the hover build
+     (and .lit, the cursor-free twin) and draining on leave. The mark is
+     hidden and pointer-events are off because up here it is a preview,
+     not a control — the card's one click stays the inspect, the lb ghost
+     stays the desktop's one flip DOOR (T9's gate law untouched). Gated on
+     hover:hover so wide-touch keeps today's bare card rather than an
+     element nothing can ever reveal. The transparent chip keeps its real
+     box, so the lazy face warms as the grid scrolls (the 0×0 law). */
+  @media (min-width: 941px) and (hover: hover) {
+    .scard .d7f .fflipc {
+      display: flex; pointer-events: none;
+      opacity: 0; transition: opacity .35s ease;
+    }
+    .scard .d7f .fflipc .fmark { display: none; }
+    .scard :is(.d7f:hover, .d7f.lit) .fflipc { opacity: 1; }
+  }
   .d7f .corner {
     /* panel-anchored — the grid template and the lb card both put .corner
        directly in .panel now. 11px, not 12: the chip box tucks 1px (at

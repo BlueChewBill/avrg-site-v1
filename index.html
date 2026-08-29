@@ -11740,6 +11740,15 @@
     if (SUNV.includes("2")) SUN.liftEase = .09;
     const sunWarmOn = SUNV.includes("3");
     let sunWarm = false;
+    /* react 2's diagnosis pair — the 655ebac fix moved the WAKE BOUNDARY,
+       not the math (d was panel-normalized before and after; what left
+       was the whole-card pre-arm+drive: the apron below the panel on
+       every board, the clip/zone flanks on og).
+         ?sun=old  the exact pre-fix world — the sun arms AND drives from
+                   anywhere on the card, chase-a-parked-cursor bug included
+         ?sun=4    the halfway: whole-card drive EXCEPT the og furniture
+                   (clip seat / zone / rest column stay cold) */
+    const SUNOLD = SUNV === "old", SUN4 = SUNV.includes("4");
     /* ?grow= — the GROW DIAL (collide react 1: at 1.08 the grow is too
        small to judge the timing directions against). Free-typed lb board
        scale, e.g. ?grow=1.15 — composes with ?sun= (?sun=2&grow=1.15).
@@ -11755,6 +11764,13 @@
         "#lb.fv3 .lb-card .panel:hover #lb-shadow{transform:translate(" +
         (4.7414 * GROWV).toFixed(4) + "cqw," + (6.0345 * GROWV).toFixed(4) + "cqw) scale(" + GROWV + ");}}";
       document.head.appendChild(st);
+    }
+    if (SUNOLD) {
+      /* pre-fix CSS half: the :hover grow rode .lb-card, not .panel */
+      const st2 = document.createElement("style");
+      st2.textContent = "@media (hover:hover){#lb.fv3 .lb-card:hover .frame img{transform:scale(" +
+        SUN.grow + ");filter:drop-shadow(4.7414cqw 6.0345cqw 0 rgba(0,0,0,.3));}}";
+      document.head.appendChild(st2);
     }
     let sunImg = lbBig;   /* the face the sun poses — the flip re-aims it at landing */
     let sunRaf = 0, sunOn = false, sunS = 1, sunX = 7, sunY = 9, sunTX = 7, sunTY = 9,
@@ -11876,7 +11892,11 @@
            read as leaves, so the chase dropped and picked back up. Off the
            panel = a leave: same targets the pointerleave hands over. */
         const inPanel = panel.contains(e.target);
-        if (!inPanel && !sunWarmOn) {
+        /* ?sun=old / ?sun=4 widen the DRIVEN region past the panel —
+           see the diagnosis-pair note at the SUNV const */
+        const driven = inPanel || SUNOLD ||
+          (SUN4 && !(e.target.closest && e.target.closest("#og-clipseat,#og-zone,.lb-rest")));
+        if (!driven && !sunWarmOn) {
           if (sunOn) { sunOn = false; sunTX = 7; sunTY = 9; sunAT = .3; }
           return;
         }
@@ -11907,7 +11927,7 @@
           lbCard.classList.add("suntrack");
           sunRaf = requestAnimationFrame(sunFrame);
         }
-        if (!inPanel) {
+        if (!driven) {
           /* ?sun=3 WARM RING — the gap arms the rise (sunFrame's lift/grow
              gate reads sunWarm) but the drive channels go home, the same
              targets a panel-leave hands over. */

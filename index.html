@@ -11735,10 +11735,27 @@
                   can't DRIVE it: direction/ink/gravity stay home. The old
                   flank bug's pre-arm, rebuilt on purpose and sanctioned.
          ?sun=23  both at once. */
-    const SUNV = new URLSearchParams(location.search).get("sun") || "";
+    const sunQS = new URLSearchParams(location.search);
+    const SUNV = sunQS.get("sun") || "";
     if (SUNV.includes("2")) SUN.liftEase = .09;
     const sunWarmOn = SUNV.includes("3");
     let sunWarm = false;
+    /* ?grow= — the GROW DIAL (collide react 1: at 1.08 the grow is too
+       small to judge the timing directions against). Free-typed lb board
+       scale, e.g. ?grow=1.15 — composes with ?sun= (?sun=2&grow=1.15).
+       The CSS hover pose pair hand-states 1.08 (img rule + the T7d
+       shadow pose = throw × grow) — the injected override restates both
+       so the pre-takeover / reduced-motion instant matches the JS. */
+    const GROWV = parseFloat(sunQS.get("grow"));
+    if (GROWV > 1 && GROWV < 2 && GROWV !== 1.08) {
+      SUN.grow = GROWV;
+      const st = document.createElement("style");
+      st.textContent =
+        "@media (hover:hover){#lb.fv3 .lb-card .panel:hover .frame img{transform:scale(" + GROWV + ");}" +
+        "#lb.fv3 .lb-card .panel:hover #lb-shadow{transform:translate(" +
+        (4.7414 * GROWV).toFixed(4) + "cqw," + (6.0345 * GROWV).toFixed(4) + "cqw) scale(" + GROWV + ");}}";
+      document.head.appendChild(st);
+    }
     let sunImg = lbBig;   /* the face the sun poses — the flip re-aims it at landing */
     let sunRaf = 0, sunOn = false, sunS = 1, sunX = 7, sunY = 9, sunTX = 7, sunTY = 9,
         sunLift = 0, sunSc = 1, sunA = .3, sunAT = .3,

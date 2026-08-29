@@ -39,6 +39,17 @@ V1 close-out status, undecided directions, parked passes, the site thesis + prog
 
 The phone add-to-picks flight got its pass on his react ("almost just reads like a glitch"): two real bugs fixed (the off-screen landing + the spoiled reveal), a three-shape collide (`?pickfly=a|b|c`), his mid-collide overlap ruling (the flight rides OVER the bar — the 6650 rung), and the pick: **"ohh this one is actually the winner" — A, the tuned arc, baked as `PICK_TUNE`**; the param and the B/C machinery retired. Full record: mobile.md's THE PHONE ADD LEARNS TO LAND + the pick addendum. Bench charting dispatched with the bake (the pick-flight wing).
 
+## THE SUNDAY DISPATCH (2026-08-28 night) — eleven tickets through the batch loop, and what it left open
+
+The pre-posting little-fixes batch ran as a full dispatch (worktree agents, six-angle review, bench sync) — the per-surface records live in the owning docs (cards.md THE ID FLIP + mobile amendment, header-bar.md THE DESKTOP SEAT WEARS THE STACK, k-core.md THE CLOCK THAT WAITS FOR LOAD + the dark sweep landing, lightbox.md the ogpb fix, mobile.md the whole-card pinch, gotchas.md the Safari lessons). All pushed to avrg.cards. **Dylan's real-glass round confirmed the phone healed everywhere; Mac Safari's shadow blob survived → T7b escalation** (in flight at wrap time — rect-shaped shadow, appears only on hover-leave settle; suspect: Safari re-rasterizing the filter at the inline→stock swap, dropping the cutout's alpha).
+
+**Open decisions the batch minted (his words: taste calls, next session):**
+- **THE SUN FEEL (T3's disproof):** og on-card sun measures IDENTICAL to classic — the "shallow" feel was the old flank bug's overdrive (flanks pre-armed the grow + drove amplitudes on-card can't reach). Three directions, his pick: accept · faster entry arm (value retune, bench-charted) · the "warm ring" (panel gaps ARM the sun, still can't drive it). The `?sun=` collide is the offered build.
+- **+List on-state border** never gets its accent (a light-retire specificity loser, pre-existing): `body.light .lb-list-btn` outranks `.lb-list-btn.on`'s currentColor. One-selector fix on his word; sits beside the parked `.lb-thumbs img.on` accent wrinkle (same class of loser, manifest-documented as his call).
+- **The stack seat's optics:** review flagged it ~25px right of the old glyph's left edge with a smaller click target; the cartographer measured the seat centres mirroring perfectly at 1920. Judge on glass.
+- **LINK-PREVIEW META TAGS — the one Sunday-critical unstarted item** (his "for later"): zero og:/twitter:/description tags; the posted link renders bare. Needs a 1200×630 share image (covercard poster or board shot + logo are the on-hand candidates).
+- The deckmark cleanup chip (phone bar's dead mark costume) runs in its own session; merges whenever it lands.
+
 ## THE WEEKEND QUEUE (Dylan, 2026-08-28) — three named jobs
 
 Set at the end of the sun-boundary session (site at `655ebac`, pushed). His list, his words in quotes:

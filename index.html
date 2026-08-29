@@ -1683,8 +1683,8 @@
     content: ""; position: absolute; inset: 0; background: #000;
     transform: scaleY(0);
   }
-  .d7f .fchip :is(.ft, .fscript) { position: relative; z-index: 1; transition: color .2s ease .18s; }
-  @media (hover: hover) { :is(.d7f:hover, .d7f.lit) .fchip :is(.ft, .fscript) { color: #fff; } }
+  .d7f .fchip :is(.ft, .fstack) { position: relative; z-index: 1; transition: color .2s ease .18s; }
+  @media (hover: hover) { :is(.d7f:hover, .d7f.lit) .fchip :is(.ft, .fstack) { color: #fff; } }
   button.d7f-cta { cursor: pointer; }
   .d7f .fc-ref {
     /* +1px top/left padding pairs with .corner's 1px frame tuck — the box
@@ -1693,114 +1693,74 @@
     padding: 3.0172cqw 3.8793cqw 2.5862cqw 4.3103cqw;
   }
   .d7f .fc-ref::before { transform-origin: center top; }
+  /* ===== THE ADD CHIP IS AN EMPTY CARD STACK (2026-08-29, Dylan: "its
+     too easily missable. lets make them universally like the mobile
+     version, could we also make the empty card in the chip look more
+     like an empty card stack in the header (minus the count
+     indicator)"). Two rulings landing together:
+     (1) ONE COSTUME AT EVERY WIDTH — the phone chip's dress (dock-gated
+     since 2026-08-08, re-cut round 5 2026-08-13) comes out of the 940
+     gate and becomes the chip's only costume: fc-ref's exact padding, a
+     glyph-only rest, no want-word reservation. The DECK MARK left the
+     chip with the gate — .fscript, the blank .fmini it became on the
+     phone, and the mark's shadow-flip aim answer (.sh, 2026-08-08) are
+     all retired here; the mark's artwork survives at #picon's .deckmark,
+     which is now the one copy to edit.
+     (2) THE GLYPH IS THE HEADER'S HAND — see STACKSVG in the JS for the
+     drawing: the .hpicks fan at chip scale (front card bottom-left, two
+     card edges rising behind it to the right), with the add + inside the
+     empty front card and NO count. Sized to the flip chip's own mini
+     (9.4827cqw) so the card's two corners carry objects of one weight —
+     that size-up IS the answer to "missable". ===== */
   .d7f .fc-list {
     /* 11px = the same 1px frame tuck as .corner (seam seal); the extra
        bottom/right padding holds the glyphs at the 12px flush spot */
     position: absolute; bottom: 11px; right: 11px; z-index: 2;
     bottom: 4.7414cqw; right: 4.7414cqw;
     letter-spacing: .16em;
-    /* right/bottom tucked 2026-08-05 ("tuck the deck icon farther in the
-       corner") — the mark rides the seat's right edge, so the chip's own
-       right/bottom padding is what sets its distance from the frame.
-       Trimmed 1px all around 2026-08-08 ("trim it both vertically and
-       horizontally slightly") — box shrinks, anchor holds the corner */
-    padding: 6px 5px 5px 9px;
-    padding: 2.5862cqw 2.1552cqw 2.1552cqw 3.8793cqw;
+    /* fc-ref's EXACT padding (the phone costume's box, now everyone's) —
+       the ref chip and the add chip are the card's two corner objects and
+       they now wear the same seat. Supersedes the 2026-08-05 tuck + the
+       2026-08-08 1px trim, both of which were cut for the bare mark. */
+    padding: 7px 9px 6px 10px;
+    padding: 3.0172cqw 3.8793cqw 2.5862cqw 4.3103cqw;
     display: inline-flex; align-items: center; gap: 5px; gap: 2.1552cqw;
   }
-  /* static fill size: the want-word decode swaps labels of different
-     lengths — the chip box (and its black fill) must never resize. At
-     rest the chip is the deck mark ALONE at the corner (the + retired
-     2026-08-05, same react as the tag); the .fl seat still reserves the
-     widest want-word ("Mine !" = 6ch + the .16em tracking each char
-     carries, plus the gap and the mark) so the word can wipe in beside
-     the mark on the dress without moving the box. space-between: words
-     enter from the left, the mark holds the corner. px line first per
-     the ONE CARD SPEC. */
-  .d7f .fc-list .fl { display: inline-flex; align-items: center; justify-content: space-between; gap: 5px; gap: 2.1552cqw; min-width: calc(6ch + .96em + 23px); min-width: calc(6ch + .96em + 9.9138cqw); }
-  /* the deck mark (2026-08-05, round 2 — Dylan: "mimic the deck more
-     precisely") — the CASE's own anatomy at icon scale: the box ring,
-     a centered vertical rail BROKEN at the mid dot (dash · dash — the
-     drawer's resting signature, rails pulling back to the dot's own
-     clearance), and a hard shadow thrown LEFT (the case's light; its
-     shelved cards throw left). ONE artwork in its seats (card chips + the
-     lb chip; the .bar-script bar seat traded the mark for the phone bar's
-     card stack 2026-08-28, Dylan's ruling — "a bit too cryptic") so the
-     mark always means THE DECK; edit the survivors together. Fill artwork
-     (evenodd ring) — rides the label's color states. */
-  /* 18px = the header treatment carried down (2026-08-05, Dylan: same
-     bigger-than-its-parts read as the bar's 38px-vs-word-organs) — the
-     mark outsizes the want-word the way the bar mark outsizes the
-     organs. Rail+dot sit LEFT of the ring's center in the artwork: the
-     drawer's furniture lives at its face, not its middle. */
-  .d7f .fc-list .fscript { display: block; width: 18px; height: 18px; width: 7.7586cqw; height: 7.7586cqw; flex: 0 0 auto; transform: translateY(1px); transform: translateY(.431cqw); }
-  /* the BLANK MINI is the PHONE chip's glyph (2026-08-13 round 5) —
-     desktop keeps the deck mark, so the mini never renders up here */
-  .d7f .fc-list .fmini { display: none; }
-  /* the shadow flips with the AIM, not the dress (reworked 2026-08-08
-     late, Dylan: "keep it the same direction as its regular collection
-     view" on chip draw): at rest AND under the card dress the mark is
-     furniture — shadow RIGHT like the fv3 card's own. It flips LEFT —
-     the drawer's light, matching the bar mark — only when the chip
-     itself is aimed at (hover, paired with the ADD+ decode in JS), when
-     the phone fill GRABS it (.tset keeps its 2026-08-08 snap), or on a
-     flight the drawer is pulling in (.bay-fly.held). The old
-     .lit/.hold/.redress/.dressed mirrors left with the card-hover rule
-     they mirrored — a dressed card's mark no longer flips. scaleX about
-     the viewBox center mirrors the L exactly. Scoped to chips on
-     purpose: the bar mark IS the drawer, left always. The rectilinear
-     shapes carry shape-rendering="crispEdges" (the corners were
-     straddling device pixels at both render scales); the dot keeps its
-     AA — a 2px circle without it is a square. */
-  .d7f .fc-list .fscript .sh { transform-box: view-box; transform-origin: center; transform: scaleX(-1); }
-  @media (hover: hover) { .d7f .fc-list:hover .fscript .sh { transform: scaleX(1); } }
-  #lb.fv3 .lb-card.tset .fc-list .fscript .sh,
-  .bay-fly.held .fc-list .fscript .sh { transform: scaleX(1); }
+  /* THE BOX SHRINK-WRAPS AND GROWS LEFTWARD — the want-word reservation
+     (6ch + .96em + the mark, the old `chip-reserve`) is RETIRED with the
+     words themselves: no hover and no decode writes into .ft any more, so
+     the chip box is constant through every dress beat without reserving
+     anything. The only writes left are membership (the ✓ a click lands)
+     and the phone lb's ADD landing, and both grow the box LEFTWARD off
+     the pinned bottom-right corner — THE ID FLIP's ruling for the ref
+     chip, and exactly what the phone has shipped since 2026-08-13.
+     space-between kept: the word enters from the left, the stack holds
+     the corner. px line first per the ONE CARD SPEC. */
+  .d7f .fc-list .fl { display: inline-flex; align-items: center; justify-content: space-between; gap: 5px; gap: 2.1552cqw; }
+  /* an empty .ft drops out entirely so the gap arithmetic stays honest */
+  .d7f .fc-list .ft:empty { display: none; }
+  /* THE STACK GLYPH's box — 22px at the 232 reference, the SAME cqw as
+     the flip chip's corner mini (9.4827cqw), so the card's two corner
+     objects read at one weight. It replaces an 18px deck mark on the
+     desktop chip and a 10×14 blank mini on the phone's, and that step up
+     is the missability answer: a drawn object in the corner instead of a
+     hairline. px line first per the ONE CARD SPEC. */
+  .d7f .fc-list .fstack { display: block; width: 22px; height: 22px; width: 9.4827cqw; height: 9.4827cqw; flex: 0 0 auto; }
+  /* the add + lives INSIDE the stack's empty front card and steps aside
+     the moment .ft has something to say — the ✓/Mine ! of a decked card,
+     or the phone lb's ADD landing. :has on the text the JS already
+     writes, the 2026-08-08 mechanism kept: no new plumbing, no layout
+     change (the + is inside the fixed-width svg, so the box cannot move),
+     and it rides free on every render path including flights, because the
+     text IS the state. */
+  .d7f .fc-list:has(.ft:not(:empty)) .fplus { display: none; }
   .d7f .fc-list::before { transform-origin: center bottom; }
-  /* THE PHONE CHIP MIMICS THE ID TAG (2026-08-08 evening, Dylan: "make
-     it mimic our top left id tag in size. have the deck icon on the
-     left and white add button on the right of the fill upon completion.
-     the fill grabs the deck icon once its passed it and pulls in the
-     add button with the fill" — his call on the chip being "the least
-     visually pleasing part of our card"). The box takes the fc-ref's
-     exact padding, the mark shrinks from 18px furniture to the tag's
-     text height and moves to the LEFT (order, not markup — desktop
-     keeps word-left/mark-right), the want-word reservation collapses
-     (phones never decode want-words; an empty .ft drops out entirely so
-     the gap arithmetic stays honest), and the white "+" is a pseudo at
-     the visual right — content only exists on this gate, so no desktop
-     surface ever renders it. DECKED cards suppress it by :has on the
-     ✓ the JS already writes into .ft — no new plumbing, and it rides
-     free on every render path including flights (buildFly copies the
-     text, the text is the state). The dressed choreography lives at the
-     .tset block: fill flipped to wipe LEFT→RIGHT, the mark grabbed as
-     the edge passes (~.3s), the + pulled to its seat on the fill's own
-     clock. */
-  @media (max-width: 940px) {
-    .d7f .fc-list {
-      padding: 7px 9px 6px 10px;
-      padding: 3.0172cqw 3.8793cqw 2.5862cqw 4.3103cqw;
-    }
-    /* ROUND 5 (2026-08-13): the phone chip is [word][BLANK MINI] now —
-       the deck mark stands down (desktop keeps it) and the blank mini
-       card is the glyph: "this goes to the card stack" in the stack's
-       own vocabulary. The 2026-08-08 mark-grab/+-pull choreography
-       (fill L→R grabbing the mark, the white + riding the fill's clock)
-       retired with the mark — it lives in git. Rest = the mini alone,
-       tucked at the corner (an empty .ft drops out); the decode lands
-       ADD beside it (dockDress writes it; the fill pulls from the
-       card's RIGHT edge now, see the .tset rule). */
-    .d7f .fc-list .fscript { display: none; }
-    .d7f .fc-list .fmini {
-      display: block; flex: 0 0 auto; box-sizing: border-box;
-      width: 10px; height: 14px; width: 4.3103cqw; height: 6.0345cqw;
-      background: #fff; border: 1px solid #000;
-      box-shadow: 1px 1px 0 #000;
-      position: relative; z-index: 1;
-    }
-    .d7f .fc-list .fl { min-width: 0; }
-    .d7f .fc-list .ft:empty { display: none; }
-  }
+  /* (RETIRED 2026-08-29 with the deck mark: `.fscript` + its aim-answer
+     shadow flip `.sh` — the 2026-08-08 "keep it the same direction as its
+     regular collection view" pass — and the phone's `.fmini` blank card
+     and its 940 gate. All four states now share one costume, so the gate
+     has nothing left to say; the mark artwork lives on at #picon's
+     .deckmark. Both live in git.) */
   .d7f.left .fchip::before { animation: chipdrop .36s ease; }
   @media (hover: hover) {
     :is(.d7f:hover, .d7f.lit) .fc-ref::before { transform-origin: left center; animation: chipwipe .44s ease forwards; }
@@ -2575,7 +2535,7 @@
      mobile rule — no extra gate needed. ADD decodes in via dockDress on
      the same beat. */
   #lb.fv3 .lb-card.tset .fc-list::before { transform-origin: right center; animation: chipwipe .44s ease .22s forwards; }
-  #lb.fv3 .lb-card.tset .fchip :is(.ft, .fscript) { color: #fff; transition: color .2s ease .44s; }
+  #lb.fv3 .lb-card.tset .fchip :is(.ft, .fstack) { color: #fff; transition: color .2s ease .44s; }
   #lb.fv3 .lb-card.tset .inframe::before, #lb.fv3 .lb-card.tset .inframe::after { height: calc(50% - 6px); height: calc(50% - 2.5862cqw); }
   /* THE BOARD LIFT (2026-08-08 evening, Dylan: "half way through [the
      fill + inner-edge draw] the board starts to lift slowly to light
@@ -2626,11 +2586,11 @@
      exit and already draws exactly this drain — run slow. */
   #lb.fv3 .lb-card.softout .fc-ref::before,
   #lb.fv3 .lb-card.softout .fc-list::before { animation: chipdrop .93s linear forwards; }
-  #lb.fv3 .lb-card.softout .fchip :is(.ft, .fscript) { transition: color .93s linear; }
+  #lb.fv3 .lb-card.softout .fchip :is(.ft, .fstack) { transition: color .93s linear; }
   /* (the retired +'s drain rule left with the + — round 5; the ADD text
-     rides the .ft color ramp above, and the mark's .sh flip below only
-     ever mattered where the mark shows) */
-  #lb.fv3 .lb-card.softout .fc-list .fscript .sh { transition: transform .93s linear; }
+     rides the .ft color ramp above. The mark's .sh flip drain went with
+     the mark itself 2026-08-29 — the stack glyph has no moving part, it
+     only changes ink with the .ft ramp above.) */
   #lb.fv3 .lb-card.softout .inframe::before,
   #lb.fv3 .lb-card.softout .inframe::after { transition: height .93s linear; }
   #lb.fv3 .lb-card.softout .find,
@@ -2665,7 +2625,7 @@
   @media (hover: hover) {
     #lb.fv3 .lb-card:is(.hold, .redress) .fc-ref::before { transform-origin: left center; animation: chipwipe .44s ease forwards; }
     #lb.fv3 .lb-card:is(.hold, .redress) .fc-list::before { transform-origin: right center; animation: chipwipe .44s ease forwards; }
-    #lb.fv3 .lb-card:is(.hold, .redress) .fchip :is(.ft, .fscript) { color: #fff; }
+    #lb.fv3 .lb-card:is(.hold, .redress) .fchip :is(.ft, .fstack) { color: #fff; }
     #lb.fv3 .lb-card:is(.hold, .redress) .inframe::before, #lb.fv3 .lb-card:is(.hold, .redress) .inframe::after { height: calc(50% - 6px); height: calc(50% - 2.5862cqw); }
   }
   /* THE LB DRESS REGIME (2026-08-01, settled over three of Dylan's calls).
@@ -2688,7 +2648,7 @@
   @media (hover: hover) {
     #lb.fv3 .lb-card.dressed .fc-ref::before { transform-origin: left center; animation: chipwipe .44s ease -.44s forwards; }
     #lb.fv3 .lb-card.dressed .fc-list::before { transform-origin: right center; animation: chipwipe .44s ease -.44s forwards; }
-    #lb.fv3 .lb-card.dressed .fchip :is(.ft, .fscript) { color: #fff; transition: none; }
+    #lb.fv3 .lb-card.dressed .fchip :is(.ft, .fstack) { color: #fff; transition: none; }
     #lb.fv3 .lb-card.dressed .inframe::before, #lb.fv3 .lb-card.dressed .inframe::after { height: calc(50% - 6px); height: calc(50% - 2.5862cqw); transition: none; }
     /* the chip-hover accent rung retired here too (2026-08-08 late, with
        the grid's) — the lb chip answers the aim like every chip: shadow
@@ -4373,7 +4333,7 @@
   body.dragging { user-select: none; -webkit-user-select: none; }
   .bay-fly.held .fc-ref::before { transform-origin: left center; animation: chipwipe .44s ease -.44s forwards; }
   .bay-fly.held .fc-list::before { transform-origin: right center; animation: chipwipe .44s ease -.44s forwards; }
-  .bay-fly.held .fchip :is(.ft, .fscript) { color: #fff; transition: none; }
+  .bay-fly.held .fchip :is(.ft, .fstack) { color: #fff; transition: none; }
   .bay-fly.held .inframe::before, .bay-fly.held .inframe::after { height: calc(50% - 6px); height: calc(50% - 2.5862cqw); }
   /* seating: the real shelf item exists (hidden) from the moment the
      flight launches — the flight lands on its measured rect, then the
@@ -4507,9 +4467,8 @@
        gesture and the landing dresses in one. */
     .bay-item .fc-ref::before { transform-origin: left center; animation: chipwipe .44s ease -.44s forwards; }
     .bay-item .fc-list::before { transform-origin: right center; animation: chipwipe .44s ease -.44s forwards; }
-    .bay-item .fchip :is(.ft, .fscript) { color: #fff; transition: none; }
+    .bay-item .fchip :is(.ft, .fstack) { color: #fff; transition: none; }
     .bay-item .inframe::before, .bay-item .inframe::after { height: calc(50% - 6px); height: calc(50% - 2.5862cqw); }
-    .bay-item .fc-list .fscript .sh { transform: scaleX(1); }
     /* cards are grabbable objects — no iOS callout/selection under a
        hold, and the browser never owns their touches (touch-action none
        keeps pointermove alive mid-carry — no pointercancel ambush; the
@@ -4673,9 +4632,8 @@
   @media (max-width: 940px) {
     .lisst-card .fc-ref::before { transform-origin: left center; animation: chipwipe .44s ease -.44s forwards; }
     .lisst-card .fc-list::before { transform-origin: right center; animation: chipwipe .44s ease -.44s forwards; }
-    .lisst-card .fchip :is(.ft, .fscript) { color: #fff; transition: none; }
+    .lisst-card .fchip :is(.ft, .fstack) { color: #fff; transition: none; }
     .lisst-card .inframe::before, .lisst-card .inframe::after { height: calc(50% - 6px); height: calc(50% - 2.5862cqw); }
-    .lisst-card .fc-list .fscript .sh { transform: scaleX(1); }
     /* the remove ✕ wears the CASE's own square down here (round 4, his
        screenshot — the .bay-x chip, "square chip in the card's angular
        language"), landed TOP-LEFT on his word; the desktop My Lisst
@@ -5965,10 +5923,12 @@
          picks page's own doors are the phone's contact organ now; DM still
          lives at the spine, the lightbox and the footer.) -->
     <a class="picon" id="picon" href="#my-lisst" aria-label="My lisst">
-      <!-- THE DECK MARK, replacing the receipt glyph (2026-08-06). Same
-           artwork as the card chips' .fscript, so edit them together (the
-           bar's .bar-script seat traded it for the card stack 2026-08-28;
-           this seat has stood down behind the stack since round 6). The receipt
+      <!-- THE DECK MARK, replacing the receipt glyph (2026-08-06). THIS IS
+           NOW THE ONLY COPY of the mark's artwork: the bar's .bar-script
+           seat traded it for the card stack 2026-08-28, and the card
+           chips' .fscript retired into the drawn stack 2026-08-29 — so
+           there is nothing left to edit "together" (this seat has itself
+           stood down behind the stack since round 6). The receipt
            was a stand-in from the dock scoping, chosen when the count badge
            was doing the cart work; the mark says "deck" in the site's own
            vocabulary instead of borrowing a shopping metaphor. -->
@@ -6134,7 +6094,11 @@
         <button class="fflipc lb-fv3only" id="lb-flipc" type="button" aria-label="Flip the board"><img class="fface" id="lb-fface" alt=""></button>
         <div class="frame"><img id="lb-shadow" alt="" aria-hidden="true" /><div class="flipbox"><img id="lb-big" class="top" src="" alt="" title="View the whole collection" /><img id="lb-bot" class="bot" src="" alt="" aria-hidden="true" /></div></div>
         <div class="info lb-fv3only"><span class="nm"><span class="nmt" id="lb-fv3-nmt"></span></span></div>
-        <button class="fchip fc-list d7f-cta lb-fv3only" id="lb-fv3-list" type="button"><span class="fl"><span class="ft"></span><svg class="fscript" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path fill-rule="evenodd" shape-rendering="crispEdges" d="M6 2.5h13v19H6V2.5Z M7.4 4.3v15.4h10.2V4.3H7.4Z"/><rect shape-rendering="crispEdges" x="9.8" y="6.5" width="1.4" height="3"/><rect shape-rendering="crispEdges" x="9.8" y="14.5" width="1.4" height="3"/><circle cx="10.5" cy="12" r="1.2"/><path class="sh" shape-rendering="crispEdges" d="M3.5 4.5V23.5H16.5V21H6.5V4.5Z"/></svg><span class="fmini" aria-hidden="true"></span></span></button>
+        <!-- the stack glyph is INJECTED at boot (see STACKSVG) — this chip
+             is static markup that predates the template's, so the artwork
+             stays in one place instead of being pasted a second time, the
+             #lb-flipc / FLIP_MARK arrangement -->
+        <button class="fchip fc-list d7f-cta lb-fv3only" id="lb-fv3-list" type="button"><span class="fl"><span class="ft"></span></span></button>
         <span class="fst lb-fv3only avail" id="lb-fv3-st"><span class="dot"></span><span class="sttxt" id="lb-fv3-sttxt"></span></span>
       </div>
       <!-- THE OG SPREAD's clip seat (2026-08-20): og desktop only (CSS-gated
@@ -6657,30 +6621,26 @@
         phase(B, sched(B, false, CLPS_MS * 0.55), false, () => { dimsWrite(el, text); });
       });
     }
-    /* the chip joins the card-hover decode family: at rest it is the bare
-       deck mark (the + retired 2026-08-05, same react as the tag); the
-       dress scrambles a random want-word in beside it — inflected, no
-       immediate repeats — and the leave clears it. The mark never decodes
-       (svg can't ride a textContent scramble) — it is the constant
-       DESTINATION, the text is your relationship to it. The ✓ state keeps
-       its meaning and never plays. */
-    const WANTS = ["Want?", "Like?", "Need?", "Mine !"];
-    function wantWord(card) {
-      const lft = card.querySelector(".fc-list .ft");
-      if (!lft || /✓/.test(lft.textContent)) return null;
-      const pool = WANTS.filter(w => w !== lft.dataset.lastWant);
-      const pick = pool[(Math.random() * pool.length) | 0];
-      lft.dataset.lastWant = pick;
-      return { lft, pick };
-    }
+    /* THE WANT-WORD DECODE IS RETIRED (2026-08-29, with the chip's
+       redesign). `WANTS` + `wantWord()` scrambled a random "Want? / Like?
+       / Need? / Mine !" into the chip on card hover, and the chip-aim
+       pair below it swapped that word for "ADD+" — both lived on the 6ch
+       reservation the chip box carried for them. The chip is a drawn
+       EMPTY CARD STACK with its own + now, on every width, and it says
+       the same thing without a word; the reservation retired with them,
+       which is what lets the box shrink-wrap. Nothing writes into
+       .fc-list .ft on desktop any more — only membership does (the ✓) and
+       the phone lb's ADD landing (dockDress). Both live in git. */
     /* THE PHONE CHIP'S WORDS (round 4, REVISED round 5 2026-08-13: rest
        went quiet — "tuck [the blank mini] into the bottom right of our
-       cards pre decode"): a free card's rest chip is the blank mini
-       ALONE now (the round-4 static want words retired to git after one
-       react), the decode is ADD (dockDress lands it at the lb arrival),
-       and a ✓ chip still prints Mine ! — the one want word that
-       survived, the pool's own word for the on-lisst state. Scoped to
-       .scard so tiny renditions (header minis, band clones) stay out. */
+       cards pre decode"): a free card's rest chip is the GLYPH ALONE
+       (the round-4 static want words retired to git after one react; the
+       glyph itself became the drawn card stack 2026-08-29), the decode is
+       ADD (dockDress lands it at the lb arrival), and a ✓ chip still
+       prints Mine ! — the last surviving want word, the pool's own word
+       for the on-lisst state, and the reason this function outlived
+       wantWord. Scoped to .scard so tiny renditions (header minis, band
+       clones) stay out. */
     function landWants(root) {
       if (!dockActive()) return;
       (root || document).querySelectorAll(".scard .fc-list .ft").forEach(lft => {
@@ -6767,11 +6727,8 @@
       if (nmt && ntxt && nmt.textContent !== ntxt) decodeCollapse(nmt, ntxt);
       const stx = document.getElementById("lb-fv3-sttxt");
       land(stx, stx.dataset.txt);
-      /* a want word that rode over from the source stays put — re-rolling it
-         would re-scramble a read that didn't change */
-      const lft = lbCard.querySelector(".fc-list .ft");
-      if (lft && WANTS.includes(lft.textContent)) lft.dataset.lastWant = lft.textContent;
-      else { const want = wantWord(lbCard); if (want) land(want.lft, want.pick); }
+      /* (the want-word land retired 2026-08-29 with the words — the add
+         chip carries no text on desktop, only the ✓ membership writes) */
     }
     if (canHover) {
       /* EXTRACTED (2026-08-04): the entry/exit decode is now a named pair
@@ -6784,7 +6741,6 @@
         const stx = card.querySelector(".sttxt");
         const nmt = card.querySelector(".nmt");
         const dims = nmt && nmt.dataset.dims;
-        const want = wantWord(card);
         /* a dims-rest card is ALREADY showing its dims (THE DIMS REST) —
            decoding dims into dims would be the same re-animation stayLand
            rules out, so the changed-only guard rides here too */
@@ -6793,13 +6749,13 @@
           if (ref) ref.textContent = ref.dataset.ref || "AVRG";
           if (stx) stx.textContent = stx.dataset.txt;
           if (newDims) dimsWrite(nmt, dims);
-          if (want) want.lft.textContent = want.pick;
           return;
         }
         if (ref) decodeInto(ref, ref.dataset.ref || "AVRG");
         if (stx) decodeInto(stx, stx.dataset.txt);
         if (newDims) decodeInto(nmt, dims);
-        if (want) decodeInto(want.lft, want.pick);
+        /* (the want-word decode retired 2026-08-29 — the add chip is a
+           drawn stack with no text of its own on desktop) */
       };
       cardDressOff = card => {
         card.classList.add("left");
@@ -6811,13 +6767,9 @@
         /* rest is whatever the card's surface rests on — the print name, the
            dims (THE DIMS REST), or UNDERSIDE on a flipped card */
         if (nmt) { clearInterval(nmt._t); nmt._t = null; dimsWrite(nmt, restNm(card)); }
-        const lft = card.querySelector(".fc-list .ft");
-        if (lft && !/✓/.test(lft.textContent)) {
-          /* rest is the bare deck mark — decodeInto("") is an instant
-             clear that also kills a mid-scramble interval */
-          if (reduced) lft.textContent = "";
-          else decodeInto(lft, "");
-        }
+        /* (the chip's want-word clear retired 2026-08-29 with the words —
+           the entry writes nothing into .fc-list .ft, so the exit has
+           nothing to hand back; the stack glyph IS the rest) */
       };
       document.addEventListener("pointerover", e => {
         const card = e.target.closest && e.target.closest(".d7f");
@@ -6843,36 +6795,13 @@
         if (card.classList.contains("lit")) return;   /* spoken for — see the entry guard */
         cardDressOff(card);
       });
-      /* CHIP AIM (2026-08-08 late): aiming at the chip itself decodes the
-         want-word to the action — ADD+ — while the mark's shadow flips to
-         the drawer's left (CSS, the aim rule). The accent rung retired
-         with this; the chip speaks by flip + decode, not colour. Leaving
-         the chip hands the want-word back; leaving the CARD through the
-         chip defers to the card exit's clear (these run AFTER the card
-         handlers, and a restore after cardDressOff would redress a bare
-         chip) — except on the stay'd lb card, whose exits never clear, so
-         the chip restores its own word. The ✓ never plays, same law as
-         the dress. ADD+ at 4ch sits inside the "Mine !" reservation — the
-         box never resizes. */
-      document.addEventListener("pointerover", e => {
-        const chip = e.target.closest && e.target.closest(".d7f .fc-list");
-        if (!chip || (e.relatedTarget && chip.contains(e.relatedTarget))) return;
-        const lft = chip.querySelector(".ft");
-        if (!lft || /✓/.test(lft.textContent)) return;
-        if (reduced) { clearInterval(lft._t); lft.textContent = "ADD+"; }
-        else decodeInto(lft, "ADD+");
-      });
-      document.addEventListener("pointerout", e => {
-        const chip = e.target.closest && e.target.closest(".d7f .fc-list");
-        if (!chip || (e.relatedTarget && chip.contains(e.relatedTarget))) return;
-        const lft = chip.querySelector(".ft");
-        if (!lft || /✓/.test(lft.textContent)) return;
-        const card = chip.closest(".d7f");
-        const leftCard = !e.relatedTarget || !card.contains(e.relatedTarget);
-        if (leftCard && !(card === lbCard && card.classList.contains("stay"))) return;
-        if (reduced) { clearInterval(lft._t); lft.textContent = lft.dataset.lastWant || ""; }
-        else decodeInto(lft, lft.dataset.lastWant || "");
-      });
+      /* (CHIP AIM RETIRED 2026-08-29 — the 2026-08-08 pair that decoded
+         the want-word to "ADD+" on chip hover and handed the word back on
+         leave. It only ever fit because the box reserved 6ch for "Mine !";
+         with the words gone the chip is a drawn stack that already says
+         add, and the aim answer would have to resize the box to speak.
+         The mark's shadow-flip half of that aim went with the mark. In
+         git with the words.) */
     }
 
     const handle = (typeof CONTACT === "object" && CONTACT && CONTACT.reddit) || "u/avrg";
@@ -7105,11 +7034,34 @@
     const sparkHtml = m => m.spark ? ' <span class="spark" title="Builder\'s mark — this one came out perfect">✱</span>' : "";
     const soldCls = m => m.st === "gone" ? " sold" : "";
     const cornerHtml = m => '<div class="corner"><span class="wchip rfc">' + esc(m.ref) + '</span>' + sparkHtml(m) + '</div>';
-    /* the deck mark — the AVRG card-between-dots glyph (see .fscript in
-       the chip CSS for the drawing). The phosphor film-script it
-       replaced, and the price-tag before that, both RETIRED 2026-08-05. */
-    const SCRIPTSVG =
-      '<svg class="fscript" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path fill-rule="evenodd" shape-rendering="crispEdges" d="M6 2.5h13v19H6V2.5Z M7.4 4.3v15.4h10.2V4.3H7.4Z"/><rect shape-rendering="crispEdges" x="9.8" y="6.5" width="1.4" height="3"/><rect shape-rendering="crispEdges" x="9.8" y="14.5" width="1.4" height="3"/><circle cx="10.5" cy="12" r="1.2"/><path class="sh" shape-rendering="crispEdges" d="M3.5 4.5V23.5H16.5V21H6.5V4.5Z"/></svg>';
+    /* THE EMPTY CARD STACK — the add chip's one glyph at every width
+       (2026-08-29, Dylan: "make the empty card in the chip look more like
+       an empty card stack in the header (minus the count indicator)").
+       The bar's hand (.hpicks/.hpick) redrawn for ~20px: front card at
+       the bottom LEFT, two cards rising behind it to the RIGHT — the
+       stack's own direction and diagonal — with the count deliberately
+       absent. A literal clone of the header markup is mud at this size,
+       so the fan is DRAWN: the front card is an evenodd ring carrying the
+       add + in its empty middle, and the two behind are drawn as only the
+       edges you would actually see (top rail, right rail, the bottom stub
+       past the front card) — occlusion baked into the artwork, the deck
+       mark's own trick with its .sh shadow. One currentColor family, so
+       the dress's ink→white flip carries the whole object; crispEdges on
+       every rectilinear path (the mark's lesson: corners straddle device
+       pixels at both render scales). The + is a group so :has can stand
+       it down when the chip has a word to show.
+       It supersedes BOTH the deck mark (desktop, 2026-08-05) and the
+       blank .fmini (phone, 2026-08-13 round 5). */
+    const STACKSVG =
+      '<svg class="fstack" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">' +
+        '<path shape-rendering="crispEdges" d="M10 .5H22v18h-4V17h2.5V2H10V.5Z"/>' +
+        '<path shape-rendering="crispEdges" d="M6 3h12v18h-4v-1.5h2.5V4.5H6V3Z"/>' +
+        '<path fill-rule="evenodd" shape-rendering="crispEdges" d="M2 5.5h12v18H2V5.5Z M3.5 7v15h9V7h-9Z"/>' +
+        '<g class="fplus">' +
+          '<rect shape-rendering="crispEdges" x="5" y="13.75" width="6" height="1.5"/>' +
+          '<rect shape-rendering="crispEdges" x="7.25" y="11.5" width="1.5" height="6"/>' +
+        '</g>' +
+      '</svg>';
     /* THE CARD REMEMBERS ITS FACE (2026-08-17, Dylan: "keeps its last seen
        side across its versions") — session memory, board-id keyed, bottom-
        last-seen ids only. THREE WRITERS, all user gestures: setFlip (the lb
@@ -7148,6 +7100,11 @@
        second time — one copy of the paths, the single-producer law. */
     (() => { const c = document.getElementById("lb-flipc");
       if (c && !c.querySelector(".fmark")) c.insertAdjacentHTML("afterbegin", FLIP_MARK); })();
+    /* the lb's ADD chip is static markup for the same reason — the stack
+       glyph is injected into its .fl once, so STACKSVG stays the single
+       producer for both the template's chips and this one */
+    (() => { const fl = document.querySelector("#lb-fv3-list .fl");
+      if (fl && !fl.querySelector(".fstack")) fl.insertAdjacentHTML("beforeend", STACKSVG); })();
     const JCARDS = {
       framev3: m =>
         /* no `canflip` and no kick: rendered cards do not 3D-flip since the
@@ -7180,11 +7137,11 @@
             '<span class="nm"><span class="nmt" data-nm="' + esc(m.nm) + '" data-dims="' + esc(m.dimsPh) + '">' + esc(m.nm) + '</span></span>' +
           '</div>' +
           (m.st === "gone" ? "" :
+            /* the add chip's glyph is THE EMPTY CARD STACK on every width
+               now (2026-08-29) — the deck mark and the phone's blank
+               .fmini both retired into it */
             '<button class="fchip fc-list d7f-cta" data-id="' + esc(m.id) + '"><span class="fl"><span class="ft">' +
-              (inLisst(m.id) ? "✓" : "") + '</span>' + SCRIPTSVG +
-              /* the BLANK MINI (2026-08-13 round 5): the phone chip's
-                 glyph — desktop hides it and keeps the mark */
-              '<span class="fmini" aria-hidden="true"></span></span></button>') +
+              (inLisst(m.id) ? "✓" : "") + '</span>' + STACKSVG + '</span></button>') +
           '<span class="fst ' + m.st + '"><span class="dot"></span><span class="sttxt" data-txt="' + m.stTxt.toUpperCase() + '"></span></span>' +
         '</div></div>',
       paper: m =>

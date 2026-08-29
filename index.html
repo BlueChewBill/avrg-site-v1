@@ -1625,23 +1625,28 @@
     }
   }
   /* THE GRID MINI JOINS THE DESKTOP DRESS (2026-08-29, Dylan: "have the
-     flip side mini board fade in and out in collections on hover") — the
-     phone's corner mini shows on desktop grid cards as a PASSIVE PREVIEW:
-     seated at rest but fully transparent, fading up with the hover build
-     (and .lit, the cursor-free twin) and draining on leave. The mark is
-     hidden and pointer-events are off because up here it is a preview,
-     not a control — the card's one click stays the inspect, the lb ghost
-     stays the desktop's one flip DOOR (T9's gate law untouched). Gated on
-     hover:hover so wide-touch keeps today's bare card rather than an
-     element nothing can ever reveal. The transparent chip keeps its real
-     box, so the lazy face warms as the grid scrolls (the 0×0 law). */
+     flip side mini board fade in and out in collections on hover" —
+     REVISED same night: "ghost it down and add the flip icon. basically
+     give it the lb card dressing"): the phone's corner mini shows on
+     desktop grid cards, fading up with the hover build (and .lit, the
+     cursor-free twin) and draining on leave — and it wears the lb GHOST's
+     dress at grid scale: the FACE ghosts .6, rising .85 under the chip's
+     own cursor, the mark full white on the board (opacity on the FACE,
+     never the button — the ghost's own law). It is a real flip DOOR now
+     (the click gate opened with the dress — a verb glyph on a dead button
+     would lie), the same door the phone grid taps. Gated on hover:hover
+     so wide-touch keeps today's bare card rather than an element nothing
+     can ever reveal. The transparent chip keeps its real box, so the lazy
+     face warms as the grid scrolls (the 0×0 law). NOTE: .6/.85 are the lb
+     ghost-opacity pair hand-restated — a retune must carry both. */
   @media (min-width: 941px) and (hover: hover) {
     .scard .d7f .fflipc {
-      display: flex; pointer-events: none;
+      display: flex;
       opacity: 0; transition: opacity .35s ease;
     }
-    .scard .d7f .fflipc .fmark { display: none; }
     .scard :is(.d7f:hover, .d7f.lit) .fflipc { opacity: 1; }
+    .scard .d7f .fflipc .fface { opacity: .6; transition: opacity .3s ease; }
+    .scard .d7f .fflipc:hover .fface { opacity: .85; }
   }
   .d7f .corner {
     /* panel-anchored — the grid template and the lb card both put .corner
@@ -2194,6 +2199,16 @@
     opacity: 0; transition: opacity .4s ease .18s;
   }
   body[data-lb="deck"] #lb.fv3 .lbhead { display: flex; }
+  /* THE COUNTER RETIRES OUTRIGHT (2026-08-29, Dylan: "remove the counter
+     above our card scroll in lb view. the 2 of 14") — the strip itself is
+     the wayfinding (the lifted mini + the prog rail). The phone half fell
+     2026-08-12 (the ≤720 block's own hide, "the strip does the wayfinding
+     on phones now"); this is the desktop half of the same ruling, and it
+     runs UNGATED because a width gate would have left the counter alive
+     only in the orphan 721–940 band nobody designed for. HIDDEN, not
+     deleted — setHead keeps writing both paths (the lbh-tag retirement's
+     idiom); same compound as the show rule, later in source wins the tie. */
+  body[data-lb="deck"] #lb.fv3 .lbhead { display: none; }
   #lb.in .lbhead { opacity: 1; }
   /* closing: the header must not ride the card home (the .lb-rest law) */
   #lb:not(.in) .lbhead { transition: opacity .1s ease; }
@@ -16359,7 +16374,11 @@
         setFlip(lbCard, !lbCard.classList.contains("flipped"));
         return;
       }
-      if (!dockActive()) return;   /* grid chips stay the phone's flip door */
+      /* the dock gate RETIRED here (2026-08-29, with the grid mini's lb
+         dress — the mark landed, so the door has to answer): grid chips
+         flip on every width now. Where a chip isn't rendered (wide-touch
+         ≥941, tiny renditions) there is nothing to click — the CSS is the
+         gate. */
       const scard = chip.closest(".scard");
       if (!scard) return;                                  /* flights, minis: not a control */
       if (scard.classList.contains("lisst-card")) return;  /* picks: bubble to flipCaret */

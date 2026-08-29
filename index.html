@@ -6991,12 +6991,13 @@
        black-chip ✱ (his second shelf: HS 08/10/14) · 1 = the ✱. */
     const JSPARK = { "HS 06": 3, "HS 07": 3, "HS 16": 3, "HS 17": 3, "HS 18": 3,
                      "HS 08": 2, "HS 10": 2, "HS 14": 2 };
-    const JPEND = { "HS 02": 1 };
-    /* CL 06/08/16/19: MIA at the 2026-08-29 inventory check — Dylan's
-       read: sold last round. SOLD here, not delisted: delisting is
-       sources/ surgery (the ordering law) and rides the board-batch
-       session if it ever happens. */
-    const JGONE = { "CL 05": 1, "CL 06": 1, "CL 08": 1, "CL 16": 1, "CL 19": 1 };
+    /* real statuses since the 2026-08-29 inventory check (the demo seeds
+       — HS 02 pending, CL 05 gone — were lies and came out on Dylan's
+       word). CL 06/08/16/19: MIA at that check — his read: sold last
+       round. SOLD here, not delisted: delisting is sources/ surgery
+       (the ordering law) and rides the board-batch session if ever. */
+    const JPEND = {};
+    const JGONE = { "CL 06": 1, "CL 08": 1, "CL 16": 1, "CL 19": 1 };
     const PH_DIMS = { "OG 01": "33.5mm × 97.5mm" };   /* the demo string rides the dims grammar */
     /* REAL MEASUREMENTS (Dylan, 2026-08-13) — keyed by padded inventory ref,
        [width, length, tailWidth, noseWidth] in mm. Width is the widest point;

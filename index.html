@@ -42,7 +42,6 @@
     font-family: var(--disp); font-weight: 400;
     -webkit-font-smoothing: antialiased; overflow-x: hidden;
   }
-  ::selection { background: var(--bone); color: var(--ink); }
   img, video { display: block; }
   a { color: inherit; text-decoration: none; }
   button { font: inherit; color: inherit; background: none; border: none; cursor: pointer; }
@@ -65,18 +64,16 @@
     display: flex; align-items: center; justify-content: center;
     gap: clamp(14px, 2.6vw, 30px);
     padding: 14px clamp(18px, 3vw, 40px);
-    background-color: rgba(0, 0, 0, .86);
     -webkit-backdrop-filter: blur(8px); backdrop-filter: blur(8px);
-    border-bottom: 1px solid #1c1c1c;
+    border-bottom: 1px solid;
   }
   .topbar .tab {
     font-family: var(--mono); font-size: 10px; font-weight: 700;
     letter-spacing: .18em; text-transform: uppercase;
-    color: #fff; border: 2px solid #fff; border-radius: 8px;
+    border: 2px solid; border-radius: 8px;
     padding: 10px 14px;
     transition: background .15s ease, color .15s ease;
   }
-  .topbar .tab:hover { background: #fff; color: #000; }
   .topbar .dm-mini { position: absolute; right: clamp(18px, 3vw, 40px); }
   .bar-brand {
     position: absolute; left: clamp(18px, 3vw, 40px);
@@ -113,7 +110,7 @@
     /* white, not bone: this mark is the same artwork as the bar's and the
        card chips', and those are page-coloured. Bone made it read as a
        different object wearing a warmer ink. */
-    .picon .deckmark { width: 34px; height: 34px; display: block; color: #fff; }
+    .picon .deckmark { width: 34px; height: 34px; display: block; }
     body.light .picon .deckmark { color: #000; }
     /* THE COUNT LOSES ITS BADGE. A filled pill beside a drawn mark is a
        second object competing with it; in the lab the count is just a
@@ -128,7 +125,7 @@
        keeps its bone fill. .topbar adds the class it needs to win without
        moving three thousand lines around. */
     .topbar .picon .pcnt {
-      background: none; color: #fff; padding: 0;
+      padding: 0;
       font-size: 10px; letter-spacing: 1.4px;
       min-width: calc(2ch + 2.8px); text-align: center;
     }
@@ -196,7 +193,6 @@
     .bar-script {
       display: flex; align-items: center; gap: 7px;
       position: absolute; right: clamp(18px, 3vw, 40px);
-      color: #fff;
     }
     body.light .bar-script { color: #000; }
     /* 38px = the .bar-brand logo's own size — Dylan's call (2026-08-05):
@@ -208,7 +204,7 @@
        reserved so the mark cannot shift when 9 becomes 10. */
     .bar-script .pcnt {
       font-family: var(--mono); font-size: 10px; font-weight: 700;
-      letter-spacing: 1.4px; color: #fff;
+      letter-spacing: 1.4px;
       min-width: 2ch; text-align: center;
     }
     body.light .bar-script .pcnt { color: #000; }
@@ -231,7 +227,7 @@
     .topbar { border-bottom: 0; padding-top: 12px; padding-bottom: 12px; --dotpull: 12px; }
     .topbar::before, .topbar::after {
       content: ""; position: absolute; left: 0; right: 0; height: 2px;
-      background: #fff; pointer-events: none;
+      pointer-events: none;
     }
     .topbar::before { top: 0; }
     .topbar::after { bottom: 0; }
@@ -242,11 +238,10 @@
        hit from the organ, un-hovered it, slid home, and re-hovered it at
        ~28Hz (measured 69 cycles / 2.5s). Dots are furniture; they must
        never hit-test. */
-    .bardot { position: relative; width: 5px; height: 5px; border-radius: 50%; background: #fff; flex: 0 0 auto; transition: background .15s ease, transform .45s ease; pointer-events: none; }
+    .bardot { position: relative; width: 5px; height: 5px; border-radius: 50%; flex: 0 0 auto; transition: background .15s ease, transform .45s ease; pointer-events: none; }
     body.light .bardot { background: #000; }
     .organ { position: relative; display: flex; }
     .orb {
-      --fg: #fff; --bg: #000;
       position: relative; z-index: 1;
       display: flex; align-items: center; justify-content: center;
       width: auto; height: 40px; padding: 0 14px; color: var(--fg);
@@ -287,7 +282,7 @@
     /* overflow HIDDEN on purpose: all seat geometry fits the bar-height box,
        and un-clipped stroke paint leaked a full-viewport vertical ghost line
        in Chrome 150 (header-lab lesson, GPU and software rasterizers both) */
-    .seatfx { position: absolute; pointer-events: none; color: #fff; overflow: hidden; z-index: 0; --ringc: #000; }
+    .seatfx { position: absolute; pointer-events: none; overflow: hidden; z-index: 0; }
     body.light .seatfx { color: #000; --ringc: #fff; }
     /* the ring quarters wear the fill's inverse (--ringc) */
     .seatfx .st { fill: none; stroke: var(--ringc); stroke-width: 2; stroke-linecap: round; stroke-dasharray: 1.05; stroke-dashoffset: 1.05; }
@@ -313,7 +308,7 @@
        organ; the flip to the fill's inverse keeps its .4s wait (the fill
        arrives beneath mid-travel) while the travel itself starts at once —
        hence the split transition-delay (background, transform). */
-    .organ.on + .bardot, .bardot:has(+ .organ.on) { z-index: 2; background: #000; transition-delay: .4s, 0s; }
+    .organ.on + .bardot, .bardot:has(+ .organ.on) { z-index: 2; transition-delay: .4s, 0s; }
     .bardot:has(+ .organ.on) { transform: translateX(var(--dpl, 0px)); }
     .organ.on + .bardot { transform: translateX(calc(var(--dpr, 0px) * -1)); }
     body.light .organ.on + .bardot, body.light .bardot:has(+ .organ.on) { background: #fff; }
@@ -404,10 +399,10 @@
       .drop.open .dveil { opacity: 1; transition: opacity .34s ease .1s; }
     }
     body.light .drop { --veilc: 255, 255, 255; }
-    .drail { position: absolute; top: 0; bottom: 0; width: 2px; background: #fff; transform: scaleY(0); transform-origin: center top; z-index: 2; }
+    .drail { position: absolute; top: 0; bottom: 0; width: 2px; transform: scaleY(0); transform-origin: center top; z-index: 2; }
     .drail.l { left: 0; }
     .drail.r { right: 0; }
-    .dface { position: absolute; bottom: 0; width: 50%; height: 2px; background: #fff; transform: scaleX(0); z-index: 2; }
+    .dface { position: absolute; bottom: 0; width: 50%; height: 2px; transform: scaleX(0); z-index: 2; }
     .dface.l { left: 0; transform-origin: left center; }
     .dface.r { right: 0; transform-origin: right center; }
     body.light .drail, body.light .dface { background: #000; }
@@ -419,7 +414,6 @@
     .drop.open .drail, .drop.open .dface { transition: background .15s ease .44s; background: #000; }
     /* shadow waits for the frame to complete — d5 idiom on the black ground */
     .drop.open .dpanel {
-      box-shadow: 7px 9px 0 -1px rgba(255, 255, 255, .12), 7px 9px 0 0 rgba(0, 0, 0, .9);
       transition: box-shadow .25s ease .52s;
     }
     body.light .drop.open .dpanel { box-shadow: 7px 9px 0 -1px rgba(0, 0, 0, .85); }
@@ -495,11 +489,11 @@
      IS the ground story now (white on dark, ink on light — the invert
      filter retired with the PNG). height:auto resolves off the viewBox
      ratio, so the box keeps the artwork's own proportion. */
-  .masthead svg { width: 150px; height: auto; margin: 0 auto; display: block; color: #fff; }
+  .masthead svg { width: 150px; height: auto; margin: 0 auto; display: block; }
   #logo-draw path { fill: none; stroke: currentColor; stroke-linecap: round; stroke-linejoin: round; }
   /* fixed two-line box: swapping taglines never moves what's below.
      sits low, near the video, rather than tight under the logo */
-  .tick { margin-top: clamp(36px, 8vh, 96px); color: #fff; line-height: 1.8; height: 36px; transition: opacity .45s ease; }
+  .tick { margin-top: clamp(36px, 8vh, 96px); line-height: 1.8; height: 36px; transition: opacity .45s ease; }
   .tick.out { opacity: 0; }
   .masthead .mono {
     margin-top: 14px;
@@ -528,7 +522,6 @@
   .video-wrap video, .vtile video {
     width: 100%; height: 100%; object-fit: cover; border-radius: 6px;
     box-shadow: 0 0 0 2px var(--ink), 9px 11px 0 -1px rgba(32, 26, 21, .34);
-    background: #16120e;
   }
   .video-wrap video { aspect-ratio: 9/14; }
 
@@ -537,14 +530,13 @@
     font-size: 14px; line-height: 1.8; color: var(--soft);
   }
   .dm-mini {
-    display: inline-block; background: transparent; color: #fff;
-    border: 2px solid #fff; border-radius: 8px;
+    display: inline-block; background: transparent;
+    border: 2px solid; border-radius: 8px;
     font-family: var(--mono); font-size: 10px; font-weight: 700;
     letter-spacing: .18em; text-transform: uppercase;
     padding: 12px 16px;
     transition: background .15s ease, color .15s ease;
   }
-  .dm-mini:hover { background: #fff; color: #000; }
 
   /* DM buttons wear the reserved glitch: a choppy slice-jitter on entry.
      every other button gets the quiet text decode (JS, same glyph set as
@@ -554,7 +546,6 @@
      inverted colors so the hover style can't flicker during the run. */
   .dm-mini.glitch-run, .lb-dm-btn.glitch-run {
     animation: dm-glitch .26s steps(1, end) 1;
-    background: #fff; color: #000;
   }
   @keyframes dm-glitch {
     0%   { transform: translate(2px, -1px) skewX(-6deg); clip-path: inset(0 0 44% 0); }
@@ -578,8 +569,7 @@
     font-size: clamp(22px, 2.3vw, 30px);
     cursor: pointer; -webkit-tap-highlight-color: transparent;
   }
-  .band h2 .hl { color: #fff; }
-  .bandsub { color: #fff; font-size: 12px; letter-spacing: .16em; }
+  .bandsub { font-size: 12px; letter-spacing: .16em; }
 
   /* ======================= CATEGORY HEADER POSTS =========================
      v1 list item 1 (Dylan): the section titles "need better site coherence /
@@ -629,7 +619,7 @@
   .colpage-inner h2::before, .colpage-inner h2::after {
     content: ""; position: absolute; top: 50%;
     width: 5px; height: 5px; border-radius: 50%;
-    background: #fff; transform: translateY(-50%); pointer-events: none;
+    transform: translateY(-50%); pointer-events: none;
     transition: translate .45s ease;
   }
   body.light .band h2::before, body.light .band h2::after,
@@ -647,7 +637,6 @@
   /* ---- card (shared with lightbox + grids) ---- */
   .frame {
     aspect-ratio: 4/5; overflow: hidden; border-radius: 6px;
-    background: #16120e;
     box-shadow: 0 0 0 2px var(--ink), 7px 9px 0 -1px rgba(32, 26, 21, .34);
   }
   .frame img { width: 100%; height: 100%; object-fit: cover; pointer-events: none; }
@@ -664,7 +653,7 @@
   .cap .rf {
     display: block; margin-top: 4px;
     font-family: var(--mono); font-size: 8.5px; font-weight: 700;
-    letter-spacing: .22em; text-transform: uppercase; color: #fff;
+    letter-spacing: .22em; text-transform: uppercase;
   }
 
   /* ---- conveyor ---- */
@@ -672,22 +661,13 @@
     position: relative; z-index: 0;
     margin-top: 14px; height: var(--beltH, 330px);
     overflow: hidden; cursor: grab; touch-action: pan-y;
-    /* the shelf: gray band with long horizontal fades, feathered softly at the
-       top and bottom (the vertical layer fades to page-black over the gray) */
-    background:
-      linear-gradient(180deg,
-        rgba(0, 0, 0, 1) 0%, rgba(0, 0, 0, 0) 13%,
-        rgba(0, 0, 0, 0) 87%, rgba(0, 0, 0, 1) 100%),
-      linear-gradient(90deg,
-        rgba(74, 74, 74, 0) 0%, rgba(74, 74, 74, 1) 18%,
-        rgba(74, 74, 74, 1) 82%, rgba(74, 74, 74, 0) 100%);
   }
   .belt.dragging { cursor: grabbing; }
   .belt::before, .belt::after {
     content: ""; position: absolute; top: 0; bottom: 0; width: 8%; z-index: 5; pointer-events: none;
   }
-  .belt::before { left: 0; background: linear-gradient(to right, var(--bg), transparent); }
-  .belt::after { right: 0; background: linear-gradient(to left, var(--bg), transparent); }
+  .belt::before { left: 0; }
+  .belt::after { right: 0; }
   .card {
     position: absolute; left: 0; top: 50%;
     width: var(--cardW, 172px); will-change: transform, opacity;
@@ -714,7 +694,7 @@
   /* "← Back to collections" + .colpage-links retired 2026-08-15 (the
      launch-day trim) — the drop and the foot's home mark carry it */
   .colpage-inner h2 {
-    display: inline-block; color: #fff;
+    display: inline-block;
     font-family: "Satoshi", var(--disp);
     font-weight: 900; text-transform: uppercase; letter-spacing: -0.025em; line-height: 1.04;
     /* padding holds the posts (see CATEGORY HEADER POSTS) — em, not the old
@@ -772,9 +752,8 @@
     gap: 16px; transition: transform .3s ease;
   }
   .colnav-home img { width: 56px; height: 56px; border-radius: 50%; display: block; }
-  .colnav-home .label { color: var(--hint); transition: color .15s ease; }
+  .colnav-home .label { transition: color .15s ease; }
   .colnav-home:hover { transform: scale(1.06); }
-  .colnav-home:hover .label { color: var(--bone); }
 
   /* ---- shop all: collection pages stitched into one scroll ---- */
   .shopall-sec { padding-top: clamp(40px, 7vh, 80px); }
@@ -861,7 +840,7 @@
   #vlb { z-index: 7000; }
   .lb[hidden] { display: none; }
   .lb-scrim {
-    position: absolute; inset: 0; background: rgba(24, 19, 14, .88);
+    position: absolute; inset: 0;
     opacity: 0; transition: opacity .45s ease;
   }
   .lb.in .lb-scrim { opacity: 1; }
@@ -965,7 +944,6 @@
   }
   .lb-card .frame {
     border-radius: 8px;
-    box-shadow: 0 0 0 2.5px var(--bone), 0 34px 90px rgba(0, 0, 0, .6);
   }
   .lb-card .frame img { pointer-events: auto; cursor: pointer; object-fit: contain; }
   .lb-rest, #og-clipseat, #og-zone { opacity: 0; transition: opacity .4s ease .18s; }
@@ -976,12 +954,12 @@
   .lb-thumbs:empty { display: none; }
   .lb-thumbs img {
     width: 54px; height: 54px; object-fit: cover; border-radius: 5px; cursor: pointer;
-    box-shadow: 0 0 0 2px rgba(221, 209, 182, .5); transition: box-shadow .2s ease;
+    transition: box-shadow .2s ease;
   }
   .lb-thumbs img.on { box-shadow: 0 0 0 3px var(--acc, #d8511f); }
   .lb-desc {
     max-width: 40ch; margin: 18px auto 0; white-space: pre-line; text-align: center;
-    font-size: 13px; line-height: 1.75; color: #d6cbb2;
+    font-size: 13px; line-height: 1.75;
   }
   .lb-desc:empty { display: none; }
   /* the dims detail line (2026-08-13): the full measurements — including the
@@ -991,14 +969,13 @@
   .lb-dims {
     margin: 12px auto 0; text-align: center;
     font-family: var(--mono); font-size: 10px; font-weight: 700;
-    letter-spacing: .2em; text-transform: uppercase; color: #d6cbb2;
+    letter-spacing: .2em; text-transform: uppercase;
   }
   .lb-dims:empty { display: none; }
   .lb-product {
     display: flex; flex-direction: column; align-items: center; gap: 14px;
     margin-top: 16px; padding: 18px 16px;
-    background: rgba(221, 209, 182, .08);
-    border: 1px solid rgba(221, 209, 182, .28);
+    border: 1px solid;
     border-radius: 10px; text-align: center;
   }
   .lb-product .nm {
@@ -1008,22 +985,20 @@
   /* spec pill: identifier | dimensions */
   .lb-pill {
     display: inline-flex; align-items: stretch; overflow: hidden;
-    border: 2px solid rgba(221, 209, 182, .55); border-radius: 999px;
+    border: 2px solid; border-radius: 999px;
     font-family: var(--mono); font-size: 11px; font-weight: 700;
     letter-spacing: .22em; text-transform: uppercase; line-height: 1;
   }
   .lb-pill .seg { padding: 10px 16px 9px; }
-  .lb-pill .ref { color: #fff; }
-  .lb-pill .dims { color: var(--bone); border-left: 2px solid rgba(221, 209, 182, .55); }
+  .lb-pill .dims { color: var(--bone); border-left: 2px solid; }
   .lb-cta { display: flex; flex-direction: column; align-items: center; gap: 10px; }
   .lb-list-btn {
     font-family: var(--mono); font-size: 9.5px; font-weight: 700;
     letter-spacing: .2em; text-transform: uppercase;
-    color: var(--soft); border: 1.5px dashed rgba(221, 209, 182, .45);
+    color: var(--soft); border: 1.5px dashed;
     border-radius: 999px; padding: 9px 14px;
     transition: color .15s ease, border-color .15s ease;
   }
-  .lb-list-btn:hover { color: #fff; border-color: #fff; }
   .lb-list-btn.on { color: var(--acc, #d8511f); border-style: solid; border-color: currentColor; }
 
   /* ---- my lisst page + inquiry form ---- */
@@ -1035,9 +1010,7 @@
   .lisst-remove {
     position: absolute; top: -10px; right: -10px; z-index: 3;
     width: 30px; height: 30px; border-radius: 50%;
-    background: var(--bone); color: var(--ink);
     font-family: var(--mono); font-size: 13px; font-weight: 700; line-height: 1;
-    box-shadow: 0 4px 14px rgba(0, 0, 0, .5);
     transition: transform .15s ease;
   }
   .lisst-remove:hover { transform: scale(1.12); }
@@ -1045,7 +1018,7 @@
     max-width: 460px; margin: clamp(36px, 6vh, 60px) auto 0; padding: 0 20px;
     text-align: left;
   }
-  .inq-head { text-align: center; color: #fff; }
+  .inq-head { text-align: center; }
   .inq-sub { margin-top: 10px; text-align: center; font-size: 12.5px; font-style: italic; color: var(--hint); }
   .inq label {
     display: block; margin: 18px 0 7px;
@@ -1054,32 +1027,29 @@
   }
   .inq input, .inq select, .inq textarea {
     width: 100%; background: transparent; color: var(--bone);
-    border: 2px solid rgba(221, 209, 182, .4); border-radius: 8px;
+    border: 2px solid; border-radius: 8px;
     font-family: var(--disp); font-size: 14px; padding: 12px 13px;
     transition: border-color .15s ease;
   }
-  .inq input:focus, .inq select:focus, .inq textarea:focus { outline: none; border-color: #fff; }
+  .inq input:focus, .inq select:focus, .inq textarea:focus { outline: none; }
   .inq select { -webkit-appearance: none; appearance: none; cursor: pointer; }
-  .inq select option { background: #111; color: var(--bone); }
   .inq textarea { resize: vertical; min-height: 90px; }
   .inq-send {
     display: block; margin: 24px auto 0;
-    background: transparent; color: #fff;
-    border: 2px solid #fff; border-radius: 8px; padding: 13px 22px;
+    background: transparent;
+    border: 2px solid; border-radius: 8px; padding: 13px 22px;
     transition: background .15s ease, color .15s ease;
   }
-  .inq-send:hover { background: #fff; color: #000; }
   .inq-status { margin-top: 14px; text-align: center; font-size: 13px; color: var(--soft); min-height: 1.4em; }
   .inq-or { margin-top: 26px; text-align: center; }
   .inq-or .dm-mini { margin-top: 10px; }
   .lb-cta-ask { color: var(--bone); }
   .lb-dm-btn {
-    flex: 0 0 auto; background: transparent; color: #fff;
-    border: 2px solid #fff; border-radius: 8px;
+    flex: 0 0 auto; background: transparent;
+    border: 2px solid; border-radius: 8px;
     padding: 12px 16px;
     transition: background .15s ease, color .15s ease;
   }
-  .lb-dm-btn:hover { background: #fff; color: #000; }
   .lb-close {
     position: absolute; top: 74px; right: clamp(18px, 3.5vw, 40px); z-index: 3;
     color: var(--bone); opacity: .8; transition: opacity .15s ease;
@@ -1089,8 +1059,6 @@
     position: absolute; top: 50%; transform: translateY(-50%); z-index: 3;
     font-family: var(--mono); font-size: 28px; line-height: 1;
     width: 54px; height: 54px; border-radius: 50%;
-    background: var(--bone); color: var(--ink);
-    box-shadow: 0 8px 28px rgba(0, 0, 0, .5);
     opacity: .92;
     transition: opacity .15s ease, transform .15s ease;
   }
@@ -1099,7 +1067,6 @@
   .lb-next { right: calc(50% - min(190px, 41vw) - 78px); }
   .lb-count {
     position: absolute; bottom: 24px; left: 50%; transform: translateX(-50%); z-index: 3;
-    color: #a3967b;
   }
   @media (hover: none), (max-width: 720px) { .lb-nav { display: none; } }
 
@@ -1186,7 +1153,6 @@
     /* the video tile keeps the old photo-frame look */
     .tile .tframe {
       aspect-ratio: 3/4; overflow: hidden; border-radius: 6px;
-      background: #16120e;
       box-shadow: 0 0 0 2px var(--ink), 6px 8px 0 -1px rgba(32, 26, 21, .34);
     }
     .tile .tframe video { width: 100%; height: 100%; object-fit: cover; }
@@ -1340,7 +1306,7 @@
   .d5.sold .stage img { filter: grayscale(.7) drop-shadow(7px 9px 0 rgba(0, 0, 0, .4)); }
 
   /* zoned: grey plate stage inside a white-bordered black card */
-  .d6z .panel { border: 2px solid #fff; background: #0b0b0b; }
+  .d6z .panel { border: 2px solid; background: #0b0b0b; }
   .d6z .plate { background: #a49d92; }
   .d6z .plate .nm { display: block; text-align: center; color: #16120e; padding-bottom: 15px; letter-spacing: .13em; }
   .d6z .plate .stage img { filter: drop-shadow(7px 9px 0 rgba(22, 18, 14, .45)); }
@@ -2215,7 +2181,6 @@
      the same on either ground. */
   .lbhead .lbh-chip {
     display: inline-flex; flex-direction: column; align-items: center; gap: 4px;
-    color: #fff;
   }
   body.light #lb .lbhead .lbh-chip { color: #000; }
   .lbhead .lbh-tag { font-size: 36px; letter-spacing: .1em; }
@@ -2446,7 +2411,7 @@
     align-items: center; justify-content: center;
     width: 34px; height: 48px;
     background: none; border: 0; padding: 0; margin: 0;
-    color: #fff; cursor: pointer;
+    cursor: pointer;
     opacity: 0; transition: opacity .25s ease .12s;
   }
   body.light .lbs-arr { color: #000; }
@@ -2454,7 +2419,7 @@
   .lbs-arr path { fill: none; stroke: currentColor; stroke-width: 2.5px;
                   stroke-linecap: butt; stroke-linejoin: miter; }
   .lbs-prog { position: absolute; z-index: 3; display: none; height: 5px;
-              color: #fff; pointer-events: none;
+              pointer-events: none;
               opacity: 0; transition: opacity .25s ease .12s; }
   body.light .lbs-prog { color: #000; }
   /* the line—dot—line rides BOTH costumes (2026-08-19); the arrows stay
@@ -2533,7 +2498,7 @@
   .lb-deknav {
     position: absolute; z-index: 1;
     background: none; border: 0; padding: 0; margin: 0;
-    color: #fff; cursor: pointer;
+    cursor: pointer;
     opacity: 0; transition: opacity .25s ease .12s;
   }
   body.light .lb-deknav { color: #000; }
@@ -2956,11 +2921,6 @@
   .bay.out .bay-panel { width: var(--outW); }
   /* the shadow waits for the frame to complete — .shadowed fires off p */
   .bay.shadowed .bay-panel { box-shadow: -7px 9px 0 -1px rgba(0, 0, 0, .85); }
-  /* black ground: a black drop is invisible on the page — announce with the
-     d5 idiom instead (faint white rim + solid black behind it) */
-  body:not(.light) .bay.shadowed .bay-panel {
-    box-shadow: -7px 9px 0 -1px rgba(255, 255, 255, .12), -7px 9px 0 0 rgba(0, 0, 0, .9);
-  }
   /* the outside edge: two vertical halves closing onto themselves after
      the top/bottom lines arrive — the face connecting, echoing the inner */
   .bf-face { position: absolute; left: 0; top: -1.5px; bottom: -1.5px; width: 1.5px; pointer-events: none; }
@@ -2986,8 +2946,6 @@
     transition: color .35s ease, opacity .3s ease; will-change: transform;
   }
   .bay.out .bay-inner { opacity: 0; }
-  body:not(.light) .bay-inner { color: var(--bone); }
-  body:not(.light) .bay.inked .bay-inner { color: #000; }
   .bay-rail { position: absolute; inset: 0; }
   /* rails converge with --rp: height rides 41% → calc(50% - 6px) */
   .bay-rail::before, .bay-rail::after {
@@ -4428,7 +4386,7 @@
   .picon { display: none; position: relative; align-items: center; gap: 7px; padding: 8px 8px; flex: 0 0 auto; cursor: pointer; }
   .picon svg { display: block; }
   .picon .pcnt {
-    font-family: var(--mono); background: #ddd1b6; color: #000;
+    font-family: var(--mono);
     font-size: 10px; font-weight: 700; padding: 2px 6px; min-width: 10px; text-align: center;
   }
   body.light .picon svg { stroke: #000; }
@@ -5317,7 +5275,6 @@
       -webkit-backdrop-filter: none; backdrop-filter: none;
       transition: background-color .55s ease;
     }
-    body.intro.intro-bar .topbar { background-color: rgba(0, 0, 0, .86); }
     body.light.intro.intro-bar .topbar { background-color: rgba(255, 255, 255, .88); }
     body.intro .bar-brand { transform: translateX(-70vw); }
     body.intro .picon { transform: translateX(70vw); }

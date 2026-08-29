@@ -1755,14 +1755,11 @@
      is the missability answer: a drawn object in the corner instead of a
      hairline. px line first per the ONE CARD SPEC. */
   .d7f .fc-list .fstack { display: block; width: 22px; height: 22px; width: 9.4827cqw; height: 9.4827cqw; flex: 0 0 auto; }
-  /* the add + lives INSIDE the stack's empty front card and steps aside
-     the moment .ft has something to say — the ✓/Mine ! of a decked card,
-     or the phone lb's ADD landing. :has on the text the JS already
-     writes, the 2026-08-08 mechanism kept: no new plumbing, no layout
-     change (the + is inside the fixed-width svg, so the box cannot move),
-     and it rides free on every render path including flights, because the
-     text IS the state. */
-  .d7f .fc-list:has(.ft:not(:empty)) .fplus { display: none; }
+  /* (the in-card add + RETIRED 2026-08-29 evening, Dylan: "lets have the
+     card always empty like the mock" — the blank card alone is the rest,
+     round 5's own quiet-rest ruling back. The .fplus group and its
+     `:has(.ft:not(:empty))` stand-down went together; the :has idiom's
+     record stays at the 2026-08-08 entry in cards.md.) */
   .d7f .fc-list::before { transform-origin: center bottom; }
   /* (RETIRED 2026-08-29 with the deck mark: `.fscript` + its aim-answer
      shadow flip `.sh` — the 2026-08-08 "keep it the same direction as its
@@ -7077,29 +7074,29 @@
        to the shipped stack: "lets scratch that add chip... this chip we
        had, with the inner frame dressing") — at word states the three-
        card fan read as a white blob. The glyph is ONE MINI CARD now,
-       wearing the fv3 card's own dress in miniature: the panel ring, the
-       hairline INFRAME, the two side gap dots, and the hard offset
-       shadow (right + bottom — the site's card light). One currentColor
+       wearing the fv3 card's own dress in miniature. One currentColor
        family so the dress's ink→white flip carries the whole object;
-       crispEdges on every rectilinear path. The + keeps its seat in the
-       card's middle, in the .fplus group the :has stand-down drives.
+       crispEdges on every rectilinear path.
        (The class stays .fstack — the bench's chip-stack-size anchor and
        the nine colour rules point at it; the name outlived the fan.)
        It supersedes BOTH the deck mark (desktop, 2026-08-05) and the
        blank .fmini (phone, 2026-08-13 round 5). */
-    /* FLATTENED same night (his mock: "no depth or stack") — the shadow
-       went with the fan; the glyph is outline + inframe + the two gap
-       dots, nothing else, centred in its box. Dropping the depth is what
-       makes the room: the card grew to 15×21 and the inframe breathes. */
+    /* FLATTENED same night (his mock: "no depth or stack"), then EMPTIED
+       on his follow-up ("lets have the card always empty like the mock
+       ... re use the empty card counter in the mobile header"): the
+       glyph IS the header's mtblank read — outline + inframe + the two
+       gap dots at the true fv3 aspect (15×22.5 ≈ the card's own .663) —
+       drawn rather than the literal .mtblank markup, because a nested
+       .d7f inside a card would take the hover dress rules and its
+       hard-coded ink could never flip white with the chip fill; the
+       one-color svg flips whole. The + is GONE (the .fplus group and
+       its :has stand-down retired) — the blank card alone is the rest,
+       round 5's own ruling back again. */
     const STACKSVG =
       '<svg class="fstack" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">' +
-        '<path fill-rule="evenodd" shape-rendering="crispEdges" d="M4.5 1.5h15v21h-15V1.5Z M6 3v18h12V3H6Z"/>' +
+        '<path fill-rule="evenodd" shape-rendering="crispEdges" d="M4.5 .75h15v22.5h-15V.75Z M6 2.25v19.5h12V2.25H6Z"/>' +
         '<path fill-rule="evenodd" shape-rendering="crispEdges" d="M7.5 4.5h9v15h-9V4.5Z M8.25 5.25v13.5h7.5V5.25Z"/>' +
         '<circle cx="7.9" cy="12" r="1.15"/><circle cx="16.1" cy="12" r="1.15"/>' +
-        '<g class="fplus">' +
-          '<rect shape-rendering="crispEdges" x="9" y="11.25" width="6" height="1.5"/>' +
-          '<rect shape-rendering="crispEdges" x="11.25" y="9" width="1.5" height="6"/>' +
-        '</g>' +
       '</svg>';
     /* THE CARD REMEMBERS ITS FACE (2026-08-17, Dylan: "keeps its last seen
        side across its versions") — session memory, board-id keyed, bottom-

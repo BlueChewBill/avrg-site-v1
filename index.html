@@ -2079,11 +2079,12 @@
       display: block; position: absolute; left: 100%;
       /* v-centered on the CARD PANEL, not top-aligned like the legacy
          columns (Dylan 2026-08-27). The card element wraps the panel in
-         --ogpt top padding (the JS scoot mirror) + a static 24px bottom
-         pad, so the panel's center from the card top is
-         (100% + --ogpt - 24px) / 2; translateY finishes the centering.
-         --ogColTop no longer touches the zone. */
-      top: calc((100% + var(--ogpt, 230px) - 24px) / 2);
+         --ogpt top padding (the JS scoot mirror) + --ogpb bottom padding
+         (the computed-pad mirror off the same observer — one source, so a
+         moved base pad can't drift the sheet), so the panel's center from
+         the card top is (100% + --ogpt - --ogpb) / 2; translateY finishes
+         the centering. --ogColTop no longer touches the zone. */
+      top: calc((100% + var(--ogpt, 230px) - var(--ogpb, 24px)) / 2);
       transform: translateY(-50%);
       margin-left: var(--ogZoneGap); width: var(--ogZoneW);
     }
@@ -16646,9 +16647,15 @@
        PANEL, but the card's padding-top is the JS-written scoot — CSS
        can't read it, so --ogpt mirrors it. A ResizeObserver, not a hook
        in the scoot's writer: padding moves the card's border box, so
-       every write lands here without touching placeDeck. */
+       every write lands here without touching placeDeck. --ogpb rides
+       the same observer (2026-08-28): the zone's centring calc needs the
+       card's bottom pad too, and mirroring the COMPUTED value keeps the
+       base 24px one source (the #lb .lb-card rule) instead of a magic
+       number repeated in the calc. Both land on lbCard — vars don't
+       inherit upward to #lb (the documented bite). */
     const ogptSync = () => {
       lbCard.style.setProperty("--ogpt", lbCard.style.paddingTop || "24px");
+      lbCard.style.setProperty("--ogpb", getComputedStyle(lbCard).paddingBottom || "24px");
     };
     new ResizeObserver(ogptSync).observe(lbCard);
 

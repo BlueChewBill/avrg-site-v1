@@ -168,6 +168,10 @@ subfolders; loose-file collections still rely on filename order alone.**
 
 `build_site.py` writes `site/img/thumb`, `site/img/full` and `site/data.js` and nothing else. `site/media/`, `site/fonts/`, `site/img/cards/` and the two logo PNGs are **committed assets** the build never touches — deleting `site/` and rebuilding does not bring them back. Re-run the build freely; just don't treat the whole folder as regenerable.
 
+## The lingering MCP Chrome hijacks Dylan's Dock relaunch (2026-08-29)
+
+The chrome-devtools MCP's Chrome (own profile at `~/.cache/chrome-devtools-mcp/chrome-profile`, headful) KEEPS RUNNING after verification wraps. If Dylan then quits his real Chrome and relaunches from the Dock, macOS fronts the still-running automation instance instead of starting his own — he sees an "empty Chrome with none of my info" and it reads like profile loss (it isn't; his profile is untouched, just not loaded). THE HABIT: when a verification stretch ends, check for and kill the MCP's instance (`ps aux | grep Chrome | grep chrome-devtools-mcp`, kill the main PID) — or at minimum warn him it's running before he touches his own Chrome. Identify it by the flag wall (`--disable-background-networking …`) + that user-data-dir; never kill a Chrome without checking `user-data-dir` first.
+
 ## Two sessions cannot share the chrome-devtools MCP profile — bring your own Chrome (2026-08-16)
 
 When two sessions verify at once, the chrome-devtools MCP's one fixed profile becomes a tug-of-war ("browser is already running" on every second call) — and pkilling through it kills the OTHER session's verification. THE ESCAPE: launch a PRIVATE headless Chrome (`--headless=new --remote-debugging-port=<own port> --user-data-dir=<scratchpad>/chrome-x`) and drive it with a ~40-line node CDP script — node ≥22 has WebSocket built in (`fetch /json/list → new WebSocket(target) → Runtime.evaluate {awaitPromise, returnByValue}`), zero dependencies, full rAF/IO/localStorage support — everything the pane can't do. Both A/B ports verified this way.

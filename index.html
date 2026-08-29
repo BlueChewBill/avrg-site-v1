@@ -1276,13 +1276,13 @@
   .st.gone { color: #8b8175; } .st.gone .dot { background: #8b8175; }
   @keyframes pulse { 50% { opacity: .35; } }
   .spark { color: #d8511f; font-size: 12px; line-height: 1; cursor: help; }
-  /* THE HIGHEST TIER (2026-08-29, Dylan's batch call): tier 2 wears the
-     drawn premium mark in INK, not the ✱'s accent orange — the top tier
-     out-ranks by weight, and the drawn object is the site's serious
-     voice. The svg sizes by width (font-size is inert on it); each seat
-     re-sizes it below like the ✱'s own seat rules. */
-  .spark.prem { color: #000; }
-  .spark.prem .pmark { display: block; width: 13px; height: 13px; }
+  /* THE MARK WARDROBE (2026-08-29, his collide verdict): the highest
+     tier (.prem) is the FILLED ✦ in ink — out-ranks the ✱ by weight,
+     bigger than the ✱'s own seat; tier 2 (.chipm) is the ✱ in the BLACK
+     CHIP costume, the site's emphasis dress. The tspark seats re-size
+     both in cqw below. */
+  .spark.prem { color: #000; font-size: 14px; }
+  .spark.chipm { background: #000; color: #fff; padding: 2px 3px; }
   .sold { opacity: .55; }
   .sold:not(.d7f):hover .stage img { transform: none !important; }
   .d7f.sold:hover .stage img { --bgrow: 1; }   /* fv3 composes its transform — killing it outright would drop the bot face's parked rotation */
@@ -1677,7 +1677,8 @@
      line, the lb spec line and the collapse's churn cells all carry it. */
   .du { font-size: .62em; text-transform: none; }
   .d7f .tspark { position: absolute; top: 13px; right: 14px; top: 5.6034cqw; right: 6.0345cqw; font-size: 12px; font-size: 5.1724cqw; z-index: 2; }
-  .d7f .tspark.prem .pmark { width: 12px; height: 12px; width: 5.1724cqw; height: 5.1724cqw; }
+  .d7f .tspark.prem { font-size: 15px; font-size: 6.4655cqw; }
+  .d7f .tspark.chipm { font-size: 10px; font-size: 4.3103cqw; padding: 2px 3px; padding: .8621cqw 1.2931cqw; }
   .d7f .fchip {
     position: relative; overflow: hidden;
     font-family: var(--mono); font-size: 8.5px; font-weight: 700;
@@ -1826,7 +1827,6 @@
   .card .st { font-size: 6px; gap: 4px; }
   .card .st .dot { width: 5px; height: 5px; }
   .card .spark { font-size: 9px; }
-  .card .spark.prem .pmark { width: 10px; height: 10px; }
   .card .d5 .info, .card .paper .info { padding: 8px 10px 10px; }
   .card .paper .info { padding-top: 0; }
   .card .d5 .nm, .card .paper .nm { font-size: 8px; }
@@ -6952,7 +6952,11 @@
        rounded / countersunk / finished"). The extras tier and the full
        tag language stay open (open-threads); this seeds tier 2 on his
        named batch. */
-    const JSPARK = { "HS 06": 2, "HS 07": 2, "HS 16": 2, "HS 17": 2, "HS 18": 2 };
+    /* RE-NUMBERED same night with his collide verdict so tier order IS
+       rank order: 3 = highest (the filled ✦, his pick) · 2 = the
+       black-chip ✱ (his second shelf: HS 08/10/14) · 1 = the ✱. */
+    const JSPARK = { "HS 06": 3, "HS 07": 3, "HS 16": 3, "HS 17": 3, "HS 18": 3,
+                     "HS 08": 2, "HS 10": 2, "HS 14": 2 };
     const JPEND = { "HS 02": 1 };
     const JGONE = { "CL 05": 1 };
     const PH_DIMS = { "OG 01": "33.5mm × 97.5mm" };   /* the demo string rides the dims grammar */
@@ -7043,19 +7047,23 @@
       };
     }
     const stHtml = m => '<span class="st ' + m.st + '"><span class="dot"></span>' + m.stTxt + '</span>';
-    /* THE HIGHEST TIER'S ICON — an INTERIM pick pending Dylan's collide
-       verdict (the countersink: the finish itself, a chamfered hole seen
-       from above — outer ring + the sunk hole). The mechanism is the
-       deliverable; the glyph is a skin, swap PREM_MARK to re-dress it. */
-    const PREM_MARK = '<svg class="pmark" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="8.75" fill="none" stroke="currentColor" stroke-width="2.5"/><circle cx="12" cy="12" r="3.4" fill="currentColor"/></svg>';
+    /* THE MARK WARDROBE (his collide verdict, 2026-08-29 same night):
+       tier 3 wears the FILLED ✦ in ink — the highest mark. Tier 2 wears
+       the ✱ in the BLACK CHIP costume (the site's emphasis dress).
+       Tier 1 keeps the accent ✱ (unheld today). The interim countersink
+       svg retired with the verdict. Tier-2/3 tooltip language is
+       placeholder — the tag wording is still the DM conversation. */
     const SPARK_TIP = ["", "Builder's mark — this one came out perfect",
+                       "Maker's mark — a cut above",
                        "Maker's mark, highest tier — absurdly well finished"];
+    const SPARK_GLYPH = ["", "✱", "✱", "✦"];
+    const SPARK_CLS = ["", "", " chipm", " prem"];
     /* ONE mark producer for both corner seats (the j-treatment corner and
-       the fv3 tspark corner) — the tier picks the glyph, the seat picks
-       the class */
+       the fv3 tspark corner) — the tier picks the glyph + dress, the
+       seat picks the class */
     const sparkSpan = (m, cls) => !m.spark ? "" :
-      '<span class="spark' + (cls ? " " + cls : "") + (m.spark === 2 ? " prem" : "") +
-      '" title="' + SPARK_TIP[m.spark] + '">' + (m.spark === 2 ? PREM_MARK : "✱") + '</span>';
+      '<span class="spark' + (cls ? " " + cls : "") + SPARK_CLS[m.spark] +
+      '" title="' + SPARK_TIP[m.spark] + '">' + SPARK_GLYPH[m.spark] + '</span>';
     const sparkHtml = m => m.spark ? " " + sparkSpan(m, "") : "";
     const soldCls = m => m.st === "gone" ? " sold" : "";
     const cornerHtml = m => '<div class="corner"><span class="wchip rfc">' + esc(m.ref) + '</span>' + sparkHtml(m) + '</div>';

@@ -186,32 +186,30 @@
      Overlays are measured/built by buildSeatFx() — engulf-only
      port; the lab's other costumes were comparison chrome, retired here. */
   .nbar { display: none; }
-  /* film-script, top right (2026-08-01, Dylan's ask): desktop drawn bar
-     only — ≤940's right edge belongs to the dm-mini/picon. Absolute like
-     the brand, so the flex line still centers it vertically for free. */
+  /* the deck's top-right seat: desktop drawn bar only — ≤940's right edge
+     belongs to the picon's own stack. Absolute like the brand, so the flex
+     line still centers it vertically for free. */
   .bar-script { display: none; }
   @media (min-width: 941px) {
     #topnav .tab, .topbar .dm-mini { display: none; }
     .nbar { display: contents; }
+    /* THE SEAT WEARS THE STACK (2026-08-28, Dylan's ruling: the deck-mark
+       glyph was "a bit too cryptic — the cards are the star of the show.
+       the stack is genuinely rad looking and easily read"). The phone
+       bar's card-stack indicator — the SAME .hpicks/.hpick fan, rendered
+       by renderPicks into a second container (#hpicks-d) — replaces the
+       drawn mark + naked #pcnt-d count; the stack's own .hcount corner
+       badge carries the number now. The job is unchanged: click toggles
+       the bay (the barScript block). Sizing kept at the phone's own —
+       the 39px stack box stands where the 38px mark did, so the brand's
+       mirror seat still mirrors. NO mobile choreography rides along:
+       the deal and the pick-flight target the PHONE container (#hpicks)
+       by id and cannot reach this one. */
     .bar-script {
-      display: flex; align-items: center; gap: 7px;
+      display: flex; align-items: center;
       position: absolute; right: clamp(18px, 3vw, 40px);
-      color: #fff;
     }
-    body.light .bar-script { color: #000; }
-    /* 38px = the .bar-brand logo's own size — Dylan's call (2026-08-05):
-       the deck mark is the brand's mirror seat and may outsize the organs */
-    .bar-script svg { width: 38px; height: 38px; display: block; }
-    /* the deck count stands beside the mark (2026-08-08, moved home when
-       the DECK organ retired): naked number, no badge — the phone picon's
-       no-pill law, same pair-reads-as-one-control reasoning. Two digits
-       reserved so the mark cannot shift when 9 becomes 10. */
-    .bar-script .pcnt {
-      font-family: var(--mono); font-size: 10px; font-weight: 700;
-      letter-spacing: 1.4px; color: #fff;
-      min-width: 2ch; text-align: center;
-    }
-    body.light .bar-script .pcnt { color: #000; }
+    .bar-script .hpicks { display: flex; }
     /* --dotpull: how far each flanking dot travels in toward the hovered
        word, and so how far the drawn card pulls inside the dots' rest
        posts. THE KNOB for the button's card-spacing read: 0 = the old
@@ -282,8 +280,9 @@
       letter-spacing: .18em; text-transform: uppercase;
       min-width: 4.5ch; text-align: center;
     }
-    /* the DECK organ's badge retired with the organ (2026-08-08) — the
-       count lives beside the bar-script mark now, styled below */
+    /* the DECK organ's badge retired with the organ (2026-08-08); its
+       count rode beside the bar-script mark until 2026-08-28, when the
+       seat took the card stack and the .hcount corner badge took the job */
     /* overflow HIDDEN on purpose: all seat geometry fits the bar-height box,
        and un-clipped stroke paint leaked a full-viewport vertical ghost line
        in Chrome 150 (header-lab lesson, GPU and software rasterizers both) */
@@ -1714,11 +1713,11 @@
      a centered vertical rail BROKEN at the mid dot (dash · dash — the
      drawer's resting signature, rails pulling back to the dot's own
      clearance), and a hard shadow thrown LEFT (the case's light; its
-     shelved cards throw left). ONE artwork in three seats (card chips,
-     the lb chip, the .bar-script drawer button — that one at 38px, the
-     brand logo's size) so the mark always means THE DECK; edit all
-     together. Fill artwork (evenodd ring) — rides the label's color
-     states. */
+     shelved cards throw left). ONE artwork in its seats (card chips + the
+     lb chip; the .bar-script bar seat traded the mark for the phone bar's
+     card stack 2026-08-28, Dylan's ruling — "a bit too cryptic") so the
+     mark always means THE DECK; edit the survivors together. Fill artwork
+     (evenodd ring) — rides the label's color states. */
   /* 18px = the header treatment carried down (2026-08-05, Dylan: same
      bigger-than-its-parts read as the bar's 38px-vs-word-organs) — the
      mark outsizes the want-word the way the bar mark outsizes the
@@ -5812,13 +5811,16 @@
   </script>
   <header class="topbar">
     <div class="bar-brand" id="bar-brand" title="AVRG"><img id="bar-logo" src="site/img/logo-circle.png" alt="AVRG" /></div>
-    <!-- the deck mark (AVRG card-between-dots, drawn in-house 2026-08-05;
-         replaced the phosphor film-script) — top right, the brand's mirror
-         seat. Its job is the drawer toggle (wired at the barScript block),
-         and since 2026-08-08 it carries the deck COUNT beside it — the bar's
-         DECK/DM organs retired, so this pair is the header's whole deck
-         story: mark + naked number, the phone picon's grammar. -->
-    <span class="bar-script" id="bar-script" aria-hidden="true"><svg viewBox="0 0 24 24" fill="currentColor"><path fill-rule="evenodd" shape-rendering="crispEdges" d="M6 2.5h13v19H6V2.5Z M7.4 4.3v15.4h10.2V4.3H7.4Z"/><rect shape-rendering="crispEdges" x="9.8" y="6.5" width="1.4" height="3"/><rect shape-rendering="crispEdges" x="9.8" y="14.5" width="1.4" height="3"/><circle cx="10.5" cy="12" r="1.2"/><path class="sh" shape-rendering="crispEdges" d="M3.5 4.5V23.5H16.5V21H6.5V4.5Z"/></svg><span class="pcnt" id="pcnt-d">0</span></span>
+    <!-- THE DECK'S SEAT WEARS THE STACK (2026-08-28, Dylan's ruling — the
+         in-house deck-mark glyph of 2026-08-05 was "a bit too cryptic; the
+         cards are the star of the show"): the phone bar's card-stack
+         indicator, same markup + CSS, rendered by renderPicks into this
+         second container. The SEAT keeps its id and its handlers — the bay
+         toggle, the inspection lean (the barScript block) — a change of
+         costume, not of job (the picon precedent). The count rides the
+         stack's own .hcount corner badge; the naked #pcnt-d number retired
+         with the mark. -->
+    <span class="bar-script" id="bar-script" aria-hidden="true"><span class="hpicks" id="hpicks-d" aria-hidden="true"></span></span>
     <nav id="topnav" style="display:contents"></nav>
     <!-- the drawn bar (desktop): three words between structural dots; the
          collections live in the COLLECTIONS drop (bar words picked
@@ -5866,8 +5868,9 @@
          lives at the spine, the lightbox and the footer.) -->
     <a class="picon" id="picon" href="#my-lisst" aria-label="My lisst">
       <!-- THE DECK MARK, replacing the receipt glyph (2026-08-06). Same
-           artwork as the bar's .bar-script and the card chips' .fscript —
-           this is now a FIFTH seat for it, so edit them together. The receipt
+           artwork as the card chips' .fscript, so edit them together (the
+           bar's .bar-script seat traded it for the card stack 2026-08-28;
+           this seat has stood down behind the stack since round 6). The receipt
            was a stand-in from the dock scoping, chosen when the count badge
            was doing the cart work; the mark says "deck" in the site's own
            vocabulary instead of borrowing a shopping metaphor. -->
@@ -9121,6 +9124,12 @@
        the blank card IS the empty state, and its tap opens the empty picks
        page, which says the same thing in words.) */
     const hpicksEl = document.getElementById("hpicks");
+    /* THE DESKTOP SEAT (2026-08-28): the drawn bar's top-right deck door
+       wears the same stack — a second container inside #bar-script.
+       renderPicks writes both; everything ceremonial (the deal's
+       clearMinis, pickCatch's aim) stays scoped to the PHONE container
+       (hpicksEl) by id, so no mobile choreography can reach this one. */
+    const hpicksDEl = document.getElementById("hpicks-d");
     /* THE STACK IS EMPTY ON YOUR PICKS (2026-08-15, Dylan's rule: "the
        mini cards up top feel like actual cards. so you deal them and now
        there are none up top... a move anywhere else should repopulate
@@ -9165,10 +9174,9 @@
        place that knows how tall that ladder should be. */
     const HPICK_MAX = 4;
     function renderPicks() {
-      if (!hpicksEl) return;
-      if (stackDealtAway()) { hpicksEl.innerHTML = ""; return; }
+      if (!hpicksEl && !hpicksDEl) return;
       const shown = [...myLisst].reverse().slice(0, HPICK_MAX);
-      hpicksEl.innerHTML = myLisst.length
+      const html = myLisst.length
         ? shown.map((id, i) => {
             const { c, b, k } = BOARD_INDEX[id];
             return '<i class="hpick" style="--i:' + i + ';z-index:' + (shown.length - i) + '">' +
@@ -9190,6 +9198,11 @@
               '<div class="stage"></div>' +
             '</div></div>' +
           '</i><span class="hcount">0</span>';
+      /* the dealt-away state empties the PHONE stack only — it is the
+         picks page's ceremony (and stackDealtAway is dockActive()-gated
+         anyway); the desktop seat has no deal to honour */
+      if (hpicksEl) hpicksEl.innerHTML = stackDealtAway() ? "" : html;
+      if (hpicksDEl) hpicksDEl.innerHTML = html;
       /* THE MINIS LOAD EAGER (2026-08-16, his catch: "a routed board turns
          to a blank mini in the hand shaped section"). The template's lazy
          img is a 0×0 box until it loads (auto-sized absolute, no intrinsic
@@ -9201,13 +9214,14 @@
       /* :not(.fface) — the flip chip's mini is display:none at mini scale
          (the proportion law); eager ignores visibility, so without the
          guard every stack mini would download its board's OTHER face too */
-      hpicksEl.querySelectorAll("img[loading='lazy']:not(.fface)").forEach(i => { i.loading = "eager"; });
+      [hpicksEl, hpicksDEl].forEach(el => {
+        if (el) el.querySelectorAll("img[loading='lazy']:not(.fface)").forEach(i => { i.loading = "eager"; });
+      });
     }
     function lisstTab() {
       navLisst.textContent = "My Lisst" + (myLisst.length ? " (" + myLisst.length + ")" : "");
-      /* the drawn bar's LISST badge rides the same update */
-      const pcd = document.getElementById("pcnt-d");
-      if (pcd) pcd.textContent = myLisst.length;
+      /* (#pcnt-d retired 2026-08-28 with the bar's deck-mark glyph — the
+         desktop count rides the stack's .hcount, written by renderPicks) */
       const pc = document.getElementById("pcnt");
       if (pc) pc.textContent = myLisst.length;
       renderPicks();
@@ -15030,10 +15044,12 @@
       if (e.animationName === "headDraw") bayHead.classList.add("hdrawn");
     });
 
-    /* the film-script glyph gets its parked job (2026-08-01 intent note:
-       "could be the eventual drawer button"): it toggles the deck — the
-       drawer's always-visible twin, since proximity was its only door.
-       Still no hover fx on purpose; that costume is undesigned. */
+    /* the deck's top-right seat toggles the deck — the drawer's
+       always-visible twin, since proximity was its only door (the 2026-08-01
+       intent note, made real). Since 2026-08-28 the seat wears the phone
+       bar's card stack instead of the mark glyph (Dylan's ruling — the
+       costume changed, this wiring did not). Still no hover fx on purpose;
+       that costume is undesigned. */
     const barScript = document.getElementById("bar-script");
     if (barScript) {
       barScript.removeAttribute("aria-hidden");

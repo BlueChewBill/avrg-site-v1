@@ -2729,14 +2729,13 @@
      and where you want the eye anyways." The slab stays STATIC — the
      board's grow/sun family is the only hover answer, the panel holds
      still. The rules live in b0ba3a1 if the idea ever comes back.) */
-  /* THE PINCH'S STAGE (2026-08-17 — the board-only zoom): per-frame writes
-     ride muted transitions (suntrack's touch cousin), and the panel's
-     load-bearing clip OPENS for the session so the lifted board can
-     outgrow the card under the fingers — the clip returns at release.
-     The parked flip face stays hidden through it: its z−1 rides paint
-     order against the panel's background, not the clip. */
-  #lb.fv3 .lb-card.pzoom .frame img { transition: none; }
-  #lb.fv3 .lb-card.pzoom .panel { overflow: visible; }
+  /* (THE PINCH'S STAGE — RETIRED 2026-08-28 with the whole-card pinch:
+     the board-only zoom's .pzoom rules (img transition mute + the panel
+     clip opening so the lifted board could outgrow the card) went with
+     the class. The whole card scales now — nothing outgrows the panel,
+     no per-frame img writes to mute; the session's transition mute rides
+     inline on #lb-card at the pinch machine. The board-only build lives
+     in git before this commit if it ever comes back.) */
   /* ---- UNDERSIDES: the lb card runs the CAROUSEL (the behind-the-back
      switch — lb-only, it needs the lateral room). Dylan's landed sketch
      (re-drawn 2026-07-26 — the lab's symmetric far-station excursion
@@ -11845,7 +11844,10 @@
         lbCard.style.transition = "transform .3s cubic-bezier(.22,1,.36,1)";
         lbCard.style.transform = "";
         setTimeout(() => {
-          if (performance.now() - slideT > 600) lbCard.style.transition = "";
+          /* pzLive: the pinch holds the card's inline mute for its whole
+             session (the card IS its target now) — clearing it here would
+             hand per-frame zoom writes to the base .55s transition */
+          if (!pzLive && performance.now() - slideT > 600) lbCard.style.transition = "";
         }, 340);
         return;
       }
@@ -11864,34 +11866,44 @@
        zoom session can never read as a board-flip tap. closeLb and
        slideExchange reset the pose FIRST — a flight measured off a zoomed
        rect lands wrong. */
-    /* THE PINCH LIFTS THE BOARD, NOT THE CARD (2026-08-17, Dylan: "make
-       the board the only thing that zooms and have its shadow reflect
-       that"; round 2 same day: "inherit the board's desktop hover grow,
-       but not its shadow movement in comparison to the cursor / sun").
-       The card and its chrome stay seated; the VISIBLE FACE scales about
-       the pinch's own point, and the shadow is the GROW STATE'S OWN —
-       blift's deeper throw, untouched, riding the transform so board and
-       shadow scale as one silhouette. No hand-written shadow: a dynamic
-       throw double-scales under the transform and walks out of the
-       filter's raster region (the wonky-blob lesson, in the move
-       handler). Seeding compensates the origin move against the live
-       blift pose (translate = (s−1)(O−C)) so nothing jumps at first
-       touch, and the retreat eases to that same compensated rest before
-       the muted final clear. */
+    /* THE PINCH GRABS THE WHOLE CARD (2026-08-28, Dylan — the pinch takes
+       the entire card as one object, chip + frame + chrome together, "to
+       prevent" the board-only zoom's awkward stray states. This REVERSES
+       the 2026-08-17 board-only ruling; that build lives in git before
+       this commit). The target is #lb-card ITSELF, not .panel: the card
+       is ALREADY a stacking context (position:relative + z-index:1), so
+       the parked flip face's z−1 keeps hiding under the panel's white —
+       a .panel transform would mint a NEW context and hoist that leg
+       over its own background (the flipland comment's law). The exchange
+       slide and the swipe drag write this same element's transform, so
+       ORDER is the contract: the seed re-baselines to rest under a mute
+       (a parked swipe offset jumps home — the swallowed-jump precedent),
+       and pinchReset runs FIRST in closeLb/slideExchange — including on
+       a card still easing through the retreat's 400ms window (pzRet),
+       because the flight math measures the panel INSIDE this transform.
+       blift stays the img's own and scales along inside the card —
+       board, chrome and shadow move as one silhouette; no hand-written
+       shadow (the wonky-blob lesson stands). The session holds an INLINE
+       transition mute end to end (the swipe-drag idiom — .lb-card's base
+       .55s would trail every per-frame write); the retreat's eased .38s
+       swaps over it, and the final clear hands the "" back. Seeding
+       still compensates the origin move against the live pose
+       (translate = (s−1)(O−C)) — the card rests untransformed so it
+       degenerates to zero today, kept generic so a future resting
+       transform can't jump at first touch. */
     let pz = null, pzLive = false, pzScale = 1, pzX = 0, pzY = 0, pzT = 0,
-        pzImg = null, pzBase = 1, pzC = { x: 0, y: 0 };
+        pzEl = null, pzRet = null, pzBase = 1, pzC = { x: 0, y: 0 };
     function pinchReset() {
-      if (!pzLive) return;
+      if (!pzLive && !pzRet) return;
       pz = null; pzLive = false; pzScale = 1; pzX = 0; pzY = 0;
-      lbCard.classList.remove("pzoom");
-      if (pzImg) {
-        pzImg.style.transition = "none";
-        pzImg.style.transform = "";
-        pzImg.style.filter = "";
-        pzImg.style.transformOrigin = "";
-        void pzImg.offsetWidth;
-        pzImg.style.transition = "";
-        pzImg = null;
+      const el = pzEl || pzRet;
+      pzEl = null; pzRet = null;
+      if (el) {
+        el.style.transition = "none";
+        el.style.transform = "";
+        el.style.transformOrigin = "";
+        void el.offsetWidth;
+        el.style.transition = "";
       }
     }
     lb.addEventListener("touchstart", e => {
@@ -11902,30 +11914,31 @@
       const a = e.touches[0], b = e.touches[1];
       const mx = (a.clientX + b.clientX) / 2, my = (a.clientY + b.clientY) / 2;
       if (!pzLive) {
-        pzImg = document.getElementById(lbCard.classList.contains("flipped") ? "lb-bot" : "lb-big");
-        /* a re-pinch mid-retreat inherits inline pose + transition — clear
-           to the CSS rest under a mute first, so every baseline below reads
-           the true resting pose (no-op on a rest-state first touch) */
-        pzImg.style.transition = "none";
-        pzImg.style.transform = "";
-        pzImg.style.filter = "";
-        pzImg.style.transformOrigin = "";
-        void pzImg.offsetWidth;
-        pzImg.style.transition = "";
-        const r = pzImg.getBoundingClientRect();
-        if (!r.width) { pzImg = null; return; }
-        /* origin in the img's LOCAL (unscaled) space; the rect is scaled */
-        const w0 = pzImg.offsetWidth, h0 = pzImg.offsetHeight;
+        pzEl = lbCard; pzRet = null;   /* an in-flight retreat hands the card straight back */
+        /* a re-pinch mid-retreat inherits inline pose + transition — and a
+           swipe hand-off can park a translateX here — clear to the CSS
+           rest under a mute first, so every baseline below reads the true
+           resting pose (no-op on a rest-state first touch). The mute
+           HOLDS for the session: the per-frame writes below must not ride
+           .lb-card's base .55s transition */
+        pzEl.style.transition = "none";
+        pzEl.style.transform = "";
+        pzEl.style.transformOrigin = "";
+        void pzEl.offsetWidth;
+        const r = pzEl.getBoundingClientRect();
+        if (!r.width) { pzEl.style.transition = ""; pzEl = null; return; }
+        /* origin in the card's LOCAL (unscaled) space; the rect is scaled */
+        const w0 = pzEl.offsetWidth, h0 = pzEl.offsetHeight;
         const lx = (mx - r.left) * (w0 / r.width), ly = (my - r.top) * (h0 / r.height);
-        /* seed from the LIVE pose (blift's 1.07 rides here) — and moving
-           the origin re-anchors that scale, so the compensating translate
-           (s−1)(O−C) keeps the screen pose identical at first touch */
-        const t = getComputedStyle(pzImg).transform;
+        /* seed from the LIVE pose — moving the origin re-anchors any
+           resting scale, so the compensating translate (s−1)(O−C) keeps
+           the screen pose identical at first touch (reads 1 today: blift
+           lives on the img and scales along INSIDE the card) */
+        const t = getComputedStyle(pzEl).transform;
         pzBase = t === "none" ? 1 : (new DOMMatrix(t)).a || 1;
         pzC = { x: (pzBase - 1) * (lx - w0 / 2), y: (pzBase - 1) * (ly - h0 / 2) };
-        pzImg.style.transformOrigin = lx + "px " + ly + "px";
+        pzEl.style.transformOrigin = lx + "px " + ly + "px";
         pzScale = pzBase; pzX = pzC.x; pzY = pzC.y;
-        lbCard.classList.add("pzoom");   /* mutes img transitions + opens the panel window */
         pzLive = true;
       }
       pz = {
@@ -11934,7 +11947,7 @@
       };
     }, { passive: true });
     lb.addEventListener("touchmove", e => {
-      if (!pz || !pzImg || e.touches.length < 2) return;
+      if (!pz || !pzEl || e.touches.length < 2) return;
       pzT = performance.now();
       e.preventDefault();   /* ours end to end — no page zoom, no scroll */
       const a = e.touches[0], b = e.touches[1];
@@ -11943,15 +11956,14 @@
       pzScale = Math.min(pzBase * 3, Math.max(pzBase, pz.s0 * (d / pz.d0)));
       pzX = pz.x0 + (mx - pz.mx);
       pzY = pz.y0 + (my - pz.my);
-      /* TRANSFORM ONLY — the shadow is the grow state's own (his round-2
-         call: "inherit the board's desktop hover grow, but not its shadow
-         movement"). A filter shadow rides the transform, so the blift
-         throw scales WITH the board as one silhouette — depth for free.
-         The first cut hand-wrote a deepening, planted throw here and it
+      /* TRANSFORM ONLY — every shadow in the card (the panel slab, the
+         board's blift throw) rides the transform and scales WITH the card
+         as one silhouette, depth for free. No hand-written shadow: the
+         board-only build's first cut planted one here and it
          DOUBLE-SCALED (inline px × pinch scale ≈ 100px visual) straight
-         out of the filter's raster region: the giant blob with the hard
+         out of the filter's raster region — the giant blob with the hard
          cut edge and staircase pixels on his HS 01 screenshot. */
-      pzImg.style.transform = "translate(" + pzX + "px," + pzY + "px) scale(" + pzScale + ")";
+      pzEl.style.transform = "translate(" + pzX + "px," + pzY + "px) scale(" + pzScale + ")";
     }, { passive: false });
     function pzEnd(e) {
       if (!pzLive) return;
@@ -11960,23 +11972,25 @@
       /* input clear: the retreat, always — eased to the COMPENSATED rest
          (the origin is still at the pinch point, so a bare "" would land
          (s−1)(O−C) off and jump when the origin cleared); the muted final
-         clear at 400ms swaps to the true CSS pose with zero visual delta */
+         clear at 400ms swaps to the true CSS pose with zero visual delta.
+         pzRet holds the card through the window so pinchReset can still
+         catch a mid-retreat close/exchange — the flight measures HERE. */
       pz = null; pzLive = false; pzScale = 1; pzX = 0; pzY = 0;
       swcAte = performance.now();   /* the lift-off must not tap the board */
-      const img = pzImg, rx = pzC.x, ry = pzC.y, rs = pzBase;
-      pzImg = null;
-      if (!img) return;
-      lbCard.classList.remove("pzoom");   /* the panel's clip returns */
-      img.style.transition = "transform .38s cubic-bezier(.22,1,.36,1)";
-      img.style.transform = "translate(" + rx + "px," + ry + "px) scale(" + rs + ")";
+      const el = pzEl, rx = pzC.x, ry = pzC.y, rs = pzBase;
+      pzEl = null;
+      if (!el) return;
+      pzRet = el;
+      el.style.transition = "transform .38s cubic-bezier(.22,1,.36,1)";
+      el.style.transform = "translate(" + rx + "px," + ry + "px) scale(" + rs + ")";
       setTimeout(() => {
-        if (pzLive || pzImg) return;   /* a re-pinch took the img back */
-        img.style.transition = "none";
-        img.style.transform = "";
-        img.style.filter = "";
-        img.style.transformOrigin = "";
-        void img.offsetWidth;
-        img.style.transition = "";
+        if (pzLive || pzEl || pzRet !== el) return;   /* a re-pinch or a reset took the card back */
+        pzRet = null;
+        el.style.transition = "none";
+        el.style.transform = "";
+        el.style.transformOrigin = "";
+        void el.offsetWidth;
+        el.style.transition = "";
       }, 400);
     }
     lb.addEventListener("touchend", pzEnd, { passive: true });

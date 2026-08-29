@@ -48,7 +48,7 @@ The pre-posting little-fixes batch ran as a full dispatch (worktree agents, six-
 - **+List on-state border** never gets its accent (a light-retire specificity loser, pre-existing): `body.light .lb-list-btn` outranks `.lb-list-btn.on`'s currentColor. One-selector fix on his word; sits beside the parked `.lb-thumbs img.on` accent wrinkle (same class of loser, manifest-documented as his call).
 - **The stack seat's optics:** review flagged it ~25px right of the old glyph's left edge with a smaller click target; the cartographer measured the seat centres mirroring perfectly at 1920. Judge on glass.
 - **LINK-PREVIEW META TAGS — the one Sunday-critical unstarted item** (his "for later"): zero og:/twitter:/description tags; the posted link renders bare. Needs a 1200×630 share image (covercard poster or board shot + logo are the on-hand candidates).
-- The deckmark cleanup chip (phone bar's dead mark costume) runs in its own session; merges whenever it lands.
+- The deckmark cleanup chip (phone bar's dead mark costume) runs in its own session; merges whenever it lands. **CAVEAT minted 2026-08-29 (the add-chip redesign): #picon's .deckmark svg is now the ONLY copy of the deck-mark artwork in the file (the bar seat and the add chip both retired theirs) — if that cleanup deletes it, the artwork leaves the repo entirely; review its diff with that in mind.**
 
 ## THE WEEKEND QUEUE (Dylan, 2026-08-28) — three named jobs
 

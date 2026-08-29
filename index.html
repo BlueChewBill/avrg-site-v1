@@ -2719,6 +2719,57 @@
     #lb.fv3 .lb-card.blift .frame img { transition-property: transform; }
     @media (hover: hover) { #lb.fv3 .lb-card .panel:hover .frame img { transition-property: transform; } }
   }
+  /* T7d — THE SHADOW BECOMES ITS OWN ELEMENT (2026-08-29, supersedes
+     T7c's park for the DESKTOP lb). Upstream: WebKit bug #207586 (dup
+     #287449 — img + drop-shadow + scale + transition): on an INCREMENTAL
+     repaint the filter is fed a partial source rect whose cut edges are
+     opaque, so the shadow gains a hard rectangular chunk fused into the
+     silhouette (Dylan's post-T7c glass) — fixed on trunk 2026-05-17,
+     ships ~Safari 27. No filter write path is safe while a corrupt
+     raster can be produced mid-track, so on desktop WebKit the board img
+     computes NO drop-shadow at all: #lb-shadow, a duplicate board img
+     (src synced by sunShadowSync), wears a CONSTANT brightness(0) at
+     opacity .3 — the same black-at-30% the rgba throw painted, hard
+     silhouette, no blur (the house throw has none) — and is only ever
+     MOVED by transform/opacity, both composited: the filtered raster
+     paints once per src and never repaints incrementally, which is the
+     beat the bug needs. Gates: the T7 @supports probe (Chrome parses it
+     false — the whole block is dead there) AND hover+941 so the PHONE
+     path (blift dress, T7-stepped, healed) is untouched — an iPhone
+     never matches hover:hover. Rest/hover mirror the two filter states:
+     hover = the .94s grow's throw × 1.08, because the filter path
+     painted its offset in the img's local space and the scale multiplied
+     it (calibrated against shipped Chrome). z-index 1 = the throw's
+     shipped paint rung (over the z0 text, under the live face; the
+     parked flip face keeps its z−1-behind-panel trick, and .panel still
+     gains no stacking context — the filter's context lives on the
+     shadow itself, same as it did on the img). #lb.caring's `.frame
+     img` hide covers this img too, so the flip clones still perform
+     alone. EXIT: when Safari 27 is the floor, this fork + the JS half
+     at sunRelease can retire. */
+  #lb-shadow { display: none; pointer-events: none; }
+  @supports (background: -webkit-named-image(i)) {
+    @media (hover: hover) and (min-width: 941px) {
+      #lb.fv3 .lb-card .frame img { filter: none; }
+      #lb.fv3 .lb-card .panel:hover .frame img { filter: none; }
+      #lb.fv3 .lb-card #lb-shadow {
+        display: block;
+        filter: brightness(0);
+        opacity: .3;
+        z-index: 1;
+        will-change: transform;
+        transform: translate(7px, 9px);
+        transform: translate(3.0172cqw, 3.8793cqw);
+        transition: transform .3s ease;
+      }
+      #lb.fv3 .lb-card .panel:hover #lb-shadow {
+        transform: translate(11.88px, 15.12px) scale(1.08);
+        transform: translate(5.1207cqw, 6.5173cqw) scale(1.08);
+        transition: transform .94s ease;
+      }
+      #lb.fv3 .lb-card.suntrack #lb-shadow { transition-property: none; }
+    }
+  }
   /* while the lb sun is live it owns the img's WHOLE pose — shadow (filter)
      AND transform (the gravity pull composes with the 1.08 grow, and a
      transition restarted every pointermove trails the hand) — so nothing
@@ -6029,7 +6080,7 @@
              costume — populate feeds the mini whichever face is hidden;
              no src attr at rest (src="" would request the page) -->
         <button class="fflipc lb-fv3only" id="lb-flipc" type="button" aria-label="Flip the board"><img class="fface" id="lb-fface" alt=""></button>
-        <div class="frame"><div class="flipbox"><img id="lb-big" class="top" src="" alt="" title="View the whole collection" /><img id="lb-bot" class="bot" src="" alt="" aria-hidden="true" /></div></div>
+        <div class="frame"><img id="lb-shadow" alt="" aria-hidden="true" /><div class="flipbox"><img id="lb-big" class="top" src="" alt="" title="View the whole collection" /><img id="lb-bot" class="bot" src="" alt="" aria-hidden="true" /></div></div>
         <div class="info lb-fv3only"><span class="nm"><span class="nmt" id="lb-fv3-nmt"></span></span></div>
         <button class="fchip fc-list d7f-cta lb-fv3only" id="lb-fv3-list" type="button"><span class="fl"><span class="ft"></span><svg class="fscript" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path fill-rule="evenodd" shape-rendering="crispEdges" d="M6 2.5h13v19H6V2.5Z M7.4 4.3v15.4h10.2V4.3H7.4Z"/><rect shape-rendering="crispEdges" x="9.8" y="6.5" width="1.4" height="3"/><rect shape-rendering="crispEdges" x="9.8" y="14.5" width="1.4" height="3"/><circle cx="10.5" cy="12" r="1.2"/><path class="sh" shape-rendering="crispEdges" d="M3.5 4.5V23.5H16.5V21H6.5V4.5Z"/></svg><span class="fmini" aria-hidden="true"></span></span></button>
         <span class="fst lb-fv3only avail" id="lb-fv3-st"><span class="dot"></span><span class="sttxt" id="lb-fv3-sttxt"></span></span>
@@ -11026,6 +11077,7 @@
           });
         });
       }
+      sunShadowSync();   /* T7d: the WebKit shadow element wears this populate's face */
       cur = { ci, k, j };
       renderNeighbors(ci, k);
       /* a mid-inspection populate (deck exchange, settle) resets the reads to
@@ -11622,54 +11674,69 @@
          from the shadow offset and it stays planted while the board
          slides over it (the drift becomes board-vs-shadow parallax).
          ground < 1 leaves a whisper of follow so they stay related. */
-      sunImg.style.filter = "drop-shadow(" + ((sunX * f - pullX * SUN.ground) * sunS).toFixed(2) + "px "
-        + ((sunY * f - pullY * SUN.ground) * sunS).toFixed(2) + "px 0 rgba(0,0,0," + sunA.toFixed(3) + "))";
+      if (sunWK) {
+        /* T7d: the shadow is its own ELEMENT here (see the block at
+           sunRelease) — same five channels, restated as geometry: the
+           filter path painted its (dx,dy) in the img's local space and
+           the grow scaled it, so the element's translate = board
+           translate + grow × (dx,dy); the ink rides element opacity
+           (black at opacity ≡ the rgba alpha); the grow rides scale. */
+        sunShadow.style.transform = "translate("
+          + ((pullX + sunSc * (sunX * f - pullX * SUN.ground)) * sunS).toFixed(2) + "px,"
+          + ((pullY + sunSc * (sunY * f - pullY * SUN.ground)) * sunS).toFixed(2)
+          + "px) scale(" + sunSc.toFixed(4) + ")";
+        sunShadow.style.opacity = sunA.toFixed(3);
+      } else {
+        sunImg.style.filter = "drop-shadow(" + ((sunX * f - pullX * SUN.ground) * sunS).toFixed(2) + "px "
+          + ((sunY * f - pullY * SUN.ground) * sunS).toFixed(2) + "px 0 rgba(0,0,0," + sunA.toFixed(3) + "))";
+      }
       sunImg.style.transform = "translate(" + (pullX * sunS).toFixed(2) + "px," + (pullY * sunS).toFixed(2) + "px) scale(" + sunSc.toFixed(4) + ")";
       sunRaf = requestAnimationFrame(sunFrame);
     }
-    /* T7c — THE AUTHORITY NEVER SWAPS (2026-08-28, supersedes T7b's
-       reraster nudge — the teardown/rebuild heal is retired). Mac
-       Safari's corrupt beat was the sun's release: the one moment filter
-       authority swapped from the inline per-frame writes back to CSS
-       (value-identical by construction, yet Safari carried a corrupt
-       raster across the swap). T7b healed AFTER the fact — the corrupt
-       frame still flashed for a beat before the rebuild, and the flip
-       left thin tile remnants (Dylan's real-glass verdict). Prevention
-       instead: on WebKit a real sun session ends with the inline filter
-       PARKED at the house rest shadow, stated in the CSS rule's own cqw
-       units — value-identical to `.d7f .frame img`'s rest declaration at
-       any card size, so a later resize/exchange/pinch can never strand a
-       stale px park (keep SUN_PARK in lockstep with that rule). The
-       compositor only ever sees inline→inline value updates — the same
-       clean path every tracking frame takes; the swap beat no longer
-       exists. Leak audit (a parked inline filter stomps any CSS filter
-       owner on the img):
-       - sold grayscale: the hero card never wears .sold (populate
-         toggles d7f/canflip/flip only; the sold dress lives on grid +
-         flank cards, whose imgs the sun never poses) — no carve needed.
-       - the softout close dress's .93s filter arm serves the PHONE's
-         blift drain, and the sun (so the park) never arms on touch. A
-         desktop close with a park just holds the rest shadow through
-         the flight — invisible under the close dress.
-       - populate clears both faces' inline filter (the one other
-         writer) under the same-task src swap, so no park outlives its
-         board and no stale raster exists to carry.
-       - the defensive sunRelease calls (nav/close with nothing armed)
-         leave a standing park ALONE on WebKit — clearing it would BE
-         the authority swap this fix removes.
-       WebKit only, same probe as the T7 CSS gate; Chrome keeps the
-       shipped clear-to-CSS release, byte-identical behavior. */
+    /* T7d — THE SHADOW BECOMES ITS OWN ELEMENT (2026-08-29, supersedes
+       T7c's SUN_PARK — the park is retired). T7c kept the img's filter
+       authority from ever swapping, but a raster corrupted DURING
+       tracking then parked forever with no repaint to flush it (Dylan's
+       post-T7c glass: the rect chunk fused into a settled silhouette).
+       Upstream it's WebKit bug #207586 (dup #287449): an incremental
+       repaint feeds the filter a partial source rect — fixed on trunk
+       2026-05-17, ships ~Safari 27 — so no schedule of drop-shadow
+       writes on the img is safe. On desktop WebKit the img never
+       computes a drop-shadow at all (the T7d CSS block kills every
+       arm): #lb-shadow, a duplicate board img dressed by a CONSTANT
+       brightness(0) + opacity .3 (≡ the rgba(0,0,0,.3) throw, hard
+       silhouette, no blur), sits behind the live face and is only ever
+       MOVED — transform + opacity are composited, so its filtered
+       raster paints once per src and never repaints incrementally,
+       which is the beat the bug needs. sunFrame routes the five SUN
+       channels (values untouched — bench law) into it: DIRECTION/LIFT/
+       GROUND → translate (× grow, the filter's local-space scaling
+       restated), PULL → added to the translate (the board's own ride),
+       INK → opacity, GROW → scale. Release clears the element back to
+       the CSS rest pose — a TRANSFORM authority swap, the same one the
+       board img takes on every release, with no filter raster in play.
+       The T7c leak audit still holds where it matters (the hero never
+       wears .sold; the phone never arms the sun and keeps its whole
+       blift/softout filter dress — the CSS gate's hover+941 media
+       excludes it by construction). Chrome: sunWK false, the shipped
+       filter path byte-identical. EXIT: when Safari 27 is the floor,
+       this fork + the T7d CSS block can retire. */
     const sunWK = CSS.supports("background: -webkit-named-image(i)");
-    const SUN_PARK = "drop-shadow(3.0172cqw 3.8793cqw 0 rgba(0, 0, 0, .3))";
+    const sunShadow = document.getElementById("lb-shadow");
+    /* the shadow wears the POSED face's pixels — populate, the thumb
+       swaps and the flip landing re-aim sunImg then call this. A src
+       swap is the one sanctioned repaint: a whole fresh raster. */
+    function sunShadowSync() {
+      if (!sunWK) return;
+      const s = sunImg.getAttribute("src");
+      if (s) { if (sunShadow.getAttribute("src") !== s) sunShadow.src = s; }
+      else sunShadow.removeAttribute("src");   /* the src="" law */
+    }
     function sunRelease() {
-      const had = !!sunRaf;   /* a real sun session ends here — the nav/close
-                                 paths also call this defensively with nothing
-                                 armed, and the phone must never gain a park
-                                 (the blift dress owns the phone shadow in CSS) */
       if (sunRaf) cancelAnimationFrame(sunRaf);
       sunRaf = 0; sunOn = false; sunLift = 0; sunSc = 1; sunA = .3; sunAT = .3;
       sunP1X = 0; sunP1Y = 0; sunP2X = 0; sunP2Y = 0; sunD = 0;
-      if (sunWK) { if (had) sunImg.style.filter = SUN_PARK; }
+      if (sunWK) { sunShadow.style.transform = ""; sunShadow.style.opacity = ""; }
       else sunImg.style.filter = "";
       sunImg.style.transform = "";
       lbCard.classList.remove("suntrack");
@@ -11696,13 +11763,23 @@
           /* fresh takeover: seed shadow AND pose from wherever CSS has them
              right now (mid-.94s-grow included), so nothing jumps */
           sunS = pr.width / 232;
-          /* computed format puts the color first — lazy-scan to the first
-             "Npx Npx" pair (color channels are unitless, no false match) */
-          const m = /drop-shadow\(.*?(-?[\d.]+)px\s+(-?[\d.]+)px/.exec(getComputedStyle(sunImg).filter);
-          sunX = m ? +m[1] / sunS : 7; sunY = m ? +m[2] / sunS : 9;
           const t = getComputedStyle(sunImg).transform;
           const mx = new DOMMatrix(t === "none" ? undefined : t);
           sunSc = mx.a || 1; sunP1X = mx.e / sunS; sunP1Y = mx.f / sunS; sunP2X = 0; sunP2Y = 0;
+          if (sunWK) {
+            /* T7d seed: no drop-shadow to read on WebKit — recover the
+               throw from the shadow ELEMENT's live transform instead
+               (mid-.94s hover glide included): screen offset = shadow
+               translate − board translate, unscaled by grow × card px */
+            const st = getComputedStyle(sunShadow).transform;
+            const sm = new DOMMatrix(st === "none" ? undefined : st);
+            sunX = (sm.e - mx.e) / (sunSc * sunS); sunY = (sm.f - mx.f) / (sunSc * sunS);
+          } else {
+            /* computed format puts the color first — lazy-scan to the first
+               "Npx Npx" pair (color channels are unitless, no false match) */
+            const m = /drop-shadow\(.*?(-?[\d.]+)px\s+(-?[\d.]+)px/.exec(getComputedStyle(sunImg).filter);
+            sunX = m ? +m[1] / sunS : 7; sunY = m ? +m[2] / sunS : 9;
+          }
           lbCard.classList.add("suntrack");
           sunRaf = requestAnimationFrame(sunFrame);
         }
@@ -11869,6 +11946,7 @@
         const b = COLLECTIONS[cur.ci].boards[cur.k];
         setFlip(lbCard, false, true);
         lbBig.src = CUT(b);
+        sunShadowSync();
         lbBig.title = "View the whole collection";
         cur.j = 0;
         lbThumbs.querySelectorAll("img").forEach(t => t.classList.toggle("on", t.dataset.j === "c"));
@@ -11880,6 +11958,7 @@
       lbBig.title = "View the whole collection";
       const b = COLLECTIONS[cur.ci].boards[cur.k];
       lbBig.src = IMG(b.photos[+j]);
+      sunShadowSync();
       cur.j = +j;
       lbThumbs.querySelectorAll("img").forEach(t => t.classList.toggle("on", t.dataset.j === j));
     });
@@ -16049,7 +16128,7 @@
       if (silent) {
         card.classList.remove("unflipped", "flipping", "fset");
         if (nmt) { clearInterval(nmt._t); nmt.textContent = nmt.dataset.nm; }
-        if (card === lbCard) { lb.classList.remove("caring"); delete lb.dataset.car; sunImg = lbBig; }
+        if (card === lbCard) { lb.classList.remove("caring"); delete lb.dataset.car; sunImg = lbBig; sunShadowSync(); }
         return;
       }
       if (card === lbCard) {
@@ -16104,6 +16183,7 @@
         lb.classList.remove("caring");   /* overlays down, real faces back */
         delete lb.dataset.car;
         sunImg = card.classList.contains("flipped") ? lbBot : lbBig;
+        sunShadowSync();   /* T7d: the shadow follows the face that landed */
       }
       setTimeout(() => card.classList.remove("landed"), 300);
     }

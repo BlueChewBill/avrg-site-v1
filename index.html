@@ -492,6 +492,19 @@
      ratio, so the box keeps the artwork's own proportion. */
   .masthead svg { width: 150px; height: auto; margin: 0 auto; display: block; }
   #logo-draw path { fill: none; stroke: currentColor; stroke-linecap: round; stroke-linejoin: round; }
+  /* THE STATIC MARK — WebKit's dead-clock dress (2026-08-28, the Safari
+     blank-mark fix). Both engines start the SMIL document clock at the
+     window LOAD event, but WebKit's load waits on fonts/media that
+     Blink's does not — so on a slow connection Safari sits pre-load for
+     many seconds with the clock parked at 0, the opacity gates never
+     fire, and the masthead is BLANK through the whole arrival (Dylan's
+     screenshot: an empty page and two dots). playLogo's watch (see THE
+     CLOCK THAT WAITS FOR LOAD at its seat) puts this class on when it
+     catches the clock dead; the finished mark shows statically.
+     !important ON PURPOSE: it is the one rung of the animation sandwich
+     that outranks SMIL presentation values, so when the clock finally
+     starts mid-static the natural replay cannot re-blank the mark. */
+  #logo-draw.smil-dead path { opacity: 1 !important; stroke-dashoffset: 0 !important; }
   /* fixed two-line box: swapping taglines never moves what's below.
      sits low, near the video, rather than tight under the logo */
   .tick { margin-top: clamp(36px, 8vh, 96px); line-height: 1.8; height: 36px; transition: opacity .45s ease; }
@@ -8940,9 +8953,60 @@
        finished mark (jump past the timeline's end; fill=freeze holds
        it): the logo is content, the drawing is theater. */
     const logoDraw = document.getElementById("logo-draw");
+    /* THE CLOCK THAT WAITS FOR LOAD (2026-08-28 — Safari's blank mark on
+       first load/refresh). Both engines start the SMIL document clock at
+       the window LOAD event — but WebKit's load waits on fonts and media
+       that Blink's does not, so on a real connection Safari can sit
+       pre-load for many seconds (or, with a stalling video, near forever)
+       with the clock parked at 0. Everything downstream assumes a live
+       clock: the opacity gates never fire (blank mark), the landing's
+       beat map marches on setTimeout wall-clock regardless, and every
+       setCurrentTime — the rewind here, drawRestore's heal — is silently
+       SWALLOWED by a timeline that has not begun. Measured (real WebKit,
+       media delayed 12s): getCurrentTime() pinned at 0 through the whole
+       ride and past it, paths at opacity 0 — while Chromium's load fired
+       under a second and the draw played.
+       THE WATCH: a capability check, not a UA sniff. When playLogo runs
+       pre-load, look again at the base draw's own end (~2.28s — a live
+       clock has all but finished by then): if load has since fired or the
+       clock moved, the draw is merely late (Chrome's own slow-load shape;
+       leave it be). Still dead → dress the svg .smil-dead (CSS at the
+       #logo-draw path rule: the finished mark, statically — the repo's
+       Safari bar is "prefer the draw, settle for visible"). When load
+       finally lands, park the timeline past the end (playLogo's own
+       reduced-motion idiom — the rewind-then-jump is drawRestore's heal
+       pair) and only THEN undress, so the natural replay of a
+       just-started clock can never re-blank the mark and the pixels are
+       identical across the swap. A clock that never verifies live keeps
+       the static dress for the session — visible beats theater. Later
+       home arrivals rewind a live clock and draw as they always did. */
+    let logoClockWatch = false;
+    function logoClockCheck() {
+      if (logoClockWatch || !logoDraw || document.readyState === "complete") return;
+      logoClockWatch = true;
+      setTimeout(function () {
+        let t = 0;
+        try { t = logoDraw.getCurrentTime(); } catch (e) {}
+        if (document.readyState === "complete" || t > 0.05) return;
+        logoDraw.classList.add("smil-dead");
+        const unveil = function (delay, last) {
+          setTimeout(function () {
+            let v = 0;
+            try {
+              logoDraw.setCurrentTime(0); logoDraw.setCurrentTime(9);
+              v = logoDraw.getCurrentTime();
+            } catch (e) {}
+            if (v > 4) logoDraw.classList.remove("smil-dead");
+            else if (!last) unveil(1500, true);
+          }, delay);
+        };
+        addEventListener("load", function () { unveil(250, false); }, { once: true });
+      }, 2500);
+    }
     function playLogo() {
       if (!logoDraw || !logoDraw.setCurrentTime) return;
       try { logoDraw.setCurrentTime(reduced ? 9 : 0); } catch (e) {}
+      logoClockCheck();
     }
     /* ========= the router: every hash lands here ========= */
     let picksArriving = false;

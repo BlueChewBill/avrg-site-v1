@@ -11627,41 +11627,52 @@
       sunImg.style.transform = "translate(" + (pullX * sunS).toFixed(2) + "px," + (pullY * sunS).toFixed(2) + "px) scale(" + sunSc.toFixed(4) + ")";
       sunRaf = requestAnimationFrame(sunFrame);
     }
-    /* T7b — SAFARI'S RASTER HEALS (2026-08-28): Mac Safari kept blobbing
-       after T7's transition prune — a hard RECTANGULAR shadow (the img's
-       box, alpha silhouette lost), appearing exactly at the post-leave
-       settle and sticking. Open is clean, tracking is clean; the corrupt
-       beat is THIS release — the inline filter clears and CSS takes the
-       shadow back, and Safari's compositor carries a corrupt raster
-       across that authority swap instead of painting the (value-
-       identical) rest state fresh. The same state built from scratch is
-       clean on his glass (every lb open), so the cure is to force the
-       from-scratch path: tear the img's layer down and rebuild it at the
-       swap (display flip + sync reflow — no frame paints between), with
-       a second pass after the next paint in case the first raster job
-       freezes mid-flight (the sticky half of the upstream bug). WebKit
-       only, same probe as the T7 CSS gate; Chrome never runs it. */
+    /* T7c — THE AUTHORITY NEVER SWAPS (2026-08-28, supersedes T7b's
+       reraster nudge — the teardown/rebuild heal is retired). Mac
+       Safari's corrupt beat was the sun's release: the one moment filter
+       authority swapped from the inline per-frame writes back to CSS
+       (value-identical by construction, yet Safari carried a corrupt
+       raster across the swap). T7b healed AFTER the fact — the corrupt
+       frame still flashed for a beat before the rebuild, and the flip
+       left thin tile remnants (Dylan's real-glass verdict). Prevention
+       instead: on WebKit a real sun session ends with the inline filter
+       PARKED at the house rest shadow, stated in the CSS rule's own cqw
+       units — value-identical to `.d7f .frame img`'s rest declaration at
+       any card size, so a later resize/exchange/pinch can never strand a
+       stale px park (keep SUN_PARK in lockstep with that rule). The
+       compositor only ever sees inline→inline value updates — the same
+       clean path every tracking frame takes; the swap beat no longer
+       exists. Leak audit (a parked inline filter stomps any CSS filter
+       owner on the img):
+       - sold grayscale: the hero card never wears .sold (populate
+         toggles d7f/canflip/flip only; the sold dress lives on grid +
+         flank cards, whose imgs the sun never poses) — no carve needed.
+       - the softout close dress's .93s filter arm serves the PHONE's
+         blift drain, and the sun (so the park) never arms on touch. A
+         desktop close with a park just holds the rest shadow through
+         the flight — invisible under the close dress.
+       - populate clears both faces' inline filter (the one other
+         writer) under the same-task src swap, so no park outlives its
+         board and no stale raster exists to carry.
+       - the defensive sunRelease calls (nav/close with nothing armed)
+         leave a standing park ALONE on WebKit — clearing it would BE
+         the authority swap this fix removes.
+       WebKit only, same probe as the T7 CSS gate; Chrome keeps the
+       shipped clear-to-CSS release, byte-identical behavior. */
     const sunWK = CSS.supports("background: -webkit-named-image(i)");
-    function sunReraster() {
-      const img = sunImg;
-      img.style.display = "none"; void img.offsetWidth; img.style.display = "";
-      requestAnimationFrame(() => requestAnimationFrame(() => {
-        if (sunRaf || img.style.filter) return;   /* the sun re-armed — it owns the pose again */
-        img.style.display = "none"; void img.offsetWidth; img.style.display = "";
-      }));
-    }
+    const SUN_PARK = "drop-shadow(3.0172cqw 3.8793cqw 0 rgba(0, 0, 0, .3))";
     function sunRelease() {
       const had = !!sunRaf;   /* a real sun session ends here — the nav/close
                                  paths also call this defensively with nothing
-                                 armed, and the phone must never see the nudge
-                                 (a display flip snaps any mid-flight dress) */
+                                 armed, and the phone must never gain a park
+                                 (the blift dress owns the phone shadow in CSS) */
       if (sunRaf) cancelAnimationFrame(sunRaf);
       sunRaf = 0; sunOn = false; sunLift = 0; sunSc = 1; sunA = .3; sunAT = .3;
       sunP1X = 0; sunP1Y = 0; sunP2X = 0; sunP2Y = 0; sunD = 0;
-      sunImg.style.filter = "";
+      if (sunWK) { if (had) sunImg.style.filter = SUN_PARK; }
+      else sunImg.style.filter = "";
       sunImg.style.transform = "";
       lbCard.classList.remove("suntrack");
-      if (sunWK && had) sunReraster();
     }
     if (canHover && !reduced) {
       lbCard.addEventListener("pointermove", e => {

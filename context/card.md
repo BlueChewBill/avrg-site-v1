@@ -9,7 +9,7 @@
 ## Facts
 
 <!-- GEN:BEGIN — written by build_context.py, do not hand-edit this block -->
-*Derived 2026-08-29 · commit 8f52e84 · index.html 17146 lines*
+*Derived 2026-08-29 · commit 166d6ee · index.html 17152 lines*
 
 **The card in numbers**
 - Boards it draws: originals 7 · hand-shaped 14 · classic 19 · resale 0 — 40 total
@@ -24,10 +24,10 @@
 - `cardInner / renderColPage` (index.html:7978) — collection-page grids (.scard slots)
 - `bindScards` (index.html:7962) — grid slot wiring: click/keyboard -> openLb
 - `renderLisst` (index.html:8302) — YOUR PICKS page cards (one producer for both dresses: YOUR PICKS on the dock side, My Lisst on desktop)
-- `renderBay` (index.html:13111) — draws the drawer/bay shelf cards — the shelf's producer (flyToBay is only the flight)
-- `the shop conveyor` (index.html:12393) — home belt cards (recycler owns their visibility)
-- `flyToBay` (index.html:15733) — card -> drawer flight
-- `setFlip / flipStage` (index.html:16303) — the flip system (chip = the hidden-face mini)
+- `renderBay` (index.html:13117) — draws the drawer/bay shelf cards — the shelf's producer (flyToBay is only the flight)
+- `the shop conveyor` (index.html:12399) — home belt cards (recycler owns their visibility)
+- `flyToBay` (index.html:15739) — card -> drawer flight
+- `setFlip / flipStage` (index.html:16309) — the flip system (chip = the hidden-face mini)
 - `faceSync + FACE` (index.html:7114) — face memory: cards inherit the last-seen side
 - `lockCardScale` (index.html:7945) — grid render law: 232px then transform-down
 - `migrateHole` (index.html:11208) — lb exchange re-seats the grid hole on every landing

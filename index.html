@@ -11786,8 +11786,14 @@
       let hudFr = 0;
       (function hudTick() { hudFr++; requestAnimationFrame(hudTick); })();
       setInterval(() => {
+        /* the state row answers react 4's screenshots (shadow pinned at
+           the house angle): is the tracker even ALLOWED to run, and is
+           it running right now — reduced:true = the OS Reduce Motion
+           setting has the whole sun gated off, CSS hover only */
         hud.textContent = "SUN " + (SUNV || "shipped") + " · grow " + SUN.grow +
-          " · liftEase " + SUN.liftEase + " · " + hudFr + "fps";
+          " · liftEase " + SUN.liftEase + " · " + hudFr + "fps · hover:" + canHover +
+          " reduced:" + reduced + " · " +
+          (sunRaf ? (sunOn ? "TRACKING" : "settling") : "sun idle");
         hudFr = 0;
       }, 1000);
     }

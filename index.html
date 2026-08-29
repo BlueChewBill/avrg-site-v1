@@ -11727,6 +11727,18 @@
                   grow: 1.08, duck: 6,
                   aDark: .53, aFaint: .19, aPow: .7,
                   ease: .14, driftEase: .01, liftEase: .045, settle: .15 };
+    /* ?sun= — THE SUN-FEEL COLLIDE (temporary, retires on Dylan's pick).
+       T3's disproof left three directions; 1 (accept) is the bare URL.
+         ?sun=2   FASTER ENTRY ARM — lift+grow rise ~2x quicker (.94s -> ~.45s)
+         ?sun=3   WARM RING — the panel gaps ARM the rise (lift+grow climb
+                  while the cursor is on the card but off the panel) yet
+                  can't DRIVE it: direction/ink/gravity stay home. The old
+                  flank bug's pre-arm, rebuilt on purpose and sanctioned.
+         ?sun=23  both at once. */
+    const SUNV = new URLSearchParams(location.search).get("sun") || "";
+    if (SUNV.includes("2")) SUN.liftEase = .09;
+    const sunWarmOn = SUNV.includes("3");
+    let sunWarm = false;
     let sunImg = lbBig;   /* the face the sun poses — the flip re-aims it at landing */
     let sunRaf = 0, sunOn = false, sunS = 1, sunX = 7, sunY = 9, sunTX = 7, sunTY = 9,
         sunLift = 0, sunSc = 1, sunA = .3, sunAT = .3,
@@ -11746,9 +11758,11 @@
       sunP2X += (sunUX * SUN.drift * g - sunP2X) * (sunOn ? SUN.driftEase : SUN.ease);
       sunP2Y += (sunUY * SUN.drift * g - sunP2Y) * (sunOn ? SUN.driftEase : SUN.ease);
       const pullX = sunP1X + sunP2X, pullY = sunP1Y + sunP2Y;
-      /* lift + grow rise slow (with the board), drain fast (the .3s shrink) */
-      sunLift += ((sunOn ? SUN.lift : 0) - sunLift) * (sunOn ? SUN.liftEase : SUN.ease);
-      sunSc += ((sunOn ? SUN.grow : 1) - sunSc) * (sunOn ? SUN.liftEase : SUN.ease);
+      /* lift + grow rise slow (with the board), drain fast (the .3s shrink).
+         ?sun=3: a warm gap arms the rise exactly like the panel does */
+      const sunArm = sunOn || sunWarm;
+      sunLift += ((sunArm ? SUN.lift : 0) - sunLift) * (sunArm ? SUN.liftEase : SUN.ease);
+      sunSc += ((sunArm ? SUN.grow : 1) - sunSc) * (sunArm ? SUN.liftEase : SUN.ease);
       /* lift stretches the drawn vector along its current direction; at
          dead center there is no direction — the overhead vanish stays.
          The lift DUCKS with the direction (ramps out below `duck` ref-px):
@@ -11758,7 +11772,7 @@
       const len = Math.hypot(sunX, sunY);
       const f = len > .01 ? (len + sunLift * Math.min(1, len / SUN.duck)) / len : 0;
       sunA += (sunAT - sunA) * SUN.ease;
-      if (!sunOn && Math.abs(sunTX - sunX) < SUN.settle && Math.abs(sunTY - sunY) < SUN.settle
+      if (!sunOn && !sunWarm && Math.abs(sunTX - sunX) < SUN.settle && Math.abs(sunTY - sunY) < SUN.settle
           && sunLift < SUN.settle && Math.abs(pullX) < SUN.settle && Math.abs(pullY) < SUN.settle
           && Math.abs(sunSc - 1) < .002 && Math.abs(sunA - .3) < .01) { sunRelease(); return; }
       /* GROUND: the drop-shadow rides the img's translate, so the pull
@@ -11826,7 +11840,7 @@
     }
     function sunRelease() {
       if (sunRaf) cancelAnimationFrame(sunRaf);
-      sunRaf = 0; sunOn = false; sunLift = 0; sunSc = 1; sunA = .3; sunAT = .3;
+      sunRaf = 0; sunOn = false; sunWarm = false; sunLift = 0; sunSc = 1; sunA = .3; sunAT = .3;
       sunP1X = 0; sunP1Y = 0; sunP2X = 0; sunP2Y = 0; sunD = 0;
       if (sunWK) { sunShadow.style.transform = ""; sunShadow.style.opacity = ""; }
       else sunImg.style.filter = "";
@@ -11844,7 +11858,8 @@
            the board chase a cursor parked on a flank — and the gaps between
            read as leaves, so the chase dropped and picked back up. Off the
            panel = a leave: same targets the pointerleave hands over. */
-        if (!panel.contains(e.target)) {
+        const inPanel = panel.contains(e.target);
+        if (!inPanel && !sunWarmOn) {
           if (sunOn) { sunOn = false; sunTX = 7; sunTY = 9; sunAT = .3; }
           return;
         }
@@ -11875,6 +11890,15 @@
           lbCard.classList.add("suntrack");
           sunRaf = requestAnimationFrame(sunFrame);
         }
+        if (!inPanel) {
+          /* ?sun=3 WARM RING — the gap arms the rise (sunFrame's lift/grow
+             gate reads sunWarm) but the drive channels go home, the same
+             targets a panel-leave hands over. */
+          sunWarm = true;
+          if (sunOn) { sunOn = false; sunTX = 7; sunTY = 9; sunAT = .3; }
+          return;
+        }
+        sunWarm = false;
         sunOn = true;
         const cx = fr.left + fr.width / 2, cy = fr.top + fr.height / 2;
         const dx = cx - e.clientX, dy = cy - e.clientY;
@@ -11894,6 +11918,7 @@
         sunAT = SUN.aDark - (SUN.aDark - SUN.aFaint) * Math.pow(d, SUN.aPow);
       });
       lbCard.addEventListener("pointerleave", () => {
+        sunWarm = false;           /* a warm-only hover drains from here too */
         if (!sunOn) return;
         sunOn = false;             /* gravity + crawl let go via the sunOn gate */
         sunTX = 7; sunTY = 9;      /* home = the house diagonal */

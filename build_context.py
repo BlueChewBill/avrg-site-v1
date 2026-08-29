@@ -44,8 +44,10 @@ accents = {c["id"]: c.get("accent", "") for c in collections}
 
 css = re.search(r"<style>\n(.*?)\n</style>", INDEX, re.S).group(1)
 
-scriptsvg = re.search(r"const SCRIPTSVG =\s*(.*?);\n", INDEX, re.S).group(1)
-scriptsvg = "".join(part.strip().strip("'\"") for part in scriptsvg.split("+\n"))
+# the add chip's glyph — SCRIPTSVG (the deck mark) retired into STACKSVG
+# (the drawn empty card stack) 2026-08-29 with the chip redesign
+stacksvg = re.search(r"const STACKSVG =\s*(.*?);\n", INDEX, re.S).group(1)
+stacksvg = "".join(part.strip().strip("'\"") for part in stacksvg.split("+\n"))
 
 dims_src = re.search(r"const DIMS_MM = (\{.*?\});", INDEX, re.S).group(1)
 dims_pairs = re.findall(r'"([A-Z]+ \d+)":\s*\[([\d.]+),\s*([\d.]+)', dims_src)
@@ -145,7 +147,7 @@ for name, line, why in anchor_rows:
     gen_lines.append(f"- `{name}` ({loc}) — {why}")
 gen_lines += [
     "",
-    "**Environments** (each is a producer above): collection grids · home belts · the lightbox card · drawer/bay shelves · flights · YOUR PICKS · the blank card (`.scard.indeck` costume) · phone chip costume (dock-gated)",
+    "**Environments** (each is a producer above): collection grids · home belts · the lightbox card · drawer/bay shelves · flights · YOUR PICKS · the blank card (`.scard.indeck` costume) — the add chip's phone-only costume went universal 2026-08-29, so there is no dock-gated card dress left",
     "",
     "**Breakpoint census** (distinct `@media` conditions in the page, by rule count):",
 ]
@@ -216,8 +218,7 @@ def card_html(b, acc, extra_cls="", st="avail", st_txt="AVAILABLE"):
         f'<span class="nm"><span class="nmt" data-nm="{name}" data-dims="{d}">{name}</span></span>'
         "</div>"
         + ("" if st == "gone" else
-           f'<button class="fchip fc-list d7f-cta" data-id="{b["id"]}"><span class="fl"><span class="ft"></span>{scriptsvg}'
-           '<span class="fmini" aria-hidden="true"></span></span></button>')
+           f'<button class="fchip fc-list d7f-cta" data-id="{b["id"]}"><span class="fl"><span class="ft"></span>{stacksvg}</span></button>')
         + f'<span class="fst {st}"><span class="dot"></span><span class="sttxt">{st_txt}</span></span>'
         "</div></div>"
     )

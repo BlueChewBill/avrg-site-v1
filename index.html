@@ -5780,7 +5780,7 @@
          costume, not of job (the picon precedent). The count rides the
          stack's own .hcount corner badge; the naked #pcnt-d number retired
          with the mark. -->
-    <span class="bar-script" id="bar-script" aria-hidden="true"><span class="hpicks" id="hpicks-d" aria-hidden="true"></span></span>
+    <span class="bar-script" id="bar-script" aria-hidden="true"><span class="hpicks" id="hpicks-d" aria-hidden="true" inert></span></span>
     <nav id="topnav" style="display:contents"></nav>
     <!-- the drawn bar (desktop): three words between structural dots; the
          collections live in the COLLECTIONS drop (bar words picked
@@ -5849,7 +5849,7 @@
            own #my-lisst href is the click — the swipe-open door's visible
            twin. Rendered by renderPicks() (lisstTab). Mark + count hide
            under the same gate that shows this. -->
-      <span class="hpicks" id="hpicks" aria-hidden="true"></span>
+      <span class="hpicks" id="hpicks" aria-hidden="true" inert></span>
     </a>
   </header>
 
@@ -6572,18 +6572,22 @@
        actually changes — decoding a read into itself would be the exact
        re-animation this pass rules out. Runs at open (after the source's
        texts ride over) and after every mid-lb populate (deck exchange). */
+    /* the ONE landing policy (hoisted from stayLand, review find — dockDress
+       carried a hand-copy that had already diverged): null-safe, changed-only,
+       reduced kills a mid-scramble interval before the plain write */
+    const landDecode = (el, txt) => {
+      if (!el || !txt || el.textContent === txt) return;
+      if (reduced) { clearInterval(el._t); el.textContent = txt; }
+      else decodeInto(el, txt);
+    };
     function stayLand() {
       if (!lbCard.classList.contains("stay")) return;
-      const land = (el, txt) => {
-        if (!el || !txt || el.textContent === txt) return;
-        if (reduced) { clearInterval(el._t); el.textContent = txt; }
-        else decodeInto(el, txt);
-      };
+      const land = landDecode;
       /* the landed decode is the board ref now (THE ID FLIP — info on the
          decode); stay is desktop-only, so dataset.ref here is never the
          touch wayfinding pos */
       const rft = document.getElementById("lb-fv3-ref");
-      land(rft, rft.dataset.ref);
+      land(rft, rft && rft.dataset.ref);
       const nmt = document.getElementById("lb-fv3-nmt");
       /* the name→dims land rides THE COLLAPSE (item 2's grammar; reduced
          short-circuits inside it) — the changed-only guard stays, so a
@@ -9149,6 +9153,13 @@
     const HPICK_MAX = 4;
     function renderPicks() {
       if (!hpicksEl && !hpicksDEl) return;
+      /* the dealt-away state empties the PHONE stack only — it is the
+         picks page's ceremony (and stackDealtAway is dockActive()-gated
+         anyway); the desktop seat is hidden at that width and keeps its
+         last render (the ceremony's own renderPicks refreshes it after).
+         BEFORE the build on purpose (review find): the ceremony's mid-deal
+         calls were paying four template renders for an invisible seat. */
+      if (stackDealtAway()) { if (hpicksEl) hpicksEl.innerHTML = ""; return; }
       const shown = [...myLisst].reverse().slice(0, HPICK_MAX);
       const html = myLisst.length
         ? shown.map((id, i) => {
@@ -9172,10 +9183,7 @@
               '<div class="stage"></div>' +
             '</div></div>' +
           '</i><span class="hcount">0</span>';
-      /* the dealt-away state empties the PHONE stack only — it is the
-         picks page's ceremony (and stackDealtAway is dockActive()-gated
-         anyway); the desktop seat has no deal to honour */
-      if (hpicksEl) hpicksEl.innerHTML = stackDealtAway() ? "" : html;
+      if (hpicksEl) hpicksEl.innerHTML = html;
       if (hpicksDEl) hpicksDEl.innerHTML = html;
       /* THE MINIS LOAD EAGER (2026-08-16, his catch: "a routed board turns
          to a blank mini in the hand shaped section"). The template's lazy
@@ -9188,10 +9196,18 @@
       /* :not(.fface) — the flip chip's mini is display:none at mini scale
          (the proportion law); eager ignores visibility, so without the
          guard every stack mini would download its board's OTHER face too */
-      [hpicksEl, hpicksDEl].forEach(el => {
-        if (el) el.querySelectorAll("img[loading='lazy']:not(.fface)").forEach(i => { i.loading = "eager"; });
-      });
+      /* only the LIVE seat gets the eager promotion (review find: the
+         hidden twin's display:none does not suppress img fetches, so the
+         phone was decoding four desktop minis it can never paint). The
+         breakpoint listener below re-runs this render when the live seat
+         changes, so the newly shown container earns its eager pass then. */
+      const liveStack = matchMedia("(min-width: 941px)").matches ? hpicksDEl : hpicksEl;
+      if (liveStack) liveStack.querySelectorAll("img[loading='lazy']:not(.fface)").forEach(i => { i.loading = "eager"; });
     }
+    /* crossing the 941 line swaps which stack seat is live — re-render so
+       the newly shown container gets its eager pass (its imgs were left
+       lazy on purpose while hidden; a 0×0 lazy img never self-loads) */
+    matchMedia("(min-width: 941px)").addEventListener("change", () => renderPicks());
     function lisstTab() {
       navLisst.textContent = "My Lisst" + (myLisst.length ? " (" + myLisst.length + ")" : "");
       /* (#pcnt-d retired 2026-08-28 with the bar's deck-mark glyph — the
@@ -9631,11 +9647,10 @@
       }
       /* the ref chip lands its info read at the arrival too (THE ID FLIP) —
          the phone has no hover, so the landing IS its decode beat, matching
-         the desktop stay land; changed-only so a re-dress never re-plays */
+         the desktop stay land; landDecode is the shared policy (review find:
+         the old inline copy had already diverged from stayLand's) */
       const rft = document.getElementById("lb-fv3-ref");
-      if (rft && rft.dataset.ref && rft.textContent !== rft.dataset.ref) {
-        if (reduced) rft.textContent = rft.dataset.ref; else decodeInto(rft, rft.dataset.ref);
-      }
+      landDecode(rft, rft && rft.dataset.ref);
       /* the chip's word rides the mobile arrival (round 4, revised round
          5: ADD, not a want word — "bottom right decodes now read
          ADD+blank mini card"); a ✓ board prints Mine ! (populate wrote
@@ -10831,7 +10846,13 @@
       if (fv3) {
         const jm = jmeta(c, b, k);
         const rft = document.getElementById("lb-fv3-ref");
-        rft.dataset.ref = jm.ref; rft.textContent = "AVRG";   /* brand rest; stayLand / the touch decode land the info read (THE ID FLIP) */
+        /* brand rest; stayLand / the touch decode land the info read (THE
+           ID FLIP). A viewport NEITHER lander covers — no hover (no stay)
+           AND ≥941 (no dockDress): wide touch glass, the iPad class —
+           rests the info directly: the pill is hidden under fv3, so this
+           chip is the inspection's only id read (review find). */
+        rft.dataset.ref = jm.ref;
+        rft.textContent = (canHover || dockActive()) ? "AVRG" : jm.ref;
         /* touch never sees the hover choreography, so the corner chip does
            wayfinding instead: it decodes to the position in this chunk
            (6/7) — a swipe sesh should know when the end is coming */
@@ -13413,6 +13434,12 @@
         wrap.innerHTML = JCARDS.framev3(jmeta(COLLECTIONS[ci], b, k));
         const card = wrap.firstChild;
         if (hidden) card.style.visibility = "hidden";   /* the preseat idiom — the deal reveals */
+        /* the composer's slots are a permanently DRESSED read and the ref
+           chip is the offering mark — it must say WHICH board (review
+           find: four attached boards all read the brand rest). Print the
+           info word; idempotent where the touch template already did. */
+        const bref = card.querySelector(".fc-ref .ft");
+        if (bref && bref.dataset.ref) bref.textContent = bref.dataset.ref;
         /* THE CARD IS THE OFFER (2026-08-09 pre-jam, Dylan: "move the
            offer portion of the box to the card"): click flags the board
            "open to offers" — its letter line decodes the default in and
@@ -16650,8 +16677,13 @@
        number repeated in the calc. Both land on lbCard — vars don't
        inherit upward to #lb (the documented bite). */
     const ogptSync = () => {
-      lbCard.style.setProperty("--ogpt", lbCard.style.paddingTop || "24px");
-      lbCard.style.setProperty("--ogpb", getComputedStyle(lbCard).paddingBottom || "24px");
+      /* ONE computed read feeds both mirrors (review find: the split
+         inline-vs-computed sources kept a 24px literal alive in each
+         fallback — computed resolves the inline write when set and the
+         CSS rule when not, so no fallback is needed at all) */
+      const cs = getComputedStyle(lbCard);
+      lbCard.style.setProperty("--ogpt", cs.paddingTop);
+      lbCard.style.setProperty("--ogpb", cs.paddingBottom);
     };
     new ResizeObserver(ogptSync).observe(lbCard);
 

@@ -1,43 +1,46 @@
-# Handoff — AVRG site v1 — 2026-08-28 (night)
+# Handoff — AVRG site v1 — 2026-08-29 (night)
 
-> (The old vault→v1 porting recipe + the closed A/B trip log that used to live here are in this file's git history — CLAUDE.md still points here for them.)
+> (The old vault→v1 porting recipe + the closed A/B trip log live in this file's git history — CLAUDE.md still points here for them.)
 
 ## Where we are
 
-THE SUNDAY DISPATCH is done and live: eleven tickets (five little-fixes + four from Dylan's real-glass round + a six-angle review's fix stack + the bench sync) all merged and **pushed to avrg.cards** at `baed119`+. Dylan's phone test came back all-green (grid IDs, the AVRG-then-land beat, whole-card pinch, no shadow blob). **Mac Safari's shadow blob survived the first cure** → the **T7b escalation agent was IN FLIGHT when this session wrapped**, in worktree `.claude/worktrees/agent-a87f778c12e97efaa`. Dylan opens the next session after it lands.
+THE FRIDAY POLISH ROUND is done and fully pushed (`a1753bf` = origin HEAD, tree clean): the composer four-pack, the grid flip mini (lb-ghost dress + real flip door), the lb counter retired, both lb decode clocks retuned, THE DIMS GRAMMAR (33.0mm × 95.85mm, small units), THE ADD CHIP redesign (three reacts deep — final form: a flat EMPTY mini card in the fv3 dress, want-words retired), and THE SPARK GROWS TIERS (✦ highest on HS 06/07/16/17/18 · black-chip ✱ on HS 08/10/14). CLAUDE.md's Where-things-stand has the one-line index; every change's record is in its owning surface doc. Bench synced three times (CompUI `97d8d35` tip, census 147). Dylan's verdict on the dims/decode work: "look great. really solid change."
+
+**The clock that matters: Dylan says ~ONE DAY left "to get it straight."** His framing at wrap: the remaining changes are **WIRING, not design** — except the LB photos, which are on HIS end (the og sheet material). Expect a finishing session, not an exploring one.
 
 ## Next task
 
-**T7d IS THE STANDING CURE AND IS PUSHED** — the bug got NAMED (WebKit #207586, the filter fed a partial source rect on incremental repaint; trunk-fixed 2026-05, ships ~Safari 27 = the recorded EXIT condition for the whole WebKit fork) and the endorsed structural cure landed: on WebKit the lb board shadow is its own `#lb-shadow` ghost img (filter frozen at `brightness(0)`, moved by transform/opacity; the real img's drop-shadow is off there). Verified on Dylan's REAL Safari (mechanism proof: no drop-shadow raster exists at any beat), Chrome pixel-inert, phone path untouched. **The sun's WebKit write target moved (filter-on-#lb-big → transform/opacity-on-#lb-shadow) — a sun-wing bench re-chart was dispatched at wrap time; confirm it landed (CompUI log).** Two taste details for his glass: the Safari hover shadow now GLIDES with the grow (transform is the safe channel — T7's stepped look is two deletable transition lines in the T7d block if he prefers the snap), and a possible half-pixel board shift on Safari (sub-pixel snapping without the filter). **HIS VERDICT LANDED, SAME SESSION: "its clean!" — THE SHADOW THREAD IS CLOSED.** The taste details (glide-vs-snap, half-pixel) drew no objection. The sun-wing bench re-chart LANDED (CompUI `c40e251`, C12 record; census 145, zero value drift — all sixteen SUN channels verified against the served page). Three notes it left: (1) a tuner on a Safari-hosted bench stage will see `#lb-big`'s filter as `none` BY DESIGN — check the wing's engine caveat before declaring the sun dead; (2) a latent land-mine is recorded: if a SOLD hero ever becomes real, the `sold-filter` rule would put a drop-shadow back on the img on the one engine that can't repaint it — currently inert (0 matching elements), but it's the first thing to check if the blob ever returns; (3) `sun-grow`'s 1.08 is hand-restated in the T7d CSS pair — a retune must carry both (the manifest row says where); binding them is Dylan's call.
-~~superseded lineage:~~ **T7c SUPERSEDED T7b AND WAS PUSHED** (merge after `2dbc874`): never-swap — WebKit parks the sun's shadow at the CSS rest value (the cqw string) so the corrupt authority-swap beat never exists; T7b's nudge retired (it was the residual-lines source). **Verified on Dylan's REAL Safari via safaridriver — Remote Automation is now ON on his Mac and his iPhone's Web Inspector is ON** (memory + gotchas T7c entry carry the recipe; harnesses in the old session scratchpad t7c/). Dylan watched the verification run live and his early read was "looks fixed" — the next session still opens on his post-push hard-refresh verdict. One lockstep law minted: `SUN_PARK` (the JS const) must match `.d7f .frame img`'s rest filter — commented at both. Remaining Safari suspect if a blob EVER appears at lb close: `.softout` still transitions filter (phone-only arm today, structurally unreachable — documented).
-~~T7b history:~~ **T7b LANDED AND WAS PUSHED** (merge after `1d64d20`; the fix: "SAFARI'S RASTER HEALS" — WebKit-only, at sun release the board img's layer is torn down and rebuilt with no painted frame between, forcing the from-scratch repaint his glass proved clean; Chrome provably inert, SUN untouched, no bench change). The task is: **collect Dylan's Mac Safari verdict** — hover a lightbox card (HS 04 was his repro), leave, watch the settle, repeat a few cycles. If clean → done, close the thread in gotchas. If the blob survives → the agent's report names the escalation ladder: (b) never-swap/park-the-inline-filter with a sold-board carve-out, then stage-2 shadow-as-element; ALSO worth asking him to flip Safari's Develop → "Allow remote automation" — a working safaridriver harness for his REAL Safari is saved in the old session's scratchpad (`t7b/safari-probe.js` pattern; rebuild it if gone) and would give this bug family a true repro rig. One extra suspect his report flagged: `.softout` (lb close) still transitions filter .93s in WebKit — if he ever sees a blob at lb CLOSE, that's the fix (extend T7's prune to it).
+**HIS CALL: "next session should start with the sun / board grow check in."** That's the standing sun-feel thread from THE SUNDAY DISPATCH (open-threads): the `?sun=` collide — build directions 2 + 3 so he can FEEL them (the faster entry arm · the warm ring) against the shipped feel, plus a check-in on the board hover grow. Done = variants served side-by-side (the `?sun=` param idiom), his pick baked, bench synced (the SUN wing is charted — sixteen channels; remember the T7d note: on WebKit the sun writes transform/opacity on `#lb-shadow`, never filter on `#lb-big`, and `sun-grow`'s 1.08 is hand-restated in the T7d CSS pair — a retune carries both).
 
-Then, his named queue for the session: **the `?sun=` collide** (build directions 2+3 so he can feel them: faster entry arm · the warm ring — see open-threads THE SUNDAY DISPATCH), **the taste calls** (+List on-state border accent · stack-seat optics), and **more bug squashing / final functional tuning he's staring at** — he'll dish these live; expect fast-and-loose screenshots, they were gold tonight.
+Then his wiring list, as he dishes it. Known wiring candidates already on the books: **meta tags (STILL SUNDAY-CRITICAL AND UNSTARTED — no link-preview card exists; raise it before he posts the URL anywhere)**, the og sheet export+wire once his photo compositions land (the Figma → `site/img/og/` → `OG_SHEETS` loop, lightbox.md's THE ZONE LANDS is the recipe), and the splitforms key if the long form is to go live.
 
 ## Read these, skip the rest
 
-- `.claude/docs/open-threads.md` — THE SUNDAY DISPATCH section (the minted decisions incl. the sun-feel three-way) + THE WEEKEND QUEUE (the standing big three).
-- `.claude/docs/lightbox.md` — the lb sun section + THE ZONE entries, needed for T7b review and the sun collide.
-- `.claude/docs/gotchas.md` — before ANY browser verification (the pane's dead rAF/RO/IO family; the two-sessions private-Chrome CDP escape; the T7 Safari lessons).
-- `git log --oneline -30` — tonight's story in commit messages; every ticket's record also sits in its owning surface doc.
+- `.claude/docs/open-threads.md` — THE SUNDAY DISPATCH section (the sun-feel three-way's exact directions + minted decisions) and the quality-identifiers item (marks state after tonight).
+- `.claude/docs/lightbox.md` — the sun section + T7d (THE SHADOW BECOMES ITS OWN ELEMENT — read before touching ANY sun channel) + THE ZONE LANDS (if og wiring comes up).
+- `.claude/docs/gotchas.md` — before ANY browser verification (pane's dead rAF/RO/IO family; the private-Chrome CDP escape — private port + private profile, check /json/list ownership; motion verdicts need real Chrome, Safari bugs need his real Safari via safaridriver).
+- `bench/manifest/avrg.json` — the SUN wing before retuning (the engine caveat: a Safari-hosted stage reads `#lb-big` filter as `none` BY DESIGN).
+- `git log --oneline -25` — tonight's story; every record also sits in its owning doc.
 
-Everything else in the repo is NOT needed until a task leads there. The context pack (`context/card.md`) is regenerated and current at `baed119`.
+Everything else is NOT needed until a task leads there. The context pack (`context/card.md`) is current at the merge; re-run `build_context.py` after any index.html change.
 
 ## Context that isn't in the code
 
-- **Pushing main is publishing.** Dylan made three push calls tonight; keep it his call.
-- **The sun "regression" was disproved by measurement** — og on-card == classic exactly; his baseline was the flank bug's overdrive. Don't re-litigate; build the collide and let him feel it.
-- **The ID-flip grammar as ruled:** desktop rest AVRG → hover decodes to ID; open lb shows ID (its landing IS the decode); touch grids rest the ID (no hover to earn it); phone lb shows AVRG until touchdown. Wide-touch (hover:none ≥941) rests the ID directly — the chip is that viewport's only ID read.
-- **Verification tooling law of the night:** parallel agents MUST use private ports + private Chrome profiles (three collisions happened anyway — check `/json/list` ownership); the iOS sim's `touch2_path` two-finger injection never reaches page handlers (CDP touch emulation is the pinch path); stale `http.server`s squat 8242/8244 on this Mac.
-- **Meta tags stay Sunday-critical and unstarted** (his explicit "for later") — no link-preview card exists; raise it before he posts.
-- **The deckmark cleanup chip** (`silly-lamport-eced3f` worktree) runs in its own session — merge its branch when it reports, don't redo it.
-- Style of the night that worked: tight tickets with don't-touch lists + real-engine verification evidence; he reacts to built things and screenshots, never specs.
+- **Pushing was blanket-authorized tonight** ("full trust. push!") — but that was THIS session's grant; next session, pushes are his call again until he says otherwise.
+- **He walks the whole site tomorrow.** Fast-and-loose screenshots incoming; tonight they were gold — an annotated crop was enough to scope every ticket. Build variants, let him pick; his three-react refinement of the add chip (stack → flat card → empty card) is the pattern: ship each react quickly, he converges fast.
+- **The add-chip class is a lie kept on purpose:** the glyph is a mini CARD but the class/const stay `.fstack`/`STACKSVG` — the bench's `chip-stack-size` anchor and nine colour rules point at them; renaming is churn with no payoff. Recorded in the code comment.
+- **The dims grammar's load-bearing trick:** the plain string ("33.0mm × 95.85mm") is what every dataset/comparison holds; the small-mm is write-time markup (`dimsWrite`). textContent reads identically through the spans. New dims writers must go through `dimsWrite`, and card-to-card text copies must copy innerHTML (`copyCardTexts` does).
+- **Tier order IS rank order in JSPARK** (1 accent ✱ unheld · 2 black-chip ✱ · 3 ✦ highest) — renumbered once already to keep that true; keep it true. Mark tooltips are placeholders; the tag LANGUAGE + touch surfacing (lb) are still the open DM conversation.
+- **Verification harness of the night:** the stale http.server on :8124 serves this repo fine (don't fight it); private headless Chrome on an own port ≥9400 + own profile is the law (two collisions avoided, one Chrome got killed by a sibling's cleanup anyway — relaunching is cheap).
+- **Agent finds parked, not touched:** the desktop drawer's shelf cards are NOT pre-dressed (the "deck cards stay dressed" rule is phone-gated — cards.md's law reads unqualified; doc or gate is wrong); `landWants` writes to a surface that's always indeck-hidden; `build_context.py` hard-crashes on renamed JS consts (guarded for STACKSVG only).
+- **#picon's `.deckmark` is the LAST copy of the deck-mark artwork** — the parked deckmark-cleanup chip (`silly-lamport-eced3f` worktree, still unmerged) must not delete it blindly; its open-threads line carries the caveat now.
+- The chip agent's worktree (`agent-a1790076462b98696`) is merged but harness-locked — ignore it or clean it when the lock drops.
 
 ## Parked / later
 
-- The weekend queue's big three (og sheets ×6 + bg-removal redo, the 15–25 board batch — ORDERING LAW, the spark/tags DM design) — need him, in his order.
-- The `--barInset` dedup + a seat-inset bench dial (cartographer find, cosmetic).
-- renderPicks' double-container write + missing self-gate signature (review noted, non-urgent since the dealt-away/eager fixes).
-- The `.inked` no-op class on the bay + its stale comment (review find, cosmetic).
-- populate's dead touch pos-decode branch (`LB !== "deck"` is constant-false) — cleanup candidate.
-- Safari pass proper (his click-through of remaining desktop surfaces) — tonight covered logo + shadow only.
+- The weekend big three (og sheets ×6 + bg-removal redo · the 15–25 board batch — ORDERING LAW before touching sources/ · the spark/tags DM design — now half-built, tiers live).
+- The taste calls he never got to: +List on-state border accent · stack-seat optics.
+- Safari pass proper (his click-through of remaining desktop surfaces).
+- The chip-hover answer option (inking the mini card's front on `.fc-list:hover`) — offered, no verdict.
+- The cosmetic code cleanups (bar-inset dedup, renderPicks double-write, populate's dead branch, `.inked` no-op).
+- iPad wide-touch resolution (lowest priority, unenumerated).

@@ -6980,7 +6980,13 @@
         '<div class="d7f' + soldCls(m) + '" style="--acc:' + m.acc + '"><div class="panel">' +
           '<div class="inframe"><i class="ctl"></i><i class="cbr"></i><i class="dgl"></i><i class="dgr"></i></div>' +
           (m.spark ? '<span class="spark tspark" title="Builder\'s mark — this one came out perfect">✱</span>' : '') +
-          '<div class="corner"><span class="fchip fc-ref"><span class="ft" data-ref="' + esc(m.ref) + '">AVRG</span></span></div>' +
+          /* THE ID FLIP's mobile amendment (T9, Dylan's ruling): no hover
+             means no decode, so an AVRG rest would bury the ids — touch
+             grids rest on the board id (the pre-flip read). Desktop keeps
+             the flip: rest AVRG, hover decodes to data-ref. The lb card is
+             not this template — populate writes its AVRG rest on every
+             size, and dockDress lands the id at the phone arrival. */
+          '<div class="corner"><span class="fchip fc-ref"><span class="ft" data-ref="' + esc(m.ref) + '">' + (canHover ? "AVRG" : esc(m.ref)) + '</span></span></div>' +
           (m.bot ? '<button class="fflipc" type="button" data-id="' + esc(m.id) + '" data-top="' + esc(m.img) + '" data-bot="' + esc(m.bot) +
             '" aria-label="Flip the board">' + FLIP_MARK +
             '<img class="fface" loading="lazy" src="' + esc(faceHid(m)) + '" alt=""></button>' : '') +

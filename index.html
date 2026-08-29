@@ -1664,6 +1664,11 @@
   /* the collapse decode's position-lock cells (decodeCollapse) — each
      char frozen at its measured width so the churn never shoves the line */
   .nmt .dcell { display: inline-block; text-align: center; white-space: pre; }
+  /* THE DIMS GRAMMAR's unit dress (2026-08-29): "mm" runs print small
+     beside their number — much smaller than the digits (his call) and
+     lowercase against the caps line. Global on purpose: the card name
+     line, the lb spec line and the collapse's churn cells all carry it. */
+  .du { font-size: .62em; text-transform: none; }
   .d7f .tspark { position: absolute; top: 13px; right: 14px; top: 5.6034cqw; right: 6.0345cqw; font-size: 12px; font-size: 5.1724cqw; z-index: 2; }
   .d7f .fchip {
     position: relative; overflow: hidden;
@@ -6549,6 +6554,20 @@
        front — and the decode carries the info (the ref); it read the other
        way before. data-ref still holds the board's id, now as the decode
        TARGET instead of the rest. */
+    /* THE DIMS GRAMMAR's rich half (2026-08-29, Dylan: "mm after each
+       measurement too. but much smaller than the text") — a digit
+       immediately before "mm" marks a unit run, which renders small via
+       .du spans. The pattern IS the gate: names can hold mm-the-letters
+       ("SUMMER") but never digit+mm, so plain reads pass through
+       untouched. textContent still reads the PLAIN string through the
+       spans, so every changed-only guard and dataset comparison in this
+       file holds unmodified. */
+    const DIMS_UNIT_RE = /\dmm/;
+    const dimsRich = txt => esc(txt).replace(/(\d)mm/g, '$1<span class="du">mm</span>');
+    const dimsWrite = (el, txt) => {
+      if (DIMS_UNIT_RE.test(txt)) el.innerHTML = dimsRich(txt);
+      else el.textContent = txt;
+    };
     function decodeInto(el, text, stretch) {
       clearInterval(el._t);
       const chars = [...text];
@@ -6568,7 +6587,9 @@
           else { out += GLYPHS[(Math.random() * GLYPHS.length) | 0]; done = false; }
         }
         el.textContent = out;
-        if (done) clearInterval(el._t);
+        /* the landing goes RICH where the text carries unit runs — the
+           churn plays at full size (plain ticks), the mm settle small */
+        if (done) { clearInterval(el._t); if (DIMS_UNIT_RE.test(text)) dimsWrite(el, text); }
       }, 30);
     }
     /* THE LB COLLAPSE (2026-08-16 A/B, decode-slowmo's clps grammar at his
@@ -6594,7 +6615,7 @@
     const CLPS_TICK = 45, CLPS_MS = 750;
     function decodeCollapse(el, text) {
       clearInterval(el._t); el._t = null;
-      if (reduced) { el.textContent = text; return; }
+      if (reduced) { dimsWrite(el, text); return; }
       const from = el.textContent;
       const w = (len, i) => { const x = len === 1 ? 0 : i / (len - 1); return Math.min(x, 1 - x) * 2; };
       /* the lab's schedule: 12% base delay + 70% directional spread + 18% jitter */
@@ -6602,9 +6623,13 @@
         chars.map((c, i) => (0.12 + 0.7 * (inward ? w(chars.length, i) : 1 - w(chars.length, i)) + Math.random() * 0.18) * ms);
       const cells = str => {
         el.textContent = "";
-        [...str].forEach(ch => {
+        /* unit chars (digit+mm) build as SMALL cells so the position lock
+           freezes their real widths — the churn holds the landed shape */
+        const uni = new Set(); let um; const ure = /(\d)mm/g;
+        while ((um = ure.exec(str))) { uni.add(um.index + 1); uni.add(um.index + 2); }
+        [...str].forEach((ch, ui) => {
           const s = document.createElement("span");
-          s.className = "dcell"; s.textContent = ch; el.appendChild(s);
+          s.className = uni.has(ui) ? "dcell du" : "dcell"; s.textContent = ch; el.appendChild(s);
         });
         const ws = [...el.children].map(s => s.getBoundingClientRect().width);
         [...el.children].forEach((s, i) => { s.style.width = ws[i] + "px"; });
@@ -6629,7 +6654,7 @@
       cells(from);
       phase(A, sched(A, true, CLPS_MS * 0.45), true, () => {
         cells(text);
-        phase(B, sched(B, false, CLPS_MS * 0.55), false, () => { el.textContent = text; });
+        phase(B, sched(B, false, CLPS_MS * 0.55), false, () => { dimsWrite(el, text); });
       });
     }
     /* the chip joins the card-hover decode family: at rest it is the bare
@@ -6674,7 +6699,10 @@
     function copyCardTexts(from, to) {
       DRESS_TEXTS.forEach(sel => {
         const a = from.querySelector(sel), f = to.querySelector(sel);
-        if (a && f) f.textContent = a.textContent;
+        /* innerHTML, not textContent (2026-08-29): a dims read carries
+           the .du unit spans now, and a text copy would land the fly
+           with full-size mm against a small-mm rest */
+        if (a && f) f.innerHTML = a.innerHTML;
       });
     }
     /* THE DIMS REST (2026-08-18): on YOUR PICKS and on the drawer's
@@ -6707,7 +6735,7 @@
         const txt = restNm(card);
         if (!txt || nmt.textContent === txt) return;
         clearInterval(nmt._t); nmt._t = null;   /* decodeEl's lesson: null the handle */
-        nmt.textContent = txt;
+        dimsWrite(nmt, txt);
       });
     }
     /* the persistent dress's text half (Dylan, 2026-08-01: the fills just
@@ -6764,7 +6792,7 @@
         if (reduced) {
           if (ref) ref.textContent = ref.dataset.ref || "AVRG";
           if (stx) stx.textContent = stx.dataset.txt;
-          if (newDims) nmt.textContent = dims;
+          if (newDims) dimsWrite(nmt, dims);
           if (want) want.lft.textContent = want.pick;
           return;
         }
@@ -6782,7 +6810,7 @@
         if (stx) { clearInterval(stx._t); stx.textContent = ""; }
         /* rest is whatever the card's surface rests on — the print name, the
            dims (THE DIMS REST), or UNDERSIDE on a flipped card */
-        if (nmt) { clearInterval(nmt._t); nmt._t = null; nmt.textContent = restNm(card); }
+        if (nmt) { clearInterval(nmt._t); nmt._t = null; dimsWrite(nmt, restNm(card)); }
         const lft = card.querySelector(".fc-list .ft");
         if (lft && !/✓/.test(lft.textContent)) {
           /* rest is the bare deck mark — decodeInto("") is an instant
@@ -6986,7 +7014,7 @@
     const JSPARK = {};
     const JPEND = { "HS 02": 1 };
     const JGONE = { "CL 05": 1 };
-    const PH_DIMS = { "OG 01": "33.5 × 97.5 MM" };
+    const PH_DIMS = { "OG 01": "33.5mm × 97.5mm" };   /* the demo string rides the dims grammar */
     /* REAL MEASUREMENTS (Dylan, 2026-08-13) — keyed by padded inventory ref,
        [width, length, tailWidth, noseWidth] in mm. Width is the widest point;
        tail/nose (optional) are the widths at each end — Dylan: "too much
@@ -7038,7 +7066,15 @@
     const OG_SHEETS = {
       "OG 05": "site/img/og/og-05-section-c.png"
     };
-    const dimsStr = d => d ? d[0] + " × " + d[1] + " MM" : "";
+    /* THE DIMS GRAMMAR (2026-08-29, Dylan: "having even round numbers
+       display a .0, so 33.0. mm after each measurement too" — "the
+       varying dim lengths in digit count and the mm being the same...
+       could be more easily readable"): every measurement prints at least
+       one decimal (33 → 33.0; 95.85 keeps its own) and carries its OWN
+       lowercase mm, rendered small by the .du span (dimsRich — the plain
+       string is what dataset.dims and every comparison hold). */
+    const dimsNum = n => Number.isInteger(+n) ? n + ".0" : "" + n;
+    const dimsStr = d => d ? dimsNum(d[0]) + "mm × " + dimsNum(d[1]) + "mm" : "";
     const jref = (c, b, k) => {
       const iv = INVREF(b);
       if (iv) return padRef(iv);
@@ -9870,7 +9906,7 @@
          landing, but a dress must never talk over UNDERSIDE. */
       const dnm = document.getElementById("lb-fv3-nmt");
       if (dnm && dnm.dataset.dims && !lbCard.classList.contains("flipped")) {
-        if (reduced) dnm.textContent = dnm.dataset.dims;
+        if (reduced) dimsWrite(dnm, dnm.dataset.dims);
         else decodeCollapse(dnm, dnm.dataset.dims);   /* the lb dims read rides THE COLLAPSE (item 2) */
       }
     }
@@ -11004,9 +11040,9 @@
       /* the full spec line, real measurements only — no placeholder ever
          prints here (PH_DIMS stays a card-decode-only demo) */
       const dmm = DIMS_MM[ref];
-      lbDims.textContent = dmm
-        ? dimsStr(dmm) + (dmm.length > 2 ? " — tail " + dmm[2] + " · nose " + dmm[3] : "")
-        : "";
+      dimsWrite(lbDims, dmm
+        ? dimsStr(dmm) + (dmm.length > 2 ? " — tail " + dimsNum(dmm[2]) + "mm · nose " + dimsNum(dmm[3]) + "mm" : "")
+        : "");
       lbCount.textContent = (k + 1) + " / " + c.boards.length + " — " + dispTitle(c);
       /* the deck header: the board's own TAG plus the collection size, one
          line on a chip (Dylan, 2026-08-01 — see the .lbhead CSS). The tag is
@@ -16273,7 +16309,7 @@
            the mobile dims pass) — a flip-back restores it there; desktop
            keeps the print name */
         const back = (dockActive() && nmt.dataset.dims) || nmt.dataset.nm;
-        if (reduced) nmt.textContent = on ? "UNDERSIDE" : back;
+        if (reduced) dimsWrite(nmt, on ? "UNDERSIDE" : back);
         else decodeInto(nmt, on ? "UNDERSIDE" : back);
       }
     }

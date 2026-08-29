@@ -7073,26 +7073,29 @@
        The bar's hand (.hpicks/.hpick) redrawn for ~20px: front card at
        the bottom LEFT, two cards rising behind it to the RIGHT — the
        stack's own direction and diagonal — with the count deliberately
-       absent. A literal clone of the header markup is mud at this size,
-       so the fan is DRAWN: the front card is an evenodd ring carrying the
-       add + in its empty middle, and the two behind are drawn as only the
-       edges you would actually see (top rail, right rail, the bottom stub
-       past the front card) — occlusion baked into the artwork, the deck
-       mark's own trick with its .sh shadow. One currentColor family, so
-       the dress's ink→white flip carries the whole object; crispEdges on
-       every rectilinear path (the mark's lesson: corners straddle device
-       pixels at both render scales). The + is a group so :has can stand
-       it down when the chip has a word to show.
+       absent. THE FAN IS SCRATCHED (2026-08-29 same night, Dylan's react
+       to the shipped stack: "lets scratch that add chip... this chip we
+       had, with the inner frame dressing") — at word states the three-
+       card fan read as a white blob. The glyph is ONE MINI CARD now,
+       wearing the fv3 card's own dress in miniature: the panel ring, the
+       hairline INFRAME, the two side gap dots, and the hard offset
+       shadow (right + bottom — the site's card light). One currentColor
+       family so the dress's ink→white flip carries the whole object;
+       crispEdges on every rectilinear path. The + keeps its seat in the
+       card's middle, in the .fplus group the :has stand-down drives.
+       (The class stays .fstack — the bench's chip-stack-size anchor and
+       the nine colour rules point at it; the name outlived the fan.)
        It supersedes BOTH the deck mark (desktop, 2026-08-05) and the
        blank .fmini (phone, 2026-08-13 round 5). */
     const STACKSVG =
       '<svg class="fstack" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">' +
-        '<path shape-rendering="crispEdges" d="M10 .5H22v18h-4V17h2.5V2H10V.5Z"/>' +
-        '<path shape-rendering="crispEdges" d="M6 3h12v18h-4v-1.5h2.5V4.5H6V3Z"/>' +
-        '<path fill-rule="evenodd" shape-rendering="crispEdges" d="M2 5.5h12v18H2V5.5Z M3.5 7v15h9V7h-9Z"/>' +
+        '<path shape-rendering="crispEdges" d="M17.5 2.5h2.5v21H4v-2.5h13.5V2.5Z"/>' +
+        '<path fill-rule="evenodd" shape-rendering="crispEdges" d="M2.5 .5h15v21h-15V.5Z M4 2v18h12V2H4Z"/>' +
+        '<path fill-rule="evenodd" shape-rendering="crispEdges" d="M5.25 3.25h9.5v15.5h-9.5V3.25Z M6 4v14h8V4H6Z"/>' +
+        '<circle cx="5.6" cy="11" r="1.15"/><circle cx="14.4" cy="11" r="1.15"/>' +
         '<g class="fplus">' +
-          '<rect shape-rendering="crispEdges" x="5" y="13.75" width="6" height="1.5"/>' +
-          '<rect shape-rendering="crispEdges" x="7.25" y="11.5" width="1.5" height="6"/>' +
+          '<rect shape-rendering="crispEdges" x="7" y="10.25" width="6" height="1.5"/>' +
+          '<rect shape-rendering="crispEdges" x="9.25" y="8" width="1.5" height="6"/>' +
         '</g>' +
       '</svg>';
     /* THE CARD REMEMBERS ITS FACE (2026-08-17, Dylan: "keeps its last seen

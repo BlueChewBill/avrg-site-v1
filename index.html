@@ -6534,10 +6534,15 @@
        front — and the decode carries the info (the ref); it read the other
        way before. data-ref still holds the board's id, now as the decode
        TARGET instead of the rest. */
-    function decodeInto(el, text) {
+    function decodeInto(el, text, stretch) {
       clearInterval(el._t);
       const chars = [...text];
-      const resolveAt = chars.map((c, i) => i * 0.4 + 1 + Math.random() * 2.2);
+      /* stretch (optional) multiplies every char's resolve clock — the
+         house scramble at a slower burn for landings that must ride an
+         accompanying fill (the phone lb ref — see dockDress) rather than
+         beating it. Omitted everywhere else: 1 is the quick house rate. */
+      const k = stretch || 1;
+      const resolveAt = chars.map((c, i) => (i * 0.4 + 1 + Math.random() * 2.2) * k);
       let f = 0;
       el._t = setInterval(() => {
         f++;
@@ -6566,7 +6571,12 @@
        unchanged. Interval-driven, never rAF (the timeout-pump law).
        LB-ONLY caller set: stayLand's name land + dockDress's arrival —
        grid hovers keep decodeInto's quick house scramble. */
-    const CLPS_TICK = 90, CLPS_MS = 1500;
+    /* ×2 SPEED 2026-08-29 (Dylan: "speed the board dimensions decode up
+       x2 in lightbox. on phone and desktop") — was 90/1500, the A/B
+       dials; both halved so the churn density per phase is unchanged.
+       The ONLY callers are the two lb dims lands (stayLand + dockDress),
+       so this clock IS the lb dims decode and nothing else. */
+    const CLPS_TICK = 45, CLPS_MS = 750;
     function decodeCollapse(el, text) {
       clearInterval(el._t); el._t = null;
       if (reduced) { el.textContent = text; return; }
@@ -6693,10 +6703,10 @@
     /* the ONE landing policy (hoisted from stayLand, review find — dockDress
        carried a hand-copy that had already diverged): null-safe, changed-only,
        reduced kills a mid-scramble interval before the plain write */
-    const landDecode = (el, txt) => {
+    const landDecode = (el, txt, stretch) => {
       if (!el || !txt || el.textContent === txt) return;
       if (reduced) { clearInterval(el._t); el.textContent = txt; }
-      else decodeInto(el, txt);
+      else decodeInto(el, txt, stretch);
     };
     function stayLand() {
       if (!lbCard.classList.contains("stay")) return;
@@ -9817,9 +9827,15 @@
       /* the ref chip lands its info read at the arrival too (THE ID FLIP) —
          the phone has no hover, so the landing IS its decode beat, matching
          the desktop stay land; landDecode is the shared policy (review find:
-         the old inline copy had already diverged from stayLand's) */
+         the old inline copy had already diverged from stayLand's).
+         STRETCHED ×5 (2026-08-29, Dylan: "slow the board id decode down.
+         its landing before the fill happens") — the quick house rate
+         finished ~145ms in, dead before the tset chip fill even starts
+         (.22s delay, lands ~.66s); at 5 the churn runs the fill's whole
+         sweep and the id settles with it. Phone-lb-only: stayLand and
+         every hover decode keep the quick rate. */
       const rft = document.getElementById("lb-fv3-ref");
-      landDecode(rft, rft && rft.dataset.ref);
+      landDecode(rft, rft && rft.dataset.ref, 5);
       /* the chip's word rides the mobile arrival (round 4, revised round
          5: ADD, not a want word — "bottom right decodes now read
          ADD+blank mini card"); a ✓ board prints Mine ! (populate wrote

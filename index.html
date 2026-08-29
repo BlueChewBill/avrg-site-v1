@@ -6449,10 +6449,14 @@
       });
     }
 
-    /* frame v3 card: on card entry the ref chip decodes to AVRG, the name
-       decodes to dims (PH_DIMS boards only) and the status word decodes in
-       beside its dot; all restore on exit. The .left class arms the chip
-       exit animation (see the CSS comment). */
+    /* frame v3 card: on card entry the ref chip decodes to the board ref,
+       the name decodes to dims (PH_DIMS boards only) and the status word
+       decodes in beside its dot; all restore on exit. The .left class arms
+       the chip exit animation (see the CSS comment). THE ID FLIP (T4,
+       2026-08-28, Dylan's ruling): the chip rests on AVRG — branding up
+       front — and the decode carries the info (the ref); it read the other
+       way before. data-ref still holds the board's id, now as the decode
+       TARGET instead of the rest. */
     function decodeInto(el, text) {
       clearInterval(el._t);
       const chars = [...text];
@@ -6606,7 +6610,7 @@
     }
     /* the persistent dress's text half (Dylan, 2026-08-01: the fills just
        stay): land the decoded reads on the lb card, scrambling ONLY what
-       actually changes — decoding "AVRG" into "AVRG" would be the exact
+       actually changes — decoding a read into itself would be the exact
        re-animation this pass rules out. Runs at open (after the source's
        texts ride over) and after every mid-lb populate (deck exchange). */
     function stayLand() {
@@ -6616,7 +6620,11 @@
         if (reduced) { clearInterval(el._t); el.textContent = txt; }
         else decodeInto(el, txt);
       };
-      land(document.getElementById("lb-fv3-ref"), "AVRG");
+      /* the landed decode is the board ref now (THE ID FLIP — info on the
+         decode); stay is desktop-only, so dataset.ref here is never the
+         touch wayfinding pos */
+      const rft = document.getElementById("lb-fv3-ref");
+      land(rft, rft.dataset.ref);
       const nmt = document.getElementById("lb-fv3-nmt");
       /* the name→dims land rides THE COLLAPSE (item 2's grammar; reduced
          short-circuits inside it) — the changed-only guard stays, so a
@@ -6648,13 +6656,13 @@
            rules out, so the changed-only guard rides here too */
         const newDims = dims && nmt.textContent !== dims;
         if (reduced) {
-          if (ref) ref.textContent = "AVRG";
+          if (ref) ref.textContent = ref.dataset.ref || "AVRG";
           if (stx) stx.textContent = stx.dataset.txt;
           if (newDims) nmt.textContent = dims;
           if (want) want.lft.textContent = want.pick;
           return;
         }
-        if (ref) decodeInto(ref, "AVRG");
+        if (ref) decodeInto(ref, ref.dataset.ref || "AVRG");
         if (stx) decodeInto(stx, stx.dataset.txt);
         if (newDims) decodeInto(nmt, dims);
         if (want) decodeInto(want.lft, want.pick);
@@ -6664,7 +6672,7 @@
         const ref = card.querySelector(".fc-ref .ft");
         const stx = card.querySelector(".sttxt");
         const nmt = card.querySelector(".nmt");
-        if (ref) { clearInterval(ref._t); ref.textContent = ref.dataset.ref; }
+        if (ref) { clearInterval(ref._t); ref.textContent = "AVRG"; }   /* rest is the brand word (THE ID FLIP) */
         if (stx) { clearInterval(stx._t); stx.textContent = ""; }
         /* rest is whatever the card's surface rests on — the print name, the
            dims (THE DIMS REST), or UNDERSIDE on a flipped card */
@@ -7013,7 +7021,7 @@
         '<div class="d7f' + soldCls(m) + '" style="--acc:' + m.acc + '"><div class="panel">' +
           '<div class="inframe"><i class="ctl"></i><i class="cbr"></i><i class="dgl"></i><i class="dgr"></i></div>' +
           (m.spark ? '<span class="spark tspark" title="Builder\'s mark — this one came out perfect">✱</span>' : '') +
-          '<div class="corner"><span class="fchip fc-ref"><span class="ft" data-ref="' + esc(m.ref) + '">' + esc(m.ref) + '</span></span></div>' +
+          '<div class="corner"><span class="fchip fc-ref"><span class="ft" data-ref="' + esc(m.ref) + '">AVRG</span></span></div>' +
           (m.bot ? '<button class="fflipc" type="button" data-id="' + esc(m.id) + '" data-top="' + esc(m.img) + '" data-bot="' + esc(m.bot) +
             '" aria-label="Flip the board">' + FLIP_MARK +
             '<img class="fface" loading="lazy" src="' + esc(faceHid(m)) + '" alt=""></button>' : '') +
@@ -9656,6 +9664,13 @@
       if (stx && stx.dataset.txt) {
         if (reduced) stx.textContent = stx.dataset.txt; else decodeInto(stx, stx.dataset.txt);
       }
+      /* the ref chip lands its info read at the arrival too (THE ID FLIP) —
+         the phone has no hover, so the landing IS its decode beat, matching
+         the desktop stay land; changed-only so a re-dress never re-plays */
+      const rft = document.getElementById("lb-fv3-ref");
+      if (rft && rft.dataset.ref && rft.textContent !== rft.dataset.ref) {
+        if (reduced) rft.textContent = rft.dataset.ref; else decodeInto(rft, rft.dataset.ref);
+      }
       /* the chip's word rides the mobile arrival (round 4, revised round
          5: ADD, not a want word — "bottom right decodes now read
          ADD+blank mini card"); a ✓ board prints Mine ! (populate wrote
@@ -10851,7 +10866,7 @@
       if (fv3) {
         const jm = jmeta(c, b, k);
         const rft = document.getElementById("lb-fv3-ref");
-        rft.dataset.ref = jm.ref; rft.textContent = jm.ref;
+        rft.dataset.ref = jm.ref; rft.textContent = "AVRG";   /* brand rest; stayLand / the touch decode land the info read (THE ID FLIP) */
         /* touch never sees the hover choreography, so the corner chip does
            wayfinding instead: it decodes to the position in this chunk
            (6/7) — a swipe sesh should know when the end is coming */
@@ -11314,7 +11329,7 @@
         /* the name line drains to the LANDING's rest, not always the print:
            a bay-bound fly wears .dimsrest, so it settles on the dims the
            shelf under it is already showing (rest == rest) */
-        put(".fc-ref .ft", m.ref); put(".nmt", restNm(flyCard) || m.nm); put(".sttxt", "");
+        put(".fc-ref .ft", "AVRG"); put(".nmt", restNm(flyCard) || m.nm); put(".sttxt", "");
         put(".fc-list .ft", inLisst(id) ? "✓" : "");
       };
       return { fly, rest };

@@ -2716,6 +2716,29 @@
     filter: drop-shadow(4.7414cqw 6.0345cqw 0 rgba(0, 0, 0, .3));
     transition: transform .94s ease, filter .94s ease;
   } }
+  /* T7 — SAFARI'S SHADOW SNAPS (2026-08-28): in WebKit the lb board
+     shadow could render as a huge jagged gray blob (Dylan's screenshots,
+     Mac Safari + iPhone) and, on desktop, stay wrong after a hover ended.
+     Every path to the blob runs through an ANIMATED filter — the phone
+     dress's .8s blift deepen, the desktop hover's .94s, the .3s ease-back
+     the sun's release re-arms — and Safari's compositor-animated
+     drop-shadow is the documented-broken path (stochastic corrupt rasters
+     that FREEZE without finalizing = the sticky half; static drop-shadows
+     verified clean in real iOS WebKit + trunk). So Safari alone drops
+     `filter` from these transitions: the board grow still glides on
+     transform, the shadow steps between states — and every state is a
+     static filter Safari paints right. The gate is the classic WebKit-only
+     @supports probe (Blink/Gecko don't parse -webkit-named-image, so
+     Chrome is untouched by construction). The block sits ABOVE the
+     suntrack rule on purpose: suntrack outranks the first arm on
+     specificity and the blift arm on order, so the sun's per-frame
+     writes stay unmuted. The selectors mirror the three transition
+     owners exactly; keep them in lockstep if those rules move. */
+  @supports (background: -webkit-named-image(i)) {
+    #lb.fv3 .lb-card .frame img,
+    #lb.fv3 .lb-card.blift .frame img { transition-property: transform; }
+    @media (hover: hover) { #lb.fv3 .lb-card .panel:hover .frame img { transition-property: transform; } }
+  }
   /* while the lb sun is live it owns the img's WHOLE pose — shadow (filter)
      AND transform (the gravity pull composes with the 1.08 grow, and a
      transition restarted every pointermove trails the hand) — so nothing

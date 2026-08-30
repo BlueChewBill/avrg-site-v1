@@ -8918,8 +8918,23 @@
         if (!inp || !dockActive()) return;
         const r = inp.getBoundingClientRect();
         const delta = Math.round(r.top - innerHeight * .3);
-        if (Math.abs(delta) > 24)
+        if (Math.abs(delta) > 24) {
           window.scrollTo({ top: Math.max(0, scrollY + delta), left: 0, behavior: "instant" });
+          /* THE TAP KEEPS ITS PROMISE (2026-08-30, Dylan's catch: the
+             jump "requires a second click to open the phones
+             keyboard"): the seat above moves the field out from under
+             the still-down finger, so the release resolves against the
+             down/up targets' common ancestor — never the input — and
+             the first tap's focus (and keyboard) silently dies. Focus
+             HERE, synchronously inside the same gesture, where iOS
+             still honors a programmatic focus with the keyboard;
+             preventScroll because the seat IS the scroll. The ghost
+             click stays unswallowed on purpose — it lands on a
+             container the delegated handlers all ignore, and canceling
+             a pointerdown cannot stop a click anyway. No-jump taps
+             (|delta| ≤ 24) keep the native tap-to-focus path. */
+          if (document.activeElement !== inp) inp.focus({ preventScroll: true });
+        }
       }, true);
       if (!vv) return;
       document.addEventListener("focusin", e => {

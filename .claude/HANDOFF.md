@@ -1,46 +1,46 @@
-# Handoff — AVRG site v1 — 2026-08-29 (night)
+# Handoff — AVRG site v1 — 2026-08-29 (evening, second session)
 
 > (The old vault→v1 porting recipe + the closed A/B trip log live in this file's git history — CLAUDE.md still points here for them.)
 
 ## Where we are
 
-THE FRIDAY POLISH ROUND is done and fully pushed (`a1753bf` = origin HEAD, tree clean): the composer four-pack, the grid flip mini (lb-ghost dress + real flip door), the lb counter retired, both lb decode clocks retuned, THE DIMS GRAMMAR (33.0mm × 95.85mm, small units), THE ADD CHIP redesign (three reacts deep — final form: a flat EMPTY mini card in the fv3 dress, want-words retired), and THE SPARK GROWS TIERS (✦ highest on HS 06/07/16/17/18 · black-chip ✱ on HS 08/10/14). CLAUDE.md's Where-things-stand has the one-line index; every change's record is in its owning surface doc. Bench synced three times (CompUI `97d8d35` tip, census 147). Dylan's verdict on the dims/decode work: "look great. really solid change."
+THE SLUGGISH-SUN HUNT is closed and everything is pushed (`b59080c`-era, tree should be clean after the wrap commit): the sun had been drowning since 08-28 — 655ebac's `.panel:hover` reword out-specified the `.suntrack` transition mute, so every per-frame sun write restarted the .94s hover glide in every browser. Dylan's screenshots cracked it; the mute is armored; his verdict on the healed engine: **"thats the feel."** Same session: the link-preview meta pass landed (og:/twitter: + composed `site/media/og-share.png` — the Sunday-critical item is DONE), the inventory went honest (CL 06/08/16/19 MIA→SOLD via `JGONE`; the inception demo lies CL 05 "Sold"/HS 02 "Pending" came out), CL 03/12/26 got measured, and the board backlog was re-counted at 48 (19 CL + 29 HS undocumented). CLAUDE.md's Where-things-stand has the one-liner; lightbox.md owns the sun record; two new gotchas (the specificity-tie landmine + synthetic-events-can't-see-:hover).
 
-**The clock that matters: Dylan says ~ONE DAY left "to get it straight."** His framing at wrap: the remaining changes are **WIRING, not design** — except the LB photos, which are on HIS end (the og sheet material). Expect a finishing session, not an exploring one.
+**The sun-feel thread is settled by his ruling:** the engine is healed and any residual taste adjustment he'll do himself "with the bench tuning later." The `?sun=`/`?grow=`/`?hud=` collide plumbing is still IN the file (param-gated, verified inert on the bare URL) — it retires whenever he declares the boundary question dead; don't strip it unprompted.
 
 ## Next task
 
-**HIS CALL: "next session should start with the sun / board grow check in."** That's the standing sun-feel thread from THE SUNDAY DISPATCH (open-threads): the `?sun=` collide — build directions 2 + 3 so he can FEEL them (the faster entry arm · the warm ring) against the shipped feel, plus a check-in on the board hover grow. Done = variants served side-by-side (the `?sun=` param idiom), his pick baked, bench synced (the SUN wing is charted — sixteen channels; remember the T7d note: on WebKit the sun writes transform/opacity on `#lb-shadow`, never filter on `#lb-big`, and `sun-grow`'s 1.08 is hand-restated in the T7d CSS pair — a retune carries both).
+**HIS LIST, two items, desktop first:**
 
-Then his wiring list, as he dishes it. Known wiring candidates already on the books: **meta tags (STILL SUNDAY-CRITICAL AND UNSTARTED — no link-preview card exists; raise it before he posts the URL anywhere)**, the og sheet export+wire once his photo compositions land (the Figma → `site/img/og/` → `OG_SHEETS` loop, lightbox.md's THE ZONE LANDS is the recipe), and the splitforms key if the long form is to go live.
+1. **Another pass on the "add" chip** — the `.fstack` mini-card glyph on `.fc-list` (cards.md's THE ADD CHIP redesign, three reacts deep: flat EMPTY mini card in the fv3 dress). No spec given at wrap — open by getting his react/direction, then build variants (his three-react refinement pattern: ship each react fast, he converges). Remember: the class/const names are a kept lie (`.fstack`/`STACKSVG` — bench anchors point at them, don't rename).
+
+2. **A new desktop dropdown from the top-left AVRG bar logo** — for now ONE entry: **media**, doing exactly what clicking the home-page spine video does today (`openVlb` — `#vlb`, the one true full-screen modal, z 7000). Then **re-present that clicked view more like the card lightbox: the playing video gets FLANKERS of the other videos** (today `#vlb` has poster thumbs in `#vlb-thumbs`; he wants the lb's neighbour grammar instead — flanking videos beside the hero). Check what the bar logo's click currently does (header-bar.md) before hanging a dropdown off it, and rhyme the dropdown with the existing drop grammar rather than inventing a new one. This is likely the long-waited home for the vault's `videos/web/` riding clips (open-threads line ~30) — but only the three shipped clips are in `site/media/` today; more clips = his export call, ask before hauling vault media.
+
+Done for (2) = the dropdown opens on the logo on desktop 941+, media entry opens `#vlb`, and `#vlb` shows the hero video with the other clips as flankers in the lb language — his react round included.
 
 ## Read these, skip the rest
 
-- `.claude/docs/open-threads.md` — THE SUNDAY DISPATCH section (the sun-feel three-way's exact directions + minted decisions) and the quality-identifiers item (marks state after tonight).
-- `.claude/docs/lightbox.md` — the sun section + T7d (THE SHADOW BECOMES ITS OWN ELEMENT — read before touching ANY sun channel) + THE ZONE LANDS (if og wiring comes up).
-- `.claude/docs/gotchas.md` — before ANY browser verification (pane's dead rAF/RO/IO family; the private-Chrome CDP escape — private port + private profile, check /json/list ownership; motion verdicts need real Chrome, Safari bugs need his real Safari via safaridriver).
-- `bench/manifest/avrg.json` — the SUN wing before retuning (the engine caveat: a Safari-hosted stage reads `#lb-big` filter as `none` BY DESIGN).
-- `git log --oneline -25` — tonight's story; every record also sits in its owning doc.
+- `.claude/docs/header-bar.md` — the bar + the drop grammar before touching the logo seat.
+- `.claude/docs/lightbox.md` — THE VIDEO LIGHTBOX section (the `#vlb` machinery: `VIDEOS` table, `clipEls`, the cover-slot-is-the-spine-video law, open/close FLIP) + the LB DECK/flanker grammar it should start rhyming with. THE SUN WAS DROWNING IN THE HOVER GLIDE if any sun work comes up.
+- `.claude/docs/cards.md` — THE ADD CHIP section for task 1.
+- `.claude/docs/gotchas.md` — before ANY browser verification. New this session: synthetic events never set `:hover` (hover-gated bugs need real CDP input), and kill the chrome-devtools MCP's Chrome when verification wraps (it hijacks Dylan's Dock relaunch).
+- `git log --oneline -20` — tonight's story.
 
-Everything else is NOT needed until a task leads there. The context pack (`context/card.md`) is current at the merge; re-run `build_context.py` after any index.html change.
+Everything else is NOT needed until a task leads there. Re-run `build_context.py` after any index.html change.
 
 ## Context that isn't in the code
 
-- **Pushing was blanket-authorized tonight** ("full trust. push!") — but that was THIS session's grant; next session, pushes are his call again until he says otherwise.
-- **He walks the whole site tomorrow.** Fast-and-loose screenshots incoming; tonight they were gold — an annotated crop was enough to scope every ticket. Build variants, let him pick; his three-react refinement of the add chip (stack → flat card → empty card) is the pattern: ship each react quickly, he converges fast.
-- **The add-chip class is a lie kept on purpose:** the glyph is a mini CARD but the class/const stay `.fstack`/`STACKSVG` — the bench's `chip-stack-size` anchor and nine colour rules point at them; renaming is churn with no payoff. Recorded in the code comment.
-- **The dims grammar's load-bearing trick:** the plain string ("33.0mm × 95.85mm") is what every dataset/comparison holds; the small-mm is write-time markup (`dimsWrite`). textContent reads identically through the spans. New dims writers must go through `dimsWrite`, and card-to-card text copies must copy innerHTML (`copyCardTexts` does).
-- **Tier order IS rank order in JSPARK** (1 accent ✱ unheld · 2 black-chip ✱ · 3 ✦ highest) — renumbered once already to keep that true; keep it true. Mark tooltips are placeholders; the tag LANGUAGE + touch surfacing (lb) are still the open DM conversation.
-- **Verification harness of the night:** the stale http.server on :8124 serves this repo fine (don't fight it); private headless Chrome on an own port ≥9400 + own profile is the law (two collisions avoided, one Chrome got killed by a sibling's cleanup anyway — relaunching is cheap).
-- **Agent finds parked, not touched:** the desktop drawer's shelf cards are NOT pre-dressed (the "deck cards stay dressed" rule is phone-gated — cards.md's law reads unqualified; doc or gate is wrong); `landWants` writes to a surface that's always indeck-hidden; `build_context.py` hard-crashes on renamed JS consts (guarded for STACKSVG only).
-- **#picon's `.deckmark` is the LAST copy of the deck-mark artwork** — the parked deckmark-cleanup chip (`silly-lamport-eced3f` worktree, still unmerged) must not delete it blindly; its open-threads line carries the caveat now.
-- The chip agent's worktree (`agent-a1790076462b98696`) is merged but harness-locked — ignore it or clean it when the lock drops.
+- **Push cadence tonight was per-drop on his word ("push it") — that grant ended with the session; pushes are his call again.**
+- **A bench-cartographer ticket was dispatched at wrap** to chart the new meta-tag surface as a (documentary/locked) wing — check `git -C ~/Projects/CompUI log --oneline -3` to see if it landed; if not, the ticket's content is recoverable from this session or re-derivable from index.html's head block.
+- **The share card is composed, not shot** — white ground, inverted line logo, HS 04's painted `-bottom` face (hs2/3/4 lead with `-bottom` as the card front), hard offset shadow, hairline frame. Recipe in commit a5a3522's message. If Dylan wants a different board on it, it's a re-render, and DM apps cache previews (re-scrape via opengraph.xyz after changes).
+- **Dylan's feel reports are precise instruments** — this session's whole arc. When his glass and your probes disagree, the glass wins; go hunting for what the probe can't express. (Saved to memory too.)
+- **The identity migration is chartered but parked** (open-threads Misc queue): filename-derived board ids, the originals' NN-prefix playbook generalized, byte-identical data.js diff as acceptance. **Do it BEFORE the 48-board batch.** His framing: not urgent.
+- **The 48-board batch**: additions sort LAST (safe by the ordering law); per-board site cost is one CANVA line + one dims line + a cutout pair; he shoots in increments, any size drop is valid.
+- Caliper list still open: HS 10/15/18 tail/nose, originals if ever.
 
 ## Parked / later
 
-- The weekend big three (og sheets ×6 + bg-removal redo · the 15–25 board batch — ORDERING LAW before touching sources/ · the spark/tags DM design — now half-built, tiers live).
-- The taste calls he never got to: +List on-state border accent · stack-seat optics.
-- Safari pass proper (his click-through of remaining desktop surfaces).
-- The chip-hover answer option (inking the mini card's front on `.fc-list:hover`) — offered, no verdict.
-- The cosmetic code cleanups (bar-inset dedup, renderPicks double-write, populate's dead branch, `.inked` no-op).
-- iPad wide-touch resolution (lowest priority, unenumerated).
+- The sun wake-boundary question (accept vs `?sun=4` vs warm ring, grow size) — HIS bench-tuning territory now; collide plumbing stays until he calls it.
+- The weekend big three minus what closed: og sheets ×6 export+wire (Figma material mostly composed) · the 48-board batch (ORDERING LAW; identity migration first) · spark tag language + touch surfacing (the DM conversation).
+- +List on-state border accent · stack-seat optics (Sunday-dispatch taste calls, still unjudged).
+- The deckmark cleanup chip (own session, #picon `.deckmark` caveat) · the cosmetic code cleanups · Safari pass proper · iPad (lowest).

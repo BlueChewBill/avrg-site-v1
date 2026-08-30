@@ -1768,13 +1768,27 @@
   .d7f .fc-list .fl { display: inline-flex; align-items: center; justify-content: space-between; gap: 5px; gap: 2.1552cqw; }
   /* an empty .ft drops out entirely so the gap arithmetic stays honest */
   .d7f .fc-list .ft:empty { display: none; }
-  /* THE STACK GLYPH's box — 22px at the 232 reference, the SAME cqw as
-     the flip chip's corner mini (9.4827cqw), so the card's two corner
-     objects read at one weight. It replaces an 18px deck mark on the
-     desktop chip and a 10×14 blank mini on the phone's, and that step up
-     is the missability answer: a drawn object in the corner instead of a
-     hairline. px line first per the ONE CARD SPEC. */
-  .d7f .fc-list .fstack { display: block; width: 22px; height: 22px; width: 9.4827cqw; height: 9.4827cqw; flex: 0 0 auto; }
+  /* THE PILL-FILL STRETCH — F BAKED (2026-08-30, his pick off the E/F
+     header-recipe collide: "lets go with f, and drop the shadow. pull
+     the icon down with the saved space. and feel free to stretch the
+     icon to only barely fit inside the decode chip"). Two numbers doing
+     three jobs:
+     · the LAYOUT seat stays F's 19px line (26px drawn − 7px of negative
+       margin), so the box holds at 32 (13 padding + 19), the fc-ref
+       costume padding is untouched, and no dress beat ever resizes it;
+     · the DRAWN card is 26px tall and BLEEDS into the pill's padding
+       through the negative margins, biased DOWN (−2.5 top / −4.5
+       bottom): 4.5px air above, 1.5px below — barely-fits, pulled low,
+       both his words. Width rides the card's clean 2:3.
+     Supersedes D's 16px seat and every parity number before it — the
+     ref pill (26) keeps its own costume; the corners rhyme by dress,
+     not by box, his blue-box mock's ruling. One more px of stretch is
+     a margin nudge, not a redraw. px lines first per the ONE CARD SPEC. */
+  .d7f .fc-list .fstack {
+    display: block; flex: 0 0 auto;
+    width: 17.33px; height: 26px; margin: -2.5px 0 -4.5px;
+    width: 7.4713cqw; height: 11.2069cqw; margin: -1.0776cqw 0 -1.9397cqw;
+  }
   /* (the in-card add + RETIRED 2026-08-29 evening, Dylan: "lets have the
      card always empty like the mock" — the blank card alone is the rest,
      round 5's own quiet-rest ruling back. The .fplus group and its
@@ -6668,12 +6682,13 @@
        redesign). `WANTS` + `wantWord()` scrambled a random "Want? / Like?
        / Need? / Mine !" into the chip on card hover, and the chip-aim
        pair below it swapped that word for "ADD+" — both lived on the 6ch
-       reservation the chip box carried for them. The chip is a drawn
-       EMPTY CARD STACK with its own + now, on every width, and it says
-       the same thing without a word; the reservation retired with them,
-       which is what lets the box shrink-wrap. Nothing writes into
-       .fc-list .ft on desktop any more — only membership does (the ✓) and
-       the phone lb's ADD landing (dockDress). Both live in git. */
+       reservation the chip box carried for them; the reservation retired
+       with them, which is what lets the box shrink-wrap. Both live in
+       git. BUT THE AIM ANSWER CAME BACK (2026-08-30, round 4): the
+       desktop decode writes a plain ADD + again — cardDressOn/Off and
+       stayLand, no reservation, the box grows leftward off the pinned
+       corner like the ref pill's id. The scramble-of-random-words stays
+       retired; membership (✓) and dockDress's phone ADD are unchanged. */
     /* THE PHONE CHIP'S WORDS (round 4, REVISED round 5 2026-08-13: rest
        went quiet — "tuck [the blank mini] into the bottom right of our
        cards pre decode"): a free card's rest chip is the GLYPH ALONE
@@ -6770,8 +6785,11 @@
       if (nmt && ntxt && nmt.textContent !== ntxt) decodeCollapse(nmt, ntxt);
       const stx = document.getElementById("lb-fv3-sttxt");
       land(stx, stx.dataset.txt);
-      /* (the want-word land retired 2026-08-29 with the words — the add
-         chip carries no text on desktop, only the ✓ membership writes) */
+      /* the ADD + lands with the stay (2026-08-30, THE WORD RETURNS) —
+         the lb's landed dress is the desktop's decode-made-resting, so
+         the chip speaks there too; ✓ out-ranks it (dockDress's guard) */
+      const lft = lbCard.querySelector(".fc-list .ft");
+      if (lft && !/✓/.test(lft.textContent)) land(lft, "ADD +");
     }
     if (canHover) {
       /* EXTRACTED (2026-08-04): the entry/exit decode is now a named pair
@@ -6784,6 +6802,16 @@
         const stx = card.querySelector(".sttxt");
         const nmt = card.querySelector(".nmt");
         const dims = nmt && nmt.dataset.dims;
+        /* THE WORD RETURNS (2026-08-30, round 4: "lets bring back the
+           word add in the decode. with an additional +") — the desktop
+           decode writes ADD + beside the glyph, dockDress's own grammar
+           (its ADD landing is the phone's decode beat) said on this
+           surface. A ✓ chip is spoken for — membership out-ranks the
+           invitation, exactly the Mine! guard's rule — and the box grows
+           LEFTWARD off the pinned corner, THE ID FLIP's sanctioned
+           growth (the never-resize law died with the reservation). */
+        const lft = card.querySelector(".fc-list .ft");
+        const lfree = lft && !/✓/.test(lft.textContent);
         /* a dims-rest card is ALREADY showing its dims (THE DIMS REST) —
            decoding dims into dims would be the same re-animation stayLand
            rules out, so the changed-only guard rides here too */
@@ -6792,13 +6820,13 @@
           if (ref) ref.textContent = ref.dataset.ref || "AVRG";
           if (stx) stx.textContent = stx.dataset.txt;
           if (newDims) dimsWrite(nmt, dims);
+          if (lfree) lft.textContent = "ADD +";
           return;
         }
         if (ref) decodeInto(ref, ref.dataset.ref || "AVRG");
         if (stx) decodeInto(stx, stx.dataset.txt);
         if (newDims) decodeInto(nmt, dims);
-        /* (the want-word decode retired 2026-08-29 — the add chip is a
-           drawn stack with no text of its own on desktop) */
+        if (lfree) decodeInto(lft, "ADD +");
       };
       cardDressOff = card => {
         card.classList.add("left");
@@ -6810,9 +6838,11 @@
         /* rest is whatever the card's surface rests on — the print name, the
            dims (THE DIMS REST), or UNDERSIDE on a flipped card */
         if (nmt) { clearInterval(nmt._t); nmt._t = null; dimsWrite(nmt, restNm(card)); }
-        /* (the chip's want-word clear retired 2026-08-29 with the words —
-           the entry writes nothing into .fc-list .ft, so the exit has
-           nothing to hand back; the stack glyph IS the rest) */
+        /* the ADD + hands back to the empty rest — the glyph alone (round
+           5's quiet-rest ruling still owns the rest state); a ✓ stays, it
+           was never the decode's to clear */
+        const lft = card.querySelector(".fc-list .ft");
+        if (lft && !/✓/.test(lft.textContent)) { clearInterval(lft._t); lft._t = null; lft.textContent = ""; }
       };
       document.addEventListener("pointerover", e => {
         const card = e.target.closest && e.target.closest(".d7f");
@@ -7137,11 +7167,37 @@
        one-color svg flips whole. The + is GONE (the .fplus group and
        its :has stand-down retired) — the blank card alone is the rest,
        round 5's own ruling back again. */
+    /* ROUND 4 (2026-08-30, his mock: the header's blank-card counter,
+       minus the 0): THE THROW COMES BACK and THE DECODE IS CONSUMPTION.
+       Two fixed paint layers replace the one currentColor family — the
+       ink layer (throw shadow · outer outline · inframe · gap dots) at
+       #000, the card body at #fff — so the chipwipe fill EATS the
+       outline and throw (black on black) and what survives is the white
+       square with the card's black inner frame. No colour flip, no new
+       plumbing: the consumption IS the decode read ("on decode the black
+       outline of the card would get consumed by the fill but the inner
+       frame could remain"). The nine :is(.ft, .fstack) colour rules are
+       inert on the glyph now (explicit fills beat inherited color) and
+       stand for the .ft text alone. THE GEOMETRY IS THE HEADER BLANK'S
+       (2026-08-30, his catch: "is there any reason we couldnt just use
+       a static empty header card to find our geometry?" — none, and
+       eyeballing it was the round-4 draft's whole miss): the mtblank
+       counter's grammar transcribed — all three lines EQUAL weight,
+       the gap doing the separating (his "extra pixel or two between
+       the inner card frame and the border"), dots as flecks on the
+       rails. Literal .mtblank markup stays impossible in here (a
+       nested .d7f takes the card's own hover rules — the round-2
+       lesson holds); the svg carries the recipe instead. THE THROW IS
+       DROPPED (his F-bake call, same day: "drop the shadow") — the
+       viewBox is the bare card, a clean 2:3. Card 10.5×15.75 u:
+       outline .75 · gap 1.5 · frame .75 · dot flecks r.65. Size and
+       seat live in the .fstack CSS (THE PILL-FILL STRETCH). */
     const STACKSVG =
-      '<svg class="fstack" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">' +
-        '<path fill-rule="evenodd" shape-rendering="crispEdges" d="M4.5 .75h15v22.5h-15V.75Z M6 2.25v19.5h12V2.25H6Z"/>' +
-        '<path fill-rule="evenodd" shape-rendering="crispEdges" d="M7.5 4.5h9v15h-9V4.5Z M8.25 5.25v13.5h7.5V5.25Z"/>' +
-        '<circle cx="7.9" cy="12" r="1.15"/><circle cx="16.1" cy="12" r="1.15"/>' +
+      '<svg class="fstack" viewBox="0 0 10.5 15.75" aria-hidden="true">' +
+        '<path fill="#fff" shape-rendering="crispEdges" d="M0 0h10.5v15.75H0Z"/>' +
+        '<path fill="#000" fill-rule="evenodd" shape-rendering="crispEdges" d="M0 0h10.5v15.75H0Z M.75 .75v14.25h9V.75Z"/>' +
+        '<path fill="#000" fill-rule="evenodd" shape-rendering="crispEdges" d="M2.25 2.25h6v11.25h-6Z M3 3v9.75h4.5V3Z"/>' +
+        '<circle fill="#000" cx="2.625" cy="7.875" r=".65"/><circle fill="#000" cx="7.875" cy="7.875" r=".65"/>' +
       '</svg>';
     /* THE CARD REMEMBERS ITS FACE (2026-08-17, Dylan: "keeps its last seen
        side across its versions") — session memory, board-id keyed, bottom-
@@ -13219,6 +13275,7 @@
           e.stopPropagation();
           toggleLisst(id);
           document.querySelectorAll('.fc-list[data-id="' + id + '"] .ft').forEach(t => {
+            clearInterval(t._t); t._t = null;   /* same armor as the chip click */
             t.textContent = inLisst(id) ? "✓" : "";
           });
           if (dockActive()) mobileExit(item, id); else flyFromBay(item, id);
@@ -15819,6 +15876,10 @@
       const adding = !inLisst(id);
       toggleLisst(id);
       document.querySelectorAll('.fc-list[data-id="' + id + '"] .ft').forEach(t => {
+        /* kill a mid-scramble ADD + before the ✓ lands (decodeEl's
+           lesson) — a live interval would write the invitation back
+           over the membership */
+        clearInterval(t._t); t._t = null;
         t.textContent = inLisst(id) ? "✓" : "";
       });
       if (adding) {

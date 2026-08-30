@@ -1,5 +1,7 @@
 # Handoff — AVRG site v1 — 2026-08-29 (evening, second session)
 
+> Dylan, at goodnight: "tell the next guy i said hi." Hi. /salute
+
 > (The old vault→v1 porting recipe + the closed A/B trip log live in this file's git history — CLAUDE.md still points here for them.)
 
 ## Where we are

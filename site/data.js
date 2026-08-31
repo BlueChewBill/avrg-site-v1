@@ -350,6 +350,336 @@ const COLLECTIONS = [
           "img/full/hand-shaped-14-2.jpg"
         ],
         "ref": "HS 14"
+      },
+      {
+        "id": "hand-shaped-15",
+        "name": "",
+        "description": "",
+        "thumb": "img/thumb/hand-shaped-15-1.jpg",
+        "thumbs": [
+          "img/thumb/hand-shaped-15-1.jpg",
+          "img/thumb/hand-shaped-15-2.jpg"
+        ],
+        "photos": [
+          "img/full/hand-shaped-15-1.jpg",
+          "img/full/hand-shaped-15-2.jpg"
+        ],
+        "ref": "HS 15"
+      },
+      {
+        "id": "hand-shaped-16",
+        "name": "",
+        "description": "",
+        "thumb": "img/thumb/hand-shaped-16-1.jpg",
+        "thumbs": [
+          "img/thumb/hand-shaped-16-1.jpg",
+          "img/thumb/hand-shaped-16-2.jpg"
+        ],
+        "photos": [
+          "img/full/hand-shaped-16-1.jpg",
+          "img/full/hand-shaped-16-2.jpg"
+        ],
+        "ref": "HS 16"
+      },
+      {
+        "id": "hand-shaped-17",
+        "name": "",
+        "description": "",
+        "thumb": "img/thumb/hand-shaped-17-1.jpg",
+        "thumbs": [
+          "img/thumb/hand-shaped-17-1.jpg",
+          "img/thumb/hand-shaped-17-2.jpg"
+        ],
+        "photos": [
+          "img/full/hand-shaped-17-1.jpg",
+          "img/full/hand-shaped-17-2.jpg"
+        ],
+        "ref": "HS 17"
+      },
+      {
+        "id": "hand-shaped-18",
+        "name": "",
+        "description": "",
+        "thumb": "img/thumb/hand-shaped-18-1.jpg",
+        "thumbs": [
+          "img/thumb/hand-shaped-18-1.jpg",
+          "img/thumb/hand-shaped-18-2.jpg"
+        ],
+        "photos": [
+          "img/full/hand-shaped-18-1.jpg",
+          "img/full/hand-shaped-18-2.jpg"
+        ],
+        "ref": "HS 18"
+      },
+      {
+        "id": "hand-shaped-19",
+        "name": "",
+        "description": "",
+        "thumb": "img/thumb/hand-shaped-19-1.jpg",
+        "thumbs": [
+          "img/thumb/hand-shaped-19-1.jpg",
+          "img/thumb/hand-shaped-19-2.jpg"
+        ],
+        "photos": [
+          "img/full/hand-shaped-19-1.jpg",
+          "img/full/hand-shaped-19-2.jpg"
+        ],
+        "ref": "HS 19"
+      },
+      {
+        "id": "hand-shaped-20",
+        "name": "",
+        "description": "",
+        "thumb": "img/thumb/hand-shaped-20-1.jpg",
+        "thumbs": [
+          "img/thumb/hand-shaped-20-1.jpg",
+          "img/thumb/hand-shaped-20-2.jpg"
+        ],
+        "photos": [
+          "img/full/hand-shaped-20-1.jpg",
+          "img/full/hand-shaped-20-2.jpg"
+        ],
+        "ref": "HS 20"
+      },
+      {
+        "id": "hand-shaped-21",
+        "name": "",
+        "description": "",
+        "thumb": "img/thumb/hand-shaped-21-1.jpg",
+        "thumbs": [
+          "img/thumb/hand-shaped-21-1.jpg",
+          "img/thumb/hand-shaped-21-2.jpg"
+        ],
+        "photos": [
+          "img/full/hand-shaped-21-1.jpg",
+          "img/full/hand-shaped-21-2.jpg"
+        ],
+        "ref": "HS 21"
+      },
+      {
+        "id": "hand-shaped-22",
+        "name": "",
+        "description": "",
+        "thumb": "img/thumb/hand-shaped-22-1.jpg",
+        "thumbs": [
+          "img/thumb/hand-shaped-22-1.jpg",
+          "img/thumb/hand-shaped-22-2.jpg"
+        ],
+        "photos": [
+          "img/full/hand-shaped-22-1.jpg",
+          "img/full/hand-shaped-22-2.jpg"
+        ],
+        "ref": "HS 22"
+      },
+      {
+        "id": "hand-shaped-23",
+        "name": "",
+        "description": "",
+        "thumb": "img/thumb/hand-shaped-23-1.jpg",
+        "thumbs": [
+          "img/thumb/hand-shaped-23-1.jpg",
+          "img/thumb/hand-shaped-23-2.jpg"
+        ],
+        "photos": [
+          "img/full/hand-shaped-23-1.jpg",
+          "img/full/hand-shaped-23-2.jpg"
+        ],
+        "ref": "HS 23"
+      },
+      {
+        "id": "hand-shaped-24",
+        "name": "",
+        "description": "",
+        "thumb": "img/thumb/hand-shaped-24-1.jpg",
+        "thumbs": [
+          "img/thumb/hand-shaped-24-1.jpg",
+          "img/thumb/hand-shaped-24-2.jpg"
+        ],
+        "photos": [
+          "img/full/hand-shaped-24-1.jpg",
+          "img/full/hand-shaped-24-2.jpg"
+        ],
+        "ref": "HS 24"
+      },
+      {
+        "id": "hand-shaped-25",
+        "name": "",
+        "description": "",
+        "thumb": "img/thumb/hand-shaped-25-1.jpg",
+        "thumbs": [
+          "img/thumb/hand-shaped-25-1.jpg",
+          "img/thumb/hand-shaped-25-2.jpg"
+        ],
+        "photos": [
+          "img/full/hand-shaped-25-1.jpg",
+          "img/full/hand-shaped-25-2.jpg"
+        ],
+        "ref": "HS 25"
+      },
+      {
+        "id": "hand-shaped-26",
+        "name": "",
+        "description": "",
+        "thumb": "img/thumb/hand-shaped-26-1.jpg",
+        "thumbs": [
+          "img/thumb/hand-shaped-26-1.jpg",
+          "img/thumb/hand-shaped-26-2.jpg"
+        ],
+        "photos": [
+          "img/full/hand-shaped-26-1.jpg",
+          "img/full/hand-shaped-26-2.jpg"
+        ],
+        "ref": "HS 26"
+      },
+      {
+        "id": "hand-shaped-27",
+        "name": "",
+        "description": "",
+        "thumb": "img/thumb/hand-shaped-27-1.jpg",
+        "thumbs": [
+          "img/thumb/hand-shaped-27-1.jpg",
+          "img/thumb/hand-shaped-27-2.jpg"
+        ],
+        "photos": [
+          "img/full/hand-shaped-27-1.jpg",
+          "img/full/hand-shaped-27-2.jpg"
+        ],
+        "ref": "HS 27"
+      },
+      {
+        "id": "hand-shaped-28",
+        "name": "",
+        "description": "",
+        "thumb": "img/thumb/hand-shaped-28-1.jpg",
+        "thumbs": [
+          "img/thumb/hand-shaped-28-1.jpg",
+          "img/thumb/hand-shaped-28-2.jpg"
+        ],
+        "photos": [
+          "img/full/hand-shaped-28-1.jpg",
+          "img/full/hand-shaped-28-2.jpg"
+        ],
+        "ref": "HS 28"
+      },
+      {
+        "id": "hand-shaped-29",
+        "name": "",
+        "description": "",
+        "thumb": "img/thumb/hand-shaped-29-1.jpg",
+        "thumbs": [
+          "img/thumb/hand-shaped-29-1.jpg",
+          "img/thumb/hand-shaped-29-2.jpg"
+        ],
+        "photos": [
+          "img/full/hand-shaped-29-1.jpg",
+          "img/full/hand-shaped-29-2.jpg"
+        ],
+        "ref": "HS 29"
+      },
+      {
+        "id": "hand-shaped-30",
+        "name": "",
+        "description": "",
+        "thumb": "img/thumb/hand-shaped-30-1.jpg",
+        "thumbs": [
+          "img/thumb/hand-shaped-30-1.jpg",
+          "img/thumb/hand-shaped-30-2.jpg"
+        ],
+        "photos": [
+          "img/full/hand-shaped-30-1.jpg",
+          "img/full/hand-shaped-30-2.jpg"
+        ],
+        "ref": "HS 30"
+      },
+      {
+        "id": "hand-shaped-31",
+        "name": "",
+        "description": "",
+        "thumb": "img/thumb/hand-shaped-31-1.jpg",
+        "thumbs": [
+          "img/thumb/hand-shaped-31-1.jpg",
+          "img/thumb/hand-shaped-31-2.jpg"
+        ],
+        "photos": [
+          "img/full/hand-shaped-31-1.jpg",
+          "img/full/hand-shaped-31-2.jpg"
+        ],
+        "ref": "HS 31"
+      },
+      {
+        "id": "hand-shaped-32",
+        "name": "",
+        "description": "",
+        "thumb": "img/thumb/hand-shaped-32-1.jpg",
+        "thumbs": [
+          "img/thumb/hand-shaped-32-1.jpg",
+          "img/thumb/hand-shaped-32-2.jpg"
+        ],
+        "photos": [
+          "img/full/hand-shaped-32-1.jpg",
+          "img/full/hand-shaped-32-2.jpg"
+        ],
+        "ref": "HS 32"
+      },
+      {
+        "id": "hand-shaped-33",
+        "name": "",
+        "description": "",
+        "thumb": "img/thumb/hand-shaped-33-1.jpg",
+        "thumbs": [
+          "img/thumb/hand-shaped-33-1.jpg",
+          "img/thumb/hand-shaped-33-2.jpg"
+        ],
+        "photos": [
+          "img/full/hand-shaped-33-1.jpg",
+          "img/full/hand-shaped-33-2.jpg"
+        ],
+        "ref": "HS 33"
+      },
+      {
+        "id": "hand-shaped-34",
+        "name": "",
+        "description": "",
+        "thumb": "img/thumb/hand-shaped-34-1.jpg",
+        "thumbs": [
+          "img/thumb/hand-shaped-34-1.jpg",
+          "img/thumb/hand-shaped-34-2.jpg"
+        ],
+        "photos": [
+          "img/full/hand-shaped-34-1.jpg",
+          "img/full/hand-shaped-34-2.jpg"
+        ],
+        "ref": "HS 34"
+      },
+      {
+        "id": "hand-shaped-35",
+        "name": "",
+        "description": "",
+        "thumb": "img/thumb/hand-shaped-35-1.jpg",
+        "thumbs": [
+          "img/thumb/hand-shaped-35-1.jpg",
+          "img/thumb/hand-shaped-35-2.jpg"
+        ],
+        "photos": [
+          "img/full/hand-shaped-35-1.jpg",
+          "img/full/hand-shaped-35-2.jpg"
+        ],
+        "ref": "HS 35"
+      },
+      {
+        "id": "hand-shaped-36",
+        "name": "",
+        "description": "",
+        "thumb": "img/thumb/hand-shaped-36-1.jpg",
+        "thumbs": [
+          "img/thumb/hand-shaped-36-1.jpg",
+          "img/thumb/hand-shaped-36-2.jpg"
+        ],
+        "photos": [
+          "img/full/hand-shaped-36-1.jpg",
+          "img/full/hand-shaped-36-2.jpg"
+        ],
+        "ref": "HS 36"
       }
     ]
   },

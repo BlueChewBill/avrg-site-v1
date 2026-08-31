@@ -645,6 +645,141 @@ const COLLECTIONS = [
           "img/full/classic-19-2.jpg"
         ],
         "ref": "CL 19"
+      },
+      {
+        "id": "classic-20",
+        "name": "",
+        "description": "",
+        "thumb": "img/thumb/classic-20-1.jpg",
+        "thumbs": [
+          "img/thumb/classic-20-1.jpg",
+          "img/thumb/classic-20-2.jpg"
+        ],
+        "photos": [
+          "img/full/classic-20-1.jpg",
+          "img/full/classic-20-2.jpg"
+        ],
+        "ref": "CL 20"
+      },
+      {
+        "id": "classic-21",
+        "name": "",
+        "description": "",
+        "thumb": "img/thumb/classic-21-1.jpg",
+        "thumbs": [
+          "img/thumb/classic-21-1.jpg",
+          "img/thumb/classic-21-2.jpg"
+        ],
+        "photos": [
+          "img/full/classic-21-1.jpg",
+          "img/full/classic-21-2.jpg"
+        ],
+        "ref": "CL 21"
+      },
+      {
+        "id": "classic-22",
+        "name": "",
+        "description": "",
+        "thumb": "img/thumb/classic-22-1.jpg",
+        "thumbs": [
+          "img/thumb/classic-22-1.jpg",
+          "img/thumb/classic-22-2.jpg"
+        ],
+        "photos": [
+          "img/full/classic-22-1.jpg",
+          "img/full/classic-22-2.jpg"
+        ],
+        "ref": "CL 22"
+      },
+      {
+        "id": "classic-23",
+        "name": "",
+        "description": "",
+        "thumb": "img/thumb/classic-23-1.jpg",
+        "thumbs": [
+          "img/thumb/classic-23-1.jpg",
+          "img/thumb/classic-23-2.jpg"
+        ],
+        "photos": [
+          "img/full/classic-23-1.jpg",
+          "img/full/classic-23-2.jpg"
+        ],
+        "ref": "CL 23"
+      },
+      {
+        "id": "classic-24",
+        "name": "",
+        "description": "",
+        "thumb": "img/thumb/classic-24-1.jpg",
+        "thumbs": [
+          "img/thumb/classic-24-1.jpg",
+          "img/thumb/classic-24-2.jpg"
+        ],
+        "photos": [
+          "img/full/classic-24-1.jpg",
+          "img/full/classic-24-2.jpg"
+        ],
+        "ref": "CL 24"
+      },
+      {
+        "id": "classic-25",
+        "name": "",
+        "description": "",
+        "thumb": "img/thumb/classic-25-1.jpg",
+        "thumbs": [
+          "img/thumb/classic-25-1.jpg",
+          "img/thumb/classic-25-2.jpg"
+        ],
+        "photos": [
+          "img/full/classic-25-1.jpg",
+          "img/full/classic-25-2.jpg"
+        ],
+        "ref": "CL 25"
+      },
+      {
+        "id": "classic-26",
+        "name": "",
+        "description": "",
+        "thumb": "img/thumb/classic-26-1.jpg",
+        "thumbs": [
+          "img/thumb/classic-26-1.jpg",
+          "img/thumb/classic-26-2.jpg"
+        ],
+        "photos": [
+          "img/full/classic-26-1.jpg",
+          "img/full/classic-26-2.jpg"
+        ],
+        "ref": "CL 26"
+      },
+      {
+        "id": "classic-27",
+        "name": "",
+        "description": "",
+        "thumb": "img/thumb/classic-27-1.jpg",
+        "thumbs": [
+          "img/thumb/classic-27-1.jpg",
+          "img/thumb/classic-27-2.jpg"
+        ],
+        "photos": [
+          "img/full/classic-27-1.jpg",
+          "img/full/classic-27-2.jpg"
+        ],
+        "ref": "CL 27"
+      },
+      {
+        "id": "classic-28",
+        "name": "",
+        "description": "",
+        "thumb": "img/thumb/classic-28-1.jpg",
+        "thumbs": [
+          "img/thumb/classic-28-1.jpg",
+          "img/thumb/classic-28-2.jpg"
+        ],
+        "photos": [
+          "img/full/classic-28-1.jpg",
+          "img/full/classic-28-2.jpg"
+        ],
+        "ref": "CL 28"
       }
     ]
   },

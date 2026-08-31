@@ -45,6 +45,7 @@ Values were **measured off the running page**, not read out of the CSS — the O
 | `04 · Home page` | 11 components + a full 1440 desktop home mockup. |
 | `05 · Lightbox` | 9 components + TWO full pages — the standard inspection and the originals spread. |
 | `06 · Deck drawer` | 6 components + a full page with the drawer out and the shop making room. |
+| `08 · Card states (2026-08-30)` | The CURRENT desktop card as two components — `Card v2 / Rest` + `Card v2 / Decode` — measured off the live page post-Friday-polish (add-chip stack glyph, dims grammar with small units, the ID flip's AVRG↔HS 01, ADD + leftward growth, the hover frame-gap). Real HS 01 cutouts uploaded. Dylan's ask 2026-08-30; page 03's card boards predate the redesign and are stale on those parts. |
 
 **35 components** land in the Assets panel. Naming is `Surface / Part` so the panel groups them.
 
@@ -74,6 +75,18 @@ Values were **measured off the running page**, not read out of the CSS — the O
   page was rebuilt with fewer.
 - **Chips show their hover text.** On the live card `.sttxt` and `.fc-list .ft` are empty at rest.
   The kit ships them written — legibility beats fidelity in a mockup — and the descriptions say so.
+
+## Measuring the DECODE state (learned building page 08, 2026-08-30)
+
+The hover decode cannot be measured with synthetic events (`:hover` never sets) and the
+decode TEXT SCRAMBLES IN over ~2s — a JS read right after hover returns garbage like
+`33.75mm × 92#7<{`. The recipe that works: drive a REAL hover with the claude-in-chrome
+`computer {action:"hover"}` tool (it sets true `:hover` — verified with `matches(':hover')`),
+wait 5s+, then read texts / take a zoom screenshot. Re-hovering RESTARTS the scramble.
+Two more card traps: `.stage` holds TWO face imgs (face memory) and the hidden one is 0×0
+by the lazy law — query the visible one, not `.stage img` first-match; and the chips'
+black dress is a `::before` wipe layer (scale-collapsed at rest), so element computed
+styles read transparent — the zoom screenshot is the paint truth.
 
 ## Traps this cost time on
 

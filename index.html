@@ -5657,19 +5657,19 @@
        pointer-events only (the video and the clamp carry transforms of
        their own): the boxes stay laid out, so lockCardScale and the
        conveyor measure the same page they always did. */
-    body.land #home .spine > :not(.masthead):not(.video-wrap):not(.made-row),
+    body.land #home .spine > :not(.masthead):not(.video-wrap):not(.made-note):not(.made-row),
     body.land #home .bandhead,
     body.land #home .belt {
       opacity: 0; pointer-events: none;
     }
     body.land #home .bandhead {
       transform: translateY(10px);
-      transition: opacity var(--landHeadDur, 520ms) ease,
-                  transform var(--landHeadDur, 520ms) cubic-bezier(.22, 1, .36, 1);
+      transition: opacity var(--landHeadDur) ease,
+                  transform var(--landHeadDur) cubic-bezier(.22, 1, .36, 1);
     }
-    body.land #home .belt { transition: opacity var(--landCarDur, 620ms) ease; }
-    body.land #home .spine > :not(.masthead):not(.video-wrap):not(.made-row) {
-      transition: opacity var(--landCarDur, 620ms) ease;
+    body.land #home .belt { transition: opacity var(--landCarDur) ease; }
+    body.land #home .spine > :not(.masthead):not(.video-wrap):not(.made-note):not(.made-row) {
+      transition: opacity var(--landCarDur) ease;
     }
     /* the tick holds its beat — startTick is deferred at boot the same way
        the intro defers it. The .4s is the phone pair's; there is no base
@@ -5708,7 +5708,7 @@
        stranded invisible — the tail beat sweeps up whatever has no chunk */
     body.land.land-tail #home .band:not([data-land-chunk]) .bandhead,
     body.land.land-tail #home .band:not([data-land-chunk]) .belt,
-    body.land.land-tail #home .spine > :not(.masthead):not(.video-wrap):not(.made-row) {
+    body.land.land-tail #home .spine > :not(.masthead):not(.video-wrap):not(.made-note):not(.made-row) {
       opacity: 1; transform: none; pointer-events: auto;
     }
 
@@ -5725,8 +5725,8 @@
     body.land #home .video-wrap {
       opacity: 0; pointer-events: none;
       transform: translateX(-120%);
-      transition: opacity var(--landVidDur, 620ms) ease,
-                  transform var(--landVidDur, 620ms) cubic-bezier(.22, 1, .36, 1);
+      transition: opacity var(--landVidDur) ease,
+                  transform var(--landVidDur) cubic-bezier(.22, 1, .36, 1);
     }
     body.land.land-vid #home .video-wrap {
       opacity: 1; transform: none; pointer-events: auto;
@@ -5759,7 +5759,7 @@
        the seat beat (and therefore the tick, the video and the cascade)
        from the same number, so the flight and the clock cannot drift. */
     body.land.land-shrink .masthead .brand {
-      transition: transform var(--landTravel, 850ms) cubic-bezier(.22, 1, .36, 1);
+      transition: transform var(--landTravel) cubic-bezier(.22, 1, .36, 1);
     }
 
     /* ---- THE CLAMP PHOTO, BELOW THE VIDEO (his correction: "'behind it'
@@ -5778,13 +5778,19 @@
        Same grammar as the video, and excluded from the shared spine hold
        for the same reason: one organ, one hold — a state's transition
        list REPLACES the base list (the .fveil bite, gotchas.md), so the
-       slide must live on the organ's own rule or it snaps. */
+       slide must live on the organ's own rule or it snaps.
+       .made-note RIDES ALONG (C16 find, Dylan's 2026-08-30 "1 looks
+       solid"): "originals, made like this" is the row's own lead-in line
+       and used to arrive a full tail beat AFTER the photo it captions —
+       caption and photo are one unit now, one beat, one entrance. */
+    body.land #home .made-note,
     body.land #home .made-row {
       opacity: 0; pointer-events: none;
       transform: translateX(-120%);
-      transition: opacity var(--landClampDur, 520ms) ease,
-                  transform var(--landClampDur, 520ms) cubic-bezier(.22, 1, .36, 1);
+      transition: opacity var(--landClampDur) ease,
+                  transform var(--landClampDur) cubic-bezier(.22, 1, .36, 1);
     }
+    body.land.land-clamp #home .made-note,
     body.land.land-clamp #home .made-row {
       opacity: 1; transform: none; pointer-events: auto;
     }
@@ -17056,7 +17062,14 @@
         played = true;
 
         /* the knobs the CSS reads. One write per ride, so an override that
-           lands between rides is picked up by the next one. */
+           lands between rides is picked up by the next one. THE var()s
+           CARRY NO FALLBACKS, on purpose (C16 find, 2026-08-30): a
+           fallback is a second copy of a LAND_TUNE number, and one had
+           already drifted (--landTravel's 850 vs the baked 1000). These
+           writes land synchronously before any beat class, so the vars
+           are always set by the time a transition can run; the one
+           unreachable-in-practice gap (a dead main script after the arm)
+           degrades to a snap, which is what a dead ceremony deserves. */
         RS.setProperty("--landTravel", T.travel + "ms");
         RS.setProperty("--landHeadDur", T.headDur + "ms");
         RS.setProperty("--landCarDur", T.carDur + "ms");

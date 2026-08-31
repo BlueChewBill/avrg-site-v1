@@ -1859,8 +1859,10 @@
   .d7f .fst.avail .dot { background: #3e7d3a; }
   .d7f .fst.pend { color: #c98a12; }
   .d7f .fst.pend .dot { background: #c98a12; animation: pulse 1.6s ease-in-out infinite; }
-  .d7f .fst.gone { color: #8b8175; }
-  .d7f .fst.gone .dot { background: #8b8175; }
+  /* sold reads RED since 2026-08-31 ("make the dot and sold red") — the
+     card's own corner red (.cbr), not a new ink */
+  .d7f .fst.gone { color: #FF4655; }
+  .d7f .fst.gone .dot { background: #FF4655; }
   .d7f .sttxt { min-height: 1em; }
 
   /* treatments are taller than the photo card — give the belt room */

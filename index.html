@@ -5657,7 +5657,7 @@
        pointer-events only (the video and the clamp carry transforms of
        their own): the boxes stay laid out, so lockCardScale and the
        conveyor measure the same page they always did. */
-    body.land #home .spine > :not(.masthead):not(.video-wrap):not(.land-clamp),
+    body.land #home .spine > :not(.masthead):not(.video-wrap):not(.made-row),
     body.land #home .bandhead,
     body.land #home .belt {
       opacity: 0; pointer-events: none;
@@ -5668,7 +5668,7 @@
                   transform var(--landHeadDur, 520ms) cubic-bezier(.22, 1, .36, 1);
     }
     body.land #home .belt { transition: opacity var(--landCarDur, 620ms) ease; }
-    body.land #home .spine > :not(.masthead):not(.video-wrap):not(.land-clamp) {
+    body.land #home .spine > :not(.masthead):not(.video-wrap):not(.made-row) {
       transition: opacity var(--landCarDur, 620ms) ease;
     }
     /* the tick holds its beat — startTick is deferred at boot the same way
@@ -5687,8 +5687,7 @@
     body.land.land-snap #home .video-wrap,
     body.land.land-snap #home .spine > :not(.masthead),
     body.land.land-snap #tick,
-    body.land.land-snap .fveil,
-    body.land.land-snap .land-clamp { transition: none; }
+    body.land.land-snap .fveil { transition: none; }
 
     /* ---- THE SECTIONS LAND ONE AT A TIME ----
        header and carousel are SEPARATE beats now (his spec: "the section
@@ -5709,7 +5708,7 @@
        stranded invisible — the tail beat sweeps up whatever has no chunk */
     body.land.land-tail #home .band:not([data-land-chunk]) .bandhead,
     body.land.land-tail #home .band:not([data-land-chunk]) .belt,
-    body.land.land-tail #home .spine > :not(.masthead):not(.video-wrap):not(.land-clamp) {
+    body.land.land-tail #home .spine > :not(.masthead):not(.video-wrap):not(.made-row) {
       opacity: 1; transform: none; pointer-events: auto;
     }
 
@@ -5765,34 +5764,30 @@
 
     /* ---- THE CLAMP PHOTO, BELOW THE VIDEO (his correction: "'behind it'
        i meant just the clamp photo below, after. so video comes in then
-       the clamp photo. my bad") ----
-       A REAL element the driver builds and inserts after .video-wrap, not
-       a pseudo and not markup: it exists only while the switch does, and
-       it takes its box at ARM time so its arrival is a fade, never a
-       reflow under the reader. Dressed to the video it follows — same
-       radius, same ink ring, same hard shadow, column width.
-       ITS STATE IS ITS OWN CLASS, not the body's, so it SURVIVES the
-       clear: this is the one beat that leaves something behind rather
-       than revealing markup that was always there. A ride cancelled
-       before it lands removes the node instead.
-       IT IS EXCLUDED FROM THE SHARED SPINE HOLD for the same reason the
-       video is — it lands inside .spine, and that selector (1,4,1) far
-       outranks .land-clamp.in (0,2,0), so the photo was being held past
-       its own beat and only appearing when the TAIL swept the spine.
-       It looked right on a first run and read 0 on a replay, which is
-       how it was caught. One organ, one hold. */
-    .land-clamp {
-      display: block; margin: 14px 0 0; width: 100%;
-      opacity: 0; transform: translateY(14px);
+       the clamp photo. my bad" — and the 2026-08-30 simplification: "the
+       clamp photo doesnt need to do anything other than arrive a beat
+       after the video the same way the video enters") ----
+       IT IS THE REAL .made-row, not an inserted copy. The first cut built
+       a duplicate <figure> and deliberately left it behind at the clear —
+       which put the SAME photo on the page twice on every completed ride
+       (the print full-width under the video, the made-row's own further
+       down; his 2026-08-30 "repeating image" catch, hidden below the fold
+       since the bake). Now the beat just reveals markup that was always
+       there, the ride leaves NOTHING behind, and a stood-down page is
+       byte-identical to one that never rode.
+       Same grammar as the video, and excluded from the shared spine hold
+       for the same reason: one organ, one hold — a state's transition
+       list REPLACES the base list (the .fveil bite, gotchas.md), so the
+       slide must live on the organ's own rule or it snaps. */
+    body.land #home .made-row {
+      opacity: 0; pointer-events: none;
+      transform: translateX(-120%);
       transition: opacity var(--landClampDur, 520ms) ease,
                   transform var(--landClampDur, 520ms) cubic-bezier(.22, 1, .36, 1);
     }
-    .land-clamp img {
-      display: block; width: 100%; aspect-ratio: 5 / 4; object-fit: cover;
-      border-radius: 6px;
-      box-shadow: 0 0 0 2px var(--ink), 9px 11px 0 -1px rgba(32, 26, 21, .34);
+    body.land.land-clamp #home .made-row {
+      opacity: 1; transform: none; pointer-events: auto;
     }
-    .land-clamp.in { opacity: 1; transform: none; }
   }
   /* ======================= end THE LANDING ============================== */
 </style>
@@ -16941,7 +16936,7 @@
       const step = (...c) => document.body.classList.add(...c);
       const RS = document.documentElement.style;
       const CLS = ["land", "land-snap", "land-pose", "land-shrink",
-                   "land-tick", "land-bar", "land-vid", "land-tail",
+                   "land-tick", "land-bar", "land-vid", "land-clamp", "land-tail",
                    "land-h1", "land-h2", "land-h3", "land-c1", "land-c2", "land-c3"];
       let played = false;
       const VARS = ["--landTravel", "--landHeadDur", "--landCarDur",
@@ -17017,12 +17012,10 @@
           try { svg.setCurrentTime(0); svg.setCurrentTime(9); } catch (e) {}
       }
 
-      function clamper() { return document.querySelector(".land-clamp"); }
-
-      /* stand the ride down whole. `keepClamp` is the landed case: the
-         photo is the one beat that LEAVES something, so it survives the
-         clear — but a ride cancelled before it landed takes its node back
-         rather than parking an empty box in the column. */
+      /* stand the ride down whole — every beat is a body class now (the
+         clamp print's leave-something-behind special case retired
+         2026-08-30 with the duplicate it caused), so the clear takes back
+         everything and the page is exactly the unridden one. */
       function standDown() {
         timers.forEach(clearTimeout);
         timers = [];
@@ -17032,8 +17025,6 @@
         VARS.forEach(v => RS.removeProperty(v));
         document.querySelectorAll("#cols .band[data-land-chunk]")
           .forEach(b => { delete b.dataset.landChunk; });
-        const c = clamper();
-        if (c && !c.classList.contains("in")) c.remove();
         if (brand) brand.style.transform = "";
         startTick();   /* belt, and FIRST: nothing after it may strand the tick */
         if (fveilEl) fveil.clear();   /* the deref the bail branch could not survive */
@@ -17084,31 +17075,6 @@
           if (band) band.dataset.landChunk = String(i + 1);
         });
 
-        /* the clamp photo's node goes in NOW, holding its box, so its
-           arrival is a fade and never a reflow under the reader.
-           A LANDED PRINT FROM THE LAST RIDE IS TAKEN BACK HERE, at the
-           START of the new one. Its .in is its own class precisely so it
-           survives the clear (the one beat that leaves something behind),
-           but that also carried it into the NEXT ride ALREADY ARRIVED —
-           measured on the bench at ~16ms instead of its beat, which makes
-           clampAt/clampDur unjudgeable on a warm stage. The reset belongs
-           here and not in standDown: an uninterrupted ride's print still
-           persists through its own clear, and a ride cancelled before the
-           landing still takes the node back (standDown's .in check). */
-        const stale = clamper();
-        if (stale) stale.remove();
-        const vwrap = document.querySelector("#home .video-wrap");
-        if (vwrap) {
-          const fig = document.createElement("figure");
-          fig.className = "land-clamp";
-          const im = document.createElement("img");
-          im.src = "site/media/story-clamps.jpg";
-          im.alt = "A deck clamped up with every clamp in the shop";
-          im.loading = "eager";   /* chrome by definition — the lazy 0x0 law */
-          fig.appendChild(im);
-          vwrap.insertAdjacentElement("afterend", fig);
-        }
-
         /* take the start pose in ONE frame, transitions off (see .land-snap) */
         document.body.classList.add("land", "land-snap");
         void document.body.offsetWidth;
@@ -17153,7 +17119,7 @@
         /* the seat: the mark is home, its line decodes, the video arrives */
         at(seatAt, () => { step("land-tick"); startTick(); });
         at(vidAt, () => step("land-vid"));
-        at(clampAt, () => { const c = clamper(); if (c) c.classList.add("in"); });
+        at(clampAt, () => step("land-clamp"));
         at(clampAt + T.tailAt, () => step("land-tail"));
 
         /* the cascade: header, then its carousel, next section overlapping */

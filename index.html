@@ -1486,31 +1486,50 @@
      the carousel's hide-behind-the-panel trick) and must never gain a
      stacking context between them and the panel. */
   .d7f .stage img { z-index: 1; }
-  /* THE SOLD BOARD GOES GHOST AND WEARS THE STAMP (2026-08-30, his ask:
-     "instead of the color fade. lets give the board just a 25 pct
-     opacity fade and a red sold across the board" — supersedes the
-     08-19 colour-dim). The 08-19 shingle lesson still binds: the CARD
-     stays opaque (`.d7f.sold { opacity: 1 }` below still overrides the
-     legacy blanket `.sold { opacity: .55 }`), only the BOARD fades.
-     Opacity rides the IMG exactly where the filter did — same
-     stacking-context scoping, so the flip faces' parked z:−1 stays
-     safe — and the base drop-shadow fades WITH the board (opacity
-     applies after filter), which is the right read for a ghost.
-     No hover restatement needed any more: the hover rule only writes
-     filter/--bgrow, so the fade survives the hand by construction. */
+  /* THE SOLD MARKER RIDES TO THE DECK (2026-08-31, his revision of the
+     same-day red stamp, which lived one commit: "lets just move the
+     sold icon on hover in the bottom left of the card appear dead
+     center of the deck. deck is always 75 pct opacity out of 100. the
+     card gets no card shadow"). The 08-19 shingle lesson still binds:
+     the CARD stays opaque (`.d7f.sold { opacity: 1 }` overrides the
+     legacy blanket `.sold { opacity: .55 }` — which the lb card now
+     also needs, see the populate toggle), the BOARD fades — .75 at
+     rest AND under the hand (opacity is orthogonal to the hover rule's
+     filter/--bgrow writes, so no hover restatement exists or is
+     needed; it rides the IMG where the 08-19 filter sat, same
+     stacking-context scoping, flip faces safe). In the lb this also
+     matches #lb-shadow, but every #lb-shadow dress rule carries id
+     specificity and the sun writes inline — this arm never wins there
+     by construction. */
   .d7f.sold { opacity: 1; }
-  .d7f.sold .stage img, .d7f.sold .frame img { opacity: .25; }
-  /* the stamp: a pseudo on the board's seat, z2 — over the board's z1,
-     under nothing (chips/controls live outside the stage). Red is the
-     card's own corner red (.cbr). Sized per ONE CARD SPEC: px at the
-     232 reference, then cqw. */
-  .d7f.sold .stage::after, .d7f.sold .frame::after {
-    content: "SOLD"; position: absolute; inset: 0; z-index: 2;
-    display: flex; align-items: center; justify-content: center;
-    font-family: var(--disp); font-weight: 800; color: #FF4655;
-    font-size: 46px; font-size: 19.8276cqw;
-    letter-spacing: 3px; letter-spacing: 1.2931cqw;
-    transform: rotate(-18deg); pointer-events: none;
+  .d7f.sold .stage img, .d7f.sold .frame img { opacity: .75; }
+  /* the sold card throws NO shadow — a gone board sits flat. The hover
+     rule below deepens the slab on a specificity TIE with a plain
+     .d7f.sold .panel arm (both 0,3,0, later-in-file would decide), so
+     the hover/lit arm is restated per the 08-29 armor law — rewording
+     an unrelated selector must never hand the slab back. The lb
+     restates slab + ambient at id weight (#lb.fv3 .lb-card .panel), so
+     the lb arm rides at the same weight. */
+  .d7f.sold .panel,
+  :is(.d7f.sold:hover, .d7f.sold.lit, .d7f.sold.hold) .panel { box-shadow: none; }
+  #lb.fv3 .lb-card.sold .panel { box-shadow: none; }
+  /* the marker's hover seat is DEAD CENTER OF THE DECK: the corner .fst
+     (a bare dot at rest — the word only ever decodes in under the hand)
+     re-seats onto the stage/frame's center, and the same sttxt decode
+     types SOLD there instead of in the corner. Geometry: stage top =
+     panel padding-top (22.4138cqw) + half the stage's own height
+     (aspect 1 at the panel's 98.7068cqw content width → 49.3534) =
+     71.7672cqw from the panel's padding box; px at the 232 reference
+     first, per ONE CARD SPEC. .hold rides the arms per the mid-flight
+     blink law (the lb carry must not re-seat the marker mid-flight);
+     .tset does NOT — the phone keeps the corner marker until the
+     mobile pass. */
+  @media (hover: hover) {
+    :is(.d7f.sold:hover, .d7f.sold.lit, .d7f.sold.hold) .fst.gone {
+      bottom: auto; left: 50%;
+      top: 166.5px; top: 71.7672cqw;
+      transform: translate(-50%, -50%);
+    }
   }
   @media (hover: hover) { :is(.d7f:hover, .d7f.lit) .stage img {
     --bgrow: 1.07;
@@ -11192,7 +11211,7 @@
       }
       lbCard.classList.toggle("d7f", fv3);
       lbCard.classList.remove("left");
-      if (!fv3) lbCard.classList.remove("tset", "stay", "dressed", "redress", "navdraw");
+      if (!fv3) lbCard.classList.remove("tset", "stay", "dressed", "redress", "navdraw", "sold");
       /* undersides: every populate opens faces-up, sun inline cleared on
          both faces; the cutout view re-arms below */
       setFlip(lbCard, false, true);
@@ -11201,6 +11220,12 @@
       lbBot.style.filter = lbBot.style.transform = "";
       if (fv3) {
         const jm = jmeta(c, b, k);
+        /* THE SOLD DRESS CARRIES TO THE INSPECTION (2026-08-31, closing
+           the C18 find: the grid ghosted a sold board while its lb
+           showed it pristine). Re-evaluated per populate, like the add
+           chip below — a deck exchange onto a sold board dresses, off
+           it undresses. */
+        lbCard.classList.toggle("sold", jm.st === "gone");
         const rft = document.getElementById("lb-fv3-ref");
         /* brand rest; stayLand / the touch decode land the info read (THE
            ID FLIP). A viewport NEITHER lander covers — no hover (no stay)

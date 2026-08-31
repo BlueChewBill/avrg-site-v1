@@ -86,8 +86,9 @@ bench files (manifest, BUILD-SPEC, the UI) never get committed to it.**
 Bench changes are committed in the CompUI repo:
 `git -C ~/Projects/CompUI add pilot && git -C ~/Projects/CompUI commit`.
 ~~CompUI has no remote~~ **CompUI HAS a remote as of 2026-08-29
-(origin → github.com/BlueChewBill/CompUI) — local commits sit ahead of
-it; pushing CompUI is Dylan's call, never a session's.**
+(origin → github.com/BlueChewBill/CompUI), first synced whole
+2026-08-30 ("push it all"); pushing CompUI is Dylan's call, never a
+session's.**
 
 **The contract (canonical since 2026-08-20, Dylan's ruling):** the bench
 and the site move together. A site change that touches a **charted param**

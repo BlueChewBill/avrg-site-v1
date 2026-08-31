@@ -1486,36 +1486,36 @@
      the carousel's hide-behind-the-panel trick) and must never gain a
      stacking context between them and the panel. */
   .d7f .stage img { z-index: 1; }
-  /* THE SOLD BOARD DIMS ITS COLOUR, NOT ITS CARD (2026-08-19, his ask:
-     "keep its opacity just fade / dim its color so its neighboring card
-     cant be seen through it"). The blanket `.sold { opacity: .55 }` made
-     the whole CARD translucent, so anywhere cards overlap — the strip's
-     shingle above all — you read the neighbour straight through a sold
-     one. The card is opaque again here and the BOARD carries the sold
-     read instead: desaturated and lifted, no transparency anywhere.
-     The filter goes on the IMG, never on .stage — a filter makes a
-     stacking context, and one on .stage would trap the flip faces'
-     parked z:−1 exactly as the 2026-08-17 z lesson describes — which
-     means the drop-shadow has to be restated alongside it (both the px
-     fallback and the cqw, in that order, like the base rule). */
+  /* THE SOLD BOARD GOES GHOST AND WEARS THE STAMP (2026-08-30, his ask:
+     "instead of the color fade. lets give the board just a 25 pct
+     opacity fade and a red sold across the board" — supersedes the
+     08-19 colour-dim). The 08-19 shingle lesson still binds: the CARD
+     stays opaque (`.d7f.sold { opacity: 1 }` below still overrides the
+     legacy blanket `.sold { opacity: .55 }`), only the BOARD fades.
+     Opacity rides the IMG exactly where the filter did — same
+     stacking-context scoping, so the flip faces' parked z:−1 stays
+     safe — and the base drop-shadow fades WITH the board (opacity
+     applies after filter), which is the right read for a ghost.
+     No hover restatement needed any more: the hover rule only writes
+     filter/--bgrow, so the fade survives the hand by construction. */
   .d7f.sold { opacity: 1; }
-  .d7f.sold .stage img, .d7f.sold .frame img {
-    filter: grayscale(.85) brightness(1.12) drop-shadow(7px 9px 0 rgba(0, 0, 0, .18));
-    filter: grayscale(.85) brightness(1.12) drop-shadow(3.0172cqw 3.8793cqw 0 rgba(0, 0, 0, .18));
+  .d7f.sold .stage img, .d7f.sold .frame img { opacity: .25; }
+  /* the stamp: a pseudo on the board's seat, z2 — over the board's z1,
+     under nothing (chips/controls live outside the stage). Red is the
+     card's own corner red (.cbr). Sized per ONE CARD SPEC: px at the
+     232 reference, then cqw. */
+  .d7f.sold .stage::after, .d7f.sold .frame::after {
+    content: "SOLD"; position: absolute; inset: 0; z-index: 2;
+    display: flex; align-items: center; justify-content: center;
+    font-family: var(--disp); font-weight: 800; color: #FF4655;
+    font-size: 46px; font-size: 19.8276cqw;
+    letter-spacing: 3px; letter-spacing: 1.2931cqw;
+    transform: rotate(-18deg); pointer-events: none;
   }
   @media (hover: hover) { :is(.d7f:hover, .d7f.lit) .stage img {
     --bgrow: 1.07;
     filter: drop-shadow(11px 14px 0 rgba(0, 0, 0, .3));
     filter: drop-shadow(4.7414cqw 6.0345cqw 0 rgba(0, 0, 0, .3));
-  } }
-  /* the sold read SURVIVES the hover: the rule above outranks the sold
-     block on specificity (:is takes its widest arm), so the grey would
-     wash out the moment the cursor landed. Restated at hover weight,
-     with the hover shadow — a sold card still answers the hand, it just
-     never gets its colour back. */
-  @media (hover: hover) { :is(.d7f.sold:hover, .d7f.sold.lit) .stage img {
-    filter: grayscale(.85) brightness(1.12) drop-shadow(11px 14px 0 rgba(0, 0, 0, .18));
-    filter: grayscale(.85) brightness(1.12) drop-shadow(4.7414cqw 6.0345cqw 0 rgba(0, 0, 0, .18));
   } }
   /* ---- UNDERSIDES (flip-lab port — vault repo, 2026-07-25) ----
      Board click flips to the underside — the object is the control.

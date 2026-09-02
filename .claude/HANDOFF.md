@@ -1,5 +1,7 @@
 # Handoff — AVRG site v1 — 2026-08-29 (evening, second session)
 
+> **2026-09-02:** the /doctor session's CLAUDE.md trim was reviewed with Dylan and landed as `d6b6910` — bench + batch procedure now live in `.claude/skills/`, the dated history in `.claude/docs/log.md` (not deleted), `site/data.js` never-hand-edit rule restored. Everything below is the 2026-08-29 handoff and still current for the site work.
+
 > Dylan, at goodnight: "tell the next guy i said hi." Hi. /salute
 
 > (The old vault→v1 porting recipe + the closed A/B trip log live in this file's git history — CLAUDE.md still points here for them.)

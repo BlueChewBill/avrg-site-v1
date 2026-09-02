@@ -206,3 +206,7 @@ If a future animated filter is wanted in Safari anyway, expect to build the shad
 ## The Claude browser pane's `?v=` cache-bust only busts the HTML — subresources stay stale (2026-08-31)
 
 During batch 3's verification the pane served a `site/data.js` from BEFORE the previous board batch (19 classics, pre-08-30) under a freshly cache-busted `index.html?v=<ts>` — the query only busts the document, and every subresource (data.js, images) still rides the pane's cache. THE ESCAPE: switch the ORIGIN — `localhost:8124` → `127.0.0.1:8124` — and the whole tree fetches clean (different origin = different cache bucket). Suspect this any time a data-driven surface renders yesterday's counts under a busted URL; a `naturalWidth`/count probe against what the repo says is the tell.
+
+## Residual lean after straightening is PERSPECTIVE keystone, not rotation — don't over-rotate (2026-08-31)
+
+Batch 3's straightening pass rotated every board onto its own silhouette axis (0–3.5°). A few still read as leaning afterwards: that residue is keystone from the shot angle (the two ends of the deck sit at different distances from the lens), so the silhouette's axis and the visual "lean" disagree. Rotating further only tilts the true axis and makes the board look worse from the other end. The cures are a reshoot or a perspective warp — never another degree of rotation.

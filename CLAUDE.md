@@ -4,7 +4,7 @@
 
 ## What this repo is
 
-**The site, and nothing else.** `index.html` IS the site — one hand-built file, HTML + CSS + JS inline, ~14k lines. No framework, no npm, no build step for the page itself. Media is committed directly (no LFS).
+**The site, and nothing else.** `index.html` IS the site — one hand-built file, HTML + CSS + JS inline, ~17k lines / ~1 MB. **ANCHOR SEARCH IT, never read it top to bottom.** No framework, no npm, no build step for the page itself. Media is committed directly (no LFS).
 
 Created 2026-08-16 as a clean copy of the working page out of the workshop repo (**the vault**, `~/Projects/avrg-site`, which is 1.5GB of labs, photo archives and full react history). v1 holds the page + exactly what builds it: `index.html` is the vault's `redesign/k-home-dual.html` with its asset paths repointed, `sources/` is the build input, `site/` is the build output plus the committed media.
 
@@ -16,35 +16,14 @@ Created 2026-08-16 as a clean copy of the working page out of the workshop repo 
 
 - `python3 build_site.py` — reads `sources/`, writes `site/img/{thumb,full}` + `site/data.js`. Re-run any time photos in `sources/` are added, removed or moved. (`seed_boards.py` did not come across — it seeded from raw photo folders that live in the vault.)
 - `python3 build_context.py` — regenerates the DERIVED halves of `context/` (the card pack's Facts block + the whole bench page). Run after any change to `index.html` or `site/data.js`. Authored Intent sections are never touched.
-- Preview: `.claude/launch.json` config **`avrg-v1`** — `python3 -m http.server 8124`, serving the **repo root**. The page is `http://localhost:8124/index.html`. Never `file://`. A second config **`avrg-vault`** serves the vault working copy on :8123 (labs + the leading page live there until cutover).
+- Preview: `.claude/launch.json` config **`avrg-v1`** — `python3 -m http.server 8124`, serving the **repo root**. The page is `http://localhost:8124/index.html`. Never `file://`.
 - **LAN ride-along:** python's `http.server` binds all interfaces, so `:8124` reaches his phone on the same wifi (`http://192.168.1.119:8124/`) — instant, no push, no Pages cache.
 
 ## Layout
 
-```
-index.html               THE SITE — HTML + CSS + JS inline (~847KB, ~14k lines).
-                         ANCHOR SEARCH IT, never read it top to bottom.
-favicon.png
-.nojekyll                GH Pages serves the tree as-is (no Jekyll pass)
-build_site.py            sources/ -> site/img/{thumb,full} + site/data.js
-README.md                the human-facing one-screen orientation
-site/
-  data.js                GENERATED — never hand-edit
-  fonts/Satoshi-Black.otf
-  img/thumb/  (84)       built from sources/
-  img/full/   (84)       built from sources/
-  img/logo-circle.png · img/logo-line-white.png
-  img/cards/canva/ (66)  card artwork — the LIVE SUBSET of the vault's 168-file batch
-  img/cards/cuts/  (6)   the originals cutouts
-  media/                 covercard.mp4 + poster · story-clamps.jpg · clip-1/2.mp4 + posters
-sources/                 build input, one folder per collection
-  classic/     (38)      loose image = a single-photo board; subfolder = one board, many angles
-  hand-shaped/ (28)
-  resale/      (empty)   a live COLLECTIONS entry with no boards yet
-  originals/   (7 board folders — 3 images + a description .txt each; require_desc)
-```
+**`site/data.js` is GENERATED** by `build_site.py` — never hand-edit it; `site/img/{thumb,full}` are build output too. `sources/` is the build input (loose image = single-photo board; subfolder = one board, many angles; `originals/` needs a description `.txt` per board).
 
-**Path grammar inside `index.html`** — everything is repo-root-relative: `site/img/…`, `site/data.js`, `site/fonts/…`, `site/media/…`, `favicon.png`. The `IMG()` helper (`const IMG = p => (p ? "site/" + p : p)`) prefixes the data-driven image paths. The vault's `../site/`, `../videos/web/` and `card-lab/…` forms are DEAD here — full mapping table in [gotchas.md](.claude/docs/gotchas.md).
+**Path grammar inside `index.html`** — everything is repo-root-relative: `site/img/…`, `site/data.js`, `site/fonts/…`, `site/media/…`, `favicon.png`. The vault's `../site/`, `../videos/web/` and `card-lab/…` forms are DEAD here — full mapping table in [gotchas.md](.claude/docs/gotchas.md).
 
 **The logo is inlined.** The single-stroke draw is an inline `<svg id="logo-draw">` (SMIL, `setCurrentTime` rewind). The `.svg` source artwork stays in the vault's brand folder — it is not a runtime dependency and does not need to be here.
 
@@ -65,61 +44,18 @@ The deep project memory — decisions, laws, mechanics, react history — lives 
 - [gotchas.md](.claude/docs/gotchas.md) — every bitten-once platform/CSS/tooling lesson, plus the v1 port laws at the bottom. Read when debugging anything weird, and before browser verification.
 - **`context/` — scoped-landing context packs** (first: [context/card.md](context/card.md) + its bench page at `/context/card-bench.html` on :8124). A pack = DERIVED facts (regenerated by `build_context.py`) + AUTHORED intent/laws/success-criteria. For a scoped ticket on a surface with a pack: read the pack, then only what it points at — the pack is the landing, the `.claude/docs/` file is the archaeology.
 - [open-threads.md](.claude/docs/open-threads.md) — what's still open, parked passes, undecided directions, the site thesis.
+- [log.md](.claude/docs/log.md) — the dated history (founding copy, launch, bench canonical, og zone, landing, dispatch rounds, board batches). Read only when a rule's origin matters.
 - [design-sync.md](.claude/docs/design-sync.md) — the claude.design "AVRG Site" project (its recipe still points at vault paths).
 - [figma-kit.md](.claude/docs/figma-kit.md) — the "AVRG — Site Kit" Figma file: the site's parts as drag-around mockup assets (card · home · lightbox · deck drawer). **A sketchpad that sits BEFORE the build** — its own thing, allowed to drift stale, **not** under the bench's change-with-charting law.
+- **Skills** (`.claude/skills/`): [bench-charting](.claude/skills/bench-charting/SKILL.md) — charting a site change on the bench: lanes, cartographer ticket, bench laws, verification traps. [board-batch](.claude/skills/board-batch/SKILL.md) — the intake recipe for a new batch of board photos (sources → cutouts → CANVA rows → builds → append-only data.js check).
 
 ## The AVRG Bench (the tuning deck at /bench)
 
-**What it is:** a live tuning UI over THIS page — Win2000 dress, sliders
-and wells bound to the real site's values — at
-**http://localhost:8124/bench/**, riding the same server that serves the
-page. It owns ZERO site code: every control drives the actual page through
-injected CSS overrides or the fenced, localhost-gated **BENCH shim** at the
-main IIFE's foot in `index.html` (exposes `STRIP_TUNE`/`NB_TUNE`/`SUN` by
-reference — the shim is the ONE sanctioned bench hook in this file; extend
-it deliberately, and it retires with the pilot). Not to be confused with
-`context/card-bench.html`, the card context pack's static bench page.
+A live tuning UI over THIS page — sliders and wells bound to the real site's values — at **http://localhost:8124/bench/**, riding the same server that serves the page. It owns ZERO site code: every control drives the page through injected CSS overrides or the fenced, localhost-gated **BENCH shim** at the main IIFE's foot in `index.html` (exposes `STRIP_TUNE`/`NB_TUNE`/`SUN` by reference) — **the ONE sanctioned bench hook in this file**; extend it deliberately, it retires with the pilot. Not to be confused with `context/card-bench.html`, the card pack's static bench page.
 
-**Where it lives:** `bench/` here is a **symlink** to
-`~/Projects/CompUI/pilot/` and is **gitignored — this repo is PUBLIC and
-bench files (manifest, BUILD-SPEC, the UI) never get committed to it.**
-Bench changes are committed in the CompUI repo:
-`git -C ~/Projects/CompUI add pilot && git -C ~/Projects/CompUI commit`.
-~~CompUI has no remote~~ **CompUI HAS a remote as of 2026-08-29
-(origin → github.com/BlueChewBill/CompUI), first synced whole
-2026-08-30 ("push it all"); pushing CompUI is Dylan's call, never a
-session's.**
+`bench/` here is a **gitignored symlink** to `~/Projects/CompUI/pilot/` — **this repo is PUBLIC: NEVER commit bench files (manifest, BUILD-SPEC, the UI) to it.** Bench commits go to the CompUI repo (`git -C ~/Projects/CompUI add pilot && git -C ~/Projects/CompUI commit`); **pushing CompUI is Dylan's call, never a session's.**
 
-**The contract (canonical since 2026-08-20, Dylan's ruling):** the bench
-and the site move together. A site change that touches a **charted param**
-(one in `bench/manifest/avrg.json`) updates the manifest — and the bench's
-ANCHORS entry when the override shape changes — **in the same session**. A
-new tunable surface gets charted when first touched. Two lanes:
-
-- **Inline (small):** retuning an already-charted value (a bake landing, a
-  range widening) — just update the manifest value/note yourself.
-- **Dispatch (real charting):** a new param spec, a new wing, or a
-  multi-param pass — do the site edit + any shim notation here, then hand
-  the **`bench-cartographer` agent** (`.claude/agents/`) a ticket: param
-  ids/names, exact selectors or consts, shipped values, sensible ranges,
-  couplings/laws worth recording. It edits the CompUI side, verifies
-  end-to-end on the served bench, commits there, and reports back — this
-  session stays pointed at the site and Dylan.
-
-**Bench laws that bind this repo's sessions** (constitution:
-`bench/BUILD-SPEC.md`): the manifest is the bench's ONLY data source;
-anchors are NAMES (selectors, consts, vars) — never line numbers; params
-bind to the one shared source — a bench-side fork is unconstitutional,
-"separation" is a site-code change Dylan orders; locked params render
-visible, never hidden; overrides replicate shipped behavior exactly,
-quirks included — a shipped quirk is flagged as a find, never silently
-fixed.
-
-**Verifying bench work:** the Claude pane's frame loop is dead inside the
-stage iframe — motion is unjudgeable there AND CSS transitions freeze
-mid-flight (computed style reads the START value; kill the transition with
-a probe rule or use the CDP harness in gotchas). Cache-bust every load
-(`?v=<ts>`).
+**The change-with-charting law (canonical since 2026-08-20):** a site change that touches a charted param (one in `bench/manifest/avrg.json`) isn't done until the bench knows, in the same session. The lanes, the ticket shape, the bench laws and the verification traps are the **`bench-charting` skill** (`.claude/skills/bench-charting/SKILL.md`); real charting is dispatched to the **`bench-cartographer` agent** (`.claude/agents/`).
 
 ## Always-on rules (the short list)
 
@@ -132,23 +68,12 @@ a probe rule or use the CDP harness in gotchas). Cache-bust every load
 - Desktop first, then mobile. **Dylan reacts to built variants, not specs** — collide options, let him pick.
 - Mobile checks go to the **iPhone 15 Pro simulator first** (393×852pt — it matches his phone); keyboard behaviour goes to his real phone, the sim runs a hardware keyboard. The Claude browser pane **cannot play motion** (dead rAF frame loop) — verify motion in real Chrome / chrome-devtools MCP. Details: [gotchas.md](.claude/docs/gotchas.md).
 - **Syntax-check the inline script before verifying anything** — one stray comment kills the whole file with nothing useful in the console. The one-liner is in [gotchas.md](.claude/docs/gotchas.md).
-- Board dimensions: `DIMS_MM` in `index.html` is **hand-authored**, keyed by padded ref, and feeds the hover dims-decode — all 14 hand-shaped boards + 15 classics (CL 03/12/26 measured 2026-08-29). Tail/nose widths print in the lightbox `#lb-dims` line only ("too much noise on a card decode"). The other 4 classics (CL 06/08/16/19) are SOLD/MIA — `JGONE` rows, never measured. Still unmeasured: originals, resale, + tail/nose on HS 10/15/18.
+- Board dimensions: `DIMS_MM` in `index.html` is **hand-authored**, keyed by padded ref, and feeds the hover dims-decode. Tail/nose widths print in the lightbox `#lb-dims` line only ("too much noise on a card decode").
 - The lb selected-state accent is deliberate — ask before removing.
 - **The scroll relay SLEEPS** — `RELAY_ON = false` in the relay IIFE; the one switch gates both the CSS (`body.relayon`) and the machine. Parked, not bailed on. Do not wake it without his word.
-- ~~Until cutover, the site is edited in the VAULT and PORTED here~~ **RETIRED 2026-08-20: the vault edit-and-port workflow is over — edit HERE directly.** The old porting recipe stays in [.claude/HANDOFF.md](.claude/HANDOFF.md) as history. (The 2026-08-16 A/B experiment is CLOSED — its record + trip log live in the HANDOFF; multi-item lists are just lists again.)
-- **A site change that touches a charted bench param isn't done until the bench knows** — see THE AVRG BENCH section above (the change-with-charting law).
+- **A site change that touches a charted bench param isn't done until the bench knows** — the change-with-charting law; procedure in the `bench-charting` skill.
 
 ## Where things stand
 
-- **2026-08-16: v1 was created** from the vault at commit `9aca992` (working tree clean), cleaned, and **PUBLISHED at https://bluechewbill.github.io/avrg-site-v1/**. The founding commits: THE COPY (the live site, whole, in its own house) · THE DEAD CODE COMES OUT (the takeover-case machine and `cardInner`'s photo branch, both unreachable, removed for real — only comments still name them) · THE MEMORY MOVES IN (these docs) · THE TOMBSTONES COME OUT (comment-only sweep, proven code-identical; 18 JS section banners) · the angry-0 removal. Verified same day: zero 404s, zero console errors, every route, both grounds, the phone costume.
-- **What the page is at this point** — the feature state as of `9aca992`: the drop-lab header dress on both surfaces, the send takeover, the LB carry suite, THE PICKS CEREMONY (the deal, the bench, the driven glides, the deal shield), thread 3's mobile pass (THE LOAD INTRO, THE WORD IS THE DOOR, THE MENU-SELECT CEREMONY), the drawn logo on every home arrival, real board dims, and the launch trim (the foot goes home). Every react history for those lives in the surface doc that owns them.
-- **2026-08-22: THE LAUNCH LANDED.** The Saturday cutover ran on schedule (small hours, Dylan's call): 35 commits pushed, GH Pages bound **avrg.cards** (`CNAME` + Porkbun DNS), cert issued, **Enforce HTTPS on**, `avrg.website` 301-forwards, the old `bluechewbill.github.io/avrg-site-v1` URL redirects to the domain, and the vault repo flipped **private** (its Pages URL is dead). The og stand-in clip (one cut for all six boards) knowingly shipped — it rides until the new og LB lands. The old cutover checklist lives in this file's git history.
-- **2026-08-20: THE BENCH WENT CANONICAL** — the CompUI tuning bench at `/bench` and this site now move together (see THE AVRG BENCH section). Same day: THE ORIGINALS GO DEEP charted as bench wings `lb-og-thumbs` + `lb-og-desc` (census 103), and Dylan ruled LIGHT IS THE DIRECTION — dark mode comes out before launch. **The retire LANDED 2026-08-20: `<body>` ships `class="light"`, the gpick + menu GROUND row + ground machine are out (k-core.md's record); the dark base CSS awaits a post-launch proven-identical sweep — **which LANDED 2026-08-28 (dispatch T1, k-core.md's record): the dark base costume is out, `:root` dark tokens kept as charted bench anchors.**
-- **2026-08-22 (same day): THE OG ZONE RULED.** The originals LB direction settled in the Figma kit (six variants + Dylan's own collages, "Originals LB Mockup" page): **the card stays the constant** — centered, still the add-to-deck/picks doorway — clip + short text keep the left, and right of the card is a **defined 480×640 zone** (at the 1440×900 reference) that **each original fills with its own hand-composed sheet**. No template law; per-board composition is the point. He composes at 2× (960×1280) on the kit's "07 · OG Sections" page; exports land in `site/img/og/` and the site renders the box. ~~Site wiring + the og-wing re-chart ride the first finished board.~~ **BOTH LANDED 2026-08-22/23 night — see the next entry.**
-- **2026-08-22/23 night: THE ZONE WENT LIVE ON THE FIRST BOARD.** One evening session, all pushed to avrg.cards except the last small fix: THE MARK STOPS HALF-ERASING (a Blink SMIL freeze bug meant every landing since the bake ended with the logo half-drawn — drawRestore now heals with a rewind+jump seek; k-core.md), THE PHONE ADD LEARNS TO LAND (two real bugs — the off-screen landing, the spoiled reveal — plus a three-shape collide; **Dylan picked A, baked as `PICK_TUNE`**, the flight rides its own z rung 6650 OVER the bar on his ruling; mobile.md), and **THE ZONE's site side: `OG_SHEETS` manifest + `#og-zone` seat render each original's hand-composed sheet — OG 05 (Short Steep) is the first board through the whole loop** (compose in Figma → paste the canvas link → Claude MCP-exports at 2× → one manifest line; lightbox.md's THE ZONE LANDS). His og bench bake landed same night (clip 300, columns +80, strip costume). Bench: pick-flight wing + zone dials charted, bake synced (CompUI 5d342ef/4dfd245, census 144). Most remaining sheet material is composed on the Figma page — export + wire is the short half.
-- **2026-08-22: THE LANDING BAKED — the desktop home arrival has a ceremony, and it is on by default.** Dylan's bench index landed four clocks (travel 1000 · poseY .420 · drawSpeed 2 · vidAt 300), he ruled the section cascade final, and the `?land=` switch came out — it now plays on every fresh desktop home boot (941+, motion allowed, bare home route); a mid-session home return keeps the plain rewind draw. **This CLOSES thread 1's desktop half.** The record is k-core.md's THE LANDING section; the one law worth knowing before touching the drawn logo is that `drawSpeed` scales the SMIL clocks from a cached base and restores them — the phone intro shares that svg and derives its beats from the markup.
-- **2026-08-28 night: THE SUNDAY DISPATCH** — eleven tickets (the ID-flip decode direction + mobile amendment, the desktop card-stack seat, the dark-CSS proven-identical sweep, the ogpb mirror, the whole-card pinch, two Safari cures incl. THE CLOCK THAT WAITS FOR LOAD, plus a six-angle review's fix stack), all pushed; records live in the owning surface docs, the session record + minted decisions in open-threads.md's THE SUNDAY DISPATCH. OG 05's C sheet + the Figma tidy landed earlier the same day (lightbox.md).
-- **2026-08-29: THE FRIDAY POLISH ROUND** — a long live-react session, everything pushed as it landed: the composer four-pack (still chips · standard caret on the ghost text's first char · card-click ends ready · the envelope clips its stuffing), the grid flip mini (fade-in → the lb ghost's dress + a real flip door), the lb counter retired outright, the two lb decode clocks retuned (phone ref ×5 slower to ride the fill; dims ×2 faster both surfaces), THE DIMS GRAMMAR (33.0mm × 95.85mm, small unit spans — write-time markup over one plain string), THE ADD CHIP redesign (an Opus agent's universal-mobile + stack glyph, then Dylan's two-react refinement to a flat EMPTY mini card in the fv3 dress; want-words retired), and THE SPARK GROWS TIERS (✦ highest on HS 06/07/16/17/18 · black-chip ✱ on HS 08/10/14). Records in cards.md / contact-composer.md / lightbox.md; bench synced thrice (decode clocks + finds, C13 chip re-chart census 147, counter retirement).
-- **2026-08-29 (second session): THE SLUGGISH-SUN HUNT + THE WIRING DAY.** The big one: **THE SUN WAS DROWNING IN THE HOVER GLIDE** — 655ebac's `.panel:hover` reword had out-specified the `.suntrack` transition mute since 08-28, so with a real hand on the board every per-frame sun write restarted the .94s glide (every browser; invisible to synthetic checks — they never set `:hover`). Found via Dylan's screenshots + a founding-copy diff; the mute is armored now (lightbox.md's record, two new gotchas). The `?sun=`/`?grow=`/`?hud=` collide plumbing rides in the file (param-gated, inert bare) until he settles the wake-boundary question by bench feel. Same day: **THE LINK GOT ITS CARD** (full og:/twitter: meta set + composed 1200×630 `site/media/og-share.png`), **THE INVENTORY WENT HONEST** (CL 06/08/16/19 MIA→SOLD via JGONE; the inception demo lies — CL 05 "Sold", HS 02 "Pending" — came out), CL 03/12/26 measured into DIMS_MM, and the board-batch backlog re-counted at **48** (19 CL + 29 HS). All pushed. Bench: SUN find-note (CompUI def9253); a meta-wing charting ticket dispatched at wrap.
-- **2026-08-30/31: THE BOARDS POUR IN + THE SOLD DRESS SETTLES.** Two bg-removed batches landed via dispatched Opus implementers (the recipe is proven twice now — pairs by shot order, classify, sources sorted LAST, cutouts cropped straight from the alpha PNGs, CANVA rows, append-only data.js diff): batch 2 = 9 classics (CL 55–63, classic-20…28), batch 3 = 22 hand-shaped (HS 25–46, hand-shaped-15…36, PS56–99/hs25–46) **plus a same-day straightening pass** (every board rotated onto its own silhouette axis, 0–3.5°; residual lean on a few is PERSPECTIVE keystone, not rotation — don't over-rotate, reshoot or warp). Batch 3's decoys: 3 duplicate exposures + the pile shot dropped, and **the lilac board is OUT by Dylan's ruling** ("too nasty to upload" — its two top-face shots landed in the folder by accident; no reshoot pending, HS 47 stays unclaimed). Board backlog ≈ 17. Same days, the sold dress went through three rulings and settled: board at **.75 opacity always, sold card throws NO shadow, the corner marker (now RED, .cbr's #FF4655) rides to dead center of the deck on hover where the decode types SOLD — and the dress carries to the lightbox** (populate toggles `sold` onto #lb-card; the grid-only era is over). The red-stamp middle ruling lived one commit. Phone marker stays corner-rest (mobile pass pending). Records: cards.md tail; bench synced through C19 (sold wing = fade/seat/ink dials + locked shadow, census 173). All pushed 2026-08-31.
+- **History:** dated entries from the founding copy (2026-08-16) through the board batches (2026-08-31) live in [log.md](.claude/docs/log.md); the launch record (avrg.cards bound, `avrg.website` 301, vault private, the og stand-in clip still shipping) is there.
 - **Still open / parked:** see [open-threads.md](.claude/docs/open-threads.md) — the intro tweak + decode-timing threads, thread 2 (home collection cards), thread 3's desktop half, waking the relay, the ORIGINALS RETHINK, the iPad tweaks (lowest priority, unenumerated), sound, the browser-compat sweep.

@@ -8149,11 +8149,19 @@
       /* no "All" masthead, no back-link block (2026-08-08 late): the page
          opens straight onto the first collection — the header lives with
          its section, and the topbar + footer nav carry the wayfinding */
+      /* AN EMPTY COLLECTION SITS OUT (2026-09-05, Dylan: "remove the
+         restock foot note"): resale has no boards yet, and its heading +
+         "Restocking — check back" box was the last thing every visitor
+         scrolled onto. Same filter the home bands already apply (HOME);
+         the index i stays the COLLECTIONS ordinal so data-col keeps
+         addressing the right collection. The direct #resale route still
+         renders colSectionHtml's fallback — nothing in the UI links there. */
       colpage.innerHTML =
-        COLLECTIONS.map((c, i) =>
-          '<section class="colpage-inner shopall-sec" data-col="' + i + '" style="--acc:' + accOf(c) + '">' +
-            colSectionHtml(c, i) +
-          '</section>'
+        COLLECTIONS.map((c, i) => c.boards.length
+          ? '<section class="colpage-inner shopall-sec" data-col="' + i + '" style="--acc:' + accOf(c) + '">' +
+              colSectionHtml(c, i) +
+            '</section>'
+          : ""
         ).join("") +
         '<section class="colpage-inner shopall-foot">' + colnavHtml() + '</section>';
       bindScards();

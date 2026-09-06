@@ -1820,6 +1820,33 @@
      `:has(.ft:not(:empty))` stand-down went together; the :has idiom's
      record stays at the 2026-08-08 entry in cards.md.) */
   .d7f .fc-list::before { transform-origin: center bottom; }
+  /* ===== THE ADD CHIP COLLIDE (2026-09-05, Dylan: "pixels are off on the
+     inner edge of the card. add reads small. chip is too tall. im open to
+     suggestions beyond the design it is now"). ?chip=a|b|c → body[data-chip]
+     (read beside the ?sun= switch); CSS-only costumes; retires on his pick.
+     THE PIXELS, ungated (every variant, every card): the red corner mark
+     (.cbr) hung 1px OUTSIDE the inframe edge while the chip tucks only 1px
+     UNDER the 2px frame line — so ~2px of red peeked out under the chip's
+     bottom-right corner on every card (the top-left's .ctl does the same
+     under the ref chip, but black-on-black). The mark now sits 1px INSIDE
+     the edge, wholly under the chip; the frame-line slivers beside both
+     chips are symmetric by measure (1.5px at the 355 lb card, both corners).
+       a  THE REF'S BOX — glyph drawn 19 in a 13 seat (bleed 3/3), box 26 =
+          the ref pill; word unchanged. Height only.
+       b  THE WORD GROWS — word 8.5 → 11px (4.7414cqw) on a 13px line, glyph
+          22 in the 13 seat (bleed 4.5/4.5, 2px air top/bottom); box 26.
+       c  THE WORD IS THE CHIP — glyph out; rest reads "+" (a ::before on
+          the empty .ft), the decode/lb reads ADD +; the ref pill's exact
+          costume mirrored corner to corner, box 26.
+     px lines first per the ONE CARD SPEC. */
+  .d7f .inframe .cbr { bottom: 1px; right: 1px; bottom: .431cqw; right: .431cqw; }
+  body[data-chip="a"] .d7f .fc-list .fstack { width: 12.67px; height: 19px; margin: -3px 0 -3px; width: 5.4598cqw; height: 8.1897cqw; margin: -1.2931cqw 0 -1.2931cqw; }
+  body[data-chip="b"] .d7f .fc-list { font-size: 11px; font-size: max(7px, 4.7414cqw); }
+  body[data-chip="b"] .d7f .fc-list .ft { line-height: 13px; line-height: 5.6034cqw; }
+  body[data-chip="b"] .d7f .fc-list .fstack { width: 14.67px; height: 22px; margin: -4.5px 0 -4.5px; width: 6.3218cqw; height: 9.4828cqw; margin: -1.9397cqw 0 -1.9397cqw; }
+  body[data-chip="c"] .d7f .fc-list .fstack { display: none; }
+  body[data-chip="c"] .d7f .fc-list .ft:empty { display: inline; }
+  body[data-chip="c"] .d7f .fc-list .ft:empty::before { content: "+"; }
   /* (RETIRED 2026-08-29 with the deck mark: `.fscript` + its aim-answer
      shadow flip `.sh` — the 2026-08-08 "keep it the same direction as its
      regular collection view" pass — and the phone's `.fmini` blank card
@@ -9761,6 +9788,15 @@
          forced 0 and the whole headroom pass stands down — no padding, no
          headTop, the card recentres on its own margin:auto. */
       const H = innerWidth <= 720 ? 0 : lbHead.offsetHeight;
+      /* THE MINIS COME BACK UP TOP (2026-09-05, Dylan: "move the card minis
+         back to the top of the desktop layout"). Every desktop/phone fork
+         below used to read H's TRUTHINESS — and since THE COUNTER RETIRED
+         (2026-08-29, .lbhead display:none) offsetHeight is 0 above 720 too,
+         so the desktop silently took the phone's below-card branch: band
+         under the card, paddingBottom reserve, width cap. D is the surface;
+         H is only ever the counter's room (0 now — its air collapses out of
+         the stack, dLine = headClr + drop + SB). */
+      const D = innerWidth > 720;
       /* THE STRIP'S ROOM (2026-08-12): the collection strip lives in the gap
          ABOVE the header, so the gap must also hold its popped band plus
          clearance — headTop = headAt·G − H/2 ≥ headClr + SB + clr gives the
@@ -9789,7 +9825,7 @@
          own phone arithmetic, read through the same ST costume). The
          deficit loop below is regime-proof either side. */
       const mst = ST();
-      const need = H ? (SB ? dLine + STRIP_TUNE.prog + 5 + STRIP_TUNE.clr
+      const need = D ? (SB ? dLine + STRIP_TUNE.prog + 5 + STRIP_TUNE.clr
                            : (T.headClr + H / 2) / (1 - T.headAt))
                      : (SB ? mst.chrome + mst.drop : 0);
       /* THE BAND MOVED BELOW THE CARD (2026-08-16 A/B — "move the mini
@@ -9803,7 +9839,7 @@
          (avail measured against the dvh-tracking height — the layout
          viewport runs behind iOS's floating bar and an INTERACTIVE band
          must not live back there; the card may, the 08-08 ruling). */
-      if (!H && SB) {
+      if (!D && SB) {
         /* + the line—dot—line's room (2026-08-17): prog air + the 5px dot */
         const reserve = mst.clr + SB + (mst.prog || 0) + 5 + 12;
         lbCard.style.paddingBottom = (24 + reserve) + "px";
@@ -9820,7 +9856,7 @@
          down just a bit"): a standing pad while the strip is up — margin:auto
          splits it, so a roomy sheet moves the card ~scoot/2 and a collapsed
          one the full amount; the deficit loop below then tops it up as needed. */
-      if (SB && H) {   /* the scoot is desktop air — the phone's card seats
+      if (SB && D) {   /* the scoot is desktop air — the phone's card seats
                           on the deficit loop alone (every sheet px is dear) */
         pad = STRIP_TUNE.scoot;
         lbCard.style.paddingTop = pad + "px";
@@ -9860,7 +9896,7 @@
         /* CLAMPED, so a short viewport degrades instead of painting the
            header on the card or under the bar: the proportional seat is the
            intent, headClr at either end of the gap is the guarantee. */
-        headTop: H ? (SB ? dTop
+        headTop: D ? (SB ? dTop
                      : Math.max(T.headClr, Math.min(T.headAt * oy - H / 2, oy - H - T.headClr))) : null
       };
       /* off-sheet staging: a whole card-width clear of each edge, so an entering
@@ -9877,7 +9913,7 @@
          air to the POPPED band top + the pop's rise + the mini itself.
          placeStrip consumes it; null everywhere the band isn't phone-live. */
       g.stripLine = !SB ? null
-        : H ? dLine                      /* desktop: under the counter */
+        : D ? dLine                      /* desktop: the top stack (the counter's seat, empty since 08-29) */
             : oy + panel.offsetHeight + panel.offsetWidth * .038793 + mst.clr
               + (mst.mini * 1.51) * (mst.pop - 1) + mst.lift + mst.mini * 1.51;
       return g;
@@ -11954,6 +11990,9 @@
          ?sun=23  both at once. */
     const sunQS = new URLSearchParams(location.search);
     const SUNV = sunQS.get("sun") || "";
+    /* THE ADD CHIP COLLIDE (2026-09-05): ?chip=a|b|c → body[data-chip], CSS-only
+       costumes at the .fc-list block. Retires on his pick. */
+    { const cv = sunQS.get("chip"); if (cv) document.body.dataset.chip = cv; }
     if (SUNV.includes("2")) SUN.liftEase = .09;
     const sunWarmOn = SUNV.includes("3");
     let sunWarm = false;

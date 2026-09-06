@@ -7282,12 +7282,33 @@
        viewBox is the bare card, a clean 2:3. Card 10.5×15.75 u:
        outline .75 · gap 1.5 · frame .75 · dot flecks r.65. Size and
        seat live in the .fstack CSS (THE PILL-FILL STRETCH). */
+    /* THE CHIP'S CARD READS LIKE THE BAR'S BLANK MINI (2026-09-05, Dylan:
+       "see if we can get the card in the chip to read more like a blank
+       mini. with its hair line inner frame and space around the dot") —
+       the bar mini is the REAL template at scale(.0948): a ~1px outline, an
+       inframe that renders as a HAIRLINE (.86cqw → .19px), the frame's
+       18% mid-gap, and the dots sitting in that gap. Round 7's glyph:
+       outline .75u (unchanged — the card edge), inner frame a .3u STROKE
+       (.5px at the 26px draw, .76px in the lb) inset 2u, split top/bottom
+       like the real ::before/::after with the 18% gap, dots r.42 seated
+       ON the line's centre inside the gap with ~.63u of air each side.
+       The hairline paths are anti-aliased on purpose — crispEdges would
+       snap a half-pixel line to nothing; the outline keeps its crisp
+       fill. Same class, same const, same two seats (grid template + the
+       lb's boot-injected #lb-fv3-list); viewBox unchanged at 2:3. */
+    /* ?glyph=tight (2026-09-05 collide, retires on his pick): the frame
+       hugs the outline the way the bar mini's does — .6u of air instead of
+       1.25u; same hairline, same gap, same dots. */
+    const GLYPH_TIGHT = new URLSearchParams(location.search).get("glyph") === "tight";
     const STACKSVG =
       '<svg class="fstack" viewBox="0 0 10.5 15.75" aria-hidden="true">' +
         '<path fill="#fff" shape-rendering="crispEdges" d="M0 0h10.5v15.75H0Z"/>' +
         '<path fill="#000" fill-rule="evenodd" shape-rendering="crispEdges" d="M0 0h10.5v15.75H0Z M.75 .75v14.25h9V.75Z"/>' +
-        '<path fill="#000" fill-rule="evenodd" shape-rendering="crispEdges" d="M2.25 2.25h6v11.25h-6Z M3 3v9.75h4.5V3Z"/>' +
-        '<circle fill="#000" cx="2.625" cy="7.875" r=".65"/><circle fill="#000" cx="7.875" cy="7.875" r=".65"/>' +
+        (GLYPH_TIGHT
+          ? '<path fill="none" stroke="#000" stroke-width=".3" d="M1.5 6.73V1.5h7.5v5.23 M1.5 9.02v5.23h7.5V9.02"/>' +
+            '<circle fill="#000" cx="1.5" cy="7.875" r=".42"/><circle fill="#000" cx="9" cy="7.875" r=".42"/>'
+          : '<path fill="none" stroke="#000" stroke-width=".3" d="M2.15 6.82V2.15h6.2v4.67 M2.15 8.93v4.67h6.2V8.93"/>' +
+            '<circle fill="#000" cx="2.15" cy="7.875" r=".42"/><circle fill="#000" cx="8.35" cy="7.875" r=".42"/>') +
       '</svg>';
     /* THE CARD REMEMBERS ITS FACE (2026-08-17, Dylan: "keeps its last seen
        side across its versions") — session memory, board-id keyed, bottom-

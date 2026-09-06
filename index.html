@@ -5595,7 +5595,7 @@
   body.light .colpage-inner h2 { color: #000; }
   /* the foot's light dress: the label darkens; the mark is the circle
      sticker (colnavHtml) so it needs no rule here */
-  body.light .colnav-home .label { color: #777; }
+  body.light .colnav-home .label { color: #767676; }   /* #777 read 4.47:1 on white (Lighthouse 2026-09-05); one step darker clears AA at 4.54 — unchanged to the eye, uncharted on the bench */
   body.light .colnav-home:hover .label { color: #000; }
 
   /* lightbox */
@@ -6041,7 +6041,10 @@
        (the containing block would stop being the viewport) -->
   <i class="fveil" id="fveil" aria-hidden="true"></i>
 
-  <div id="home">
+  <!-- role=main on BOTH page shells (2026-09-05, Lighthouse landmark-one-main): only one is ever
+       un-hidden, so exactly one main reaches the accessibility tree — no wrapper, so no sticky
+       containing-block change (gotchas: a sticky child's stick-room is the parent's content box). -->
+  <div id="home" role="main">
     <div class="split">
       <section class="spine">
         <div class="masthead">
@@ -6125,7 +6128,7 @@
     </div>
   </div>
 
-  <div id="colpage" hidden></div>
+  <div id="colpage" role="main" hidden></div>
 
   <!-- lightbox: card pulled forward -->
   <div class="lb" id="lb" hidden>
@@ -6182,7 +6185,7 @@
              is static markup that predates the template's, so the artwork
              stays in one place instead of being pasted a second time, the
              #lb-flipc / FLIP_MARK arrangement -->
-        <button class="fchip fc-list d7f-cta lb-fv3only" id="lb-fv3-list" type="button"><span class="fl"><span class="ft"></span></span></button>
+        <button class="fchip fc-list d7f-cta lb-fv3only" id="lb-fv3-list" type="button" aria-label="Add to my lisst"><span class="fl"><span class="ft"></span></span></button>
         <span class="fst lb-fv3only avail" id="lb-fv3-st"><span class="dot"></span><span class="sttxt" id="lb-fv3-sttxt"></span></span>
       </div>
       <!-- THE OG SPREAD's clip seat (2026-08-20): og desktop only (CSS-gated
@@ -7329,7 +7332,7 @@
             /* the add chip's glyph is THE EMPTY CARD STACK on every width
                now (2026-08-29) — the deck mark and the phone's blank
                .fmini both retired into it */
-            '<button class="fchip fc-list d7f-cta" data-id="' + esc(m.id) + '"><span class="fl"><span class="ft">' +
+            '<button class="fchip fc-list d7f-cta" data-id="' + esc(m.id) + '" aria-label="Add to my lisst"><span class="fl"><span class="ft">' +
               (inLisst(m.id) ? "✓" : "") + '</span>' + STACKSVG + '</span></button>') +
           '<span class="fst ' + m.st + '"><span class="dot"></span><span class="sttxt" data-txt="' + m.stTxt.toUpperCase() + '"></span></span>' +
         '</div></div>',
@@ -8053,7 +8056,7 @@
        bar's own logo — the circle sticker, since light is the one ground. */
     function colnavHtml() {
       return '<div class="colnav">' +
-          '<a class="colnav-home" href="#" title="Back to the main page" aria-label="Back to the main page">' +
+          '<a class="colnav-home" href="#" title="Back to the main page">' +
             '<img src="' + IMG("img/logo-circle.png") + '" alt="AVRG" />' +
             '<span class="label">·&#8195;HOME&#8195;·</span>' +
           '</a>' +
@@ -9550,6 +9553,16 @@
        the leftmost paints over the ones behind it — the count is the only
        place that knows how tall that ladder should be. */
     const HPICK_MAX = 4;
+    /* the deck seat's name — "The deck, N picks" (renderPicks + the seat's
+       wiring). A function DECLARATION, hoisted: renderPicks has callers above
+       this line (route's boot render) — a const arrow here would be the TDZ
+       landmine gotchas.md warns about. */
+    function seatLabel() {
+      const seat = document.getElementById("bar-script");
+      if (!seat) return;
+      const n = myLisst.length;
+      seat.setAttribute("aria-label", "The deck, " + n + (n === 1 ? " pick" : " picks"));
+    }
     function renderPicks() {
       if (!hpicksEl && !hpicksDEl) return;
       /* the dealt-away state empties the PHONE stack only — it is the
@@ -9584,6 +9597,12 @@
           '</i><span class="hcount">0</span>';
       if (hpicksEl) hpicksEl.innerHTML = html;
       if (hpicksDEl) hpicksDEl.innerHTML = html;
+      /* the desktop seat's accessible name carries the count (2026-09-05,
+         Lighthouse label-content-name-mismatch: the seat's visible text IS
+         the count, so its name must contain it). By id, not the barScript
+         const — that lives ~6000 lines down and renderPicks runs at boot
+         (the TDZ law). Also the seed value the seat's own wiring reads. */
+      seatLabel();
       /* THE MINIS LOAD EAGER (2026-08-16, his catch: "a routed board turns
          to a blank mini in the hand shaped section"). The template's lazy
          img is a 0×0 box until it loads (auto-sized absolute, no intrinsic
@@ -15687,7 +15706,7 @@
       barScript.removeAttribute("aria-hidden");
       barScript.setAttribute("role", "button");
       barScript.setAttribute("tabindex", "0");
-      barScript.setAttribute("aria-label", "The deck");
+      seatLabel();   /* "The deck, N picks" — the name must contain the visible count */
       barScript.style.cursor = "pointer";
       const scriptFlip = () => {
         if (dockActive()) return;   /* it only renders on the drawn bar anyway */

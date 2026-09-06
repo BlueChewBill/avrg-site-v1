@@ -2167,28 +2167,52 @@
       display: none;   /* base: only lb.ogt shows it — under .ogz the sheet img stands alone */
       position: relative; width: 100%; aspect-ratio: 3 / 4; background: #fff;
       container-type: inline-size; font-family: var(--disp); color: #111;
+      /* THE TEMPLATE'S OWN VARS (2026-09-06, the cartographer's C21 finds,
+         Dylan: "make the changes"): the content inset was six literals in
+         two percentage bases (and the detail column's width was the right
+         margin minus the band split, so a bench margin row would have
+         raced the split); the guide's grey sat inside the dash gradients'
+         stops; the arrow's white + weight were THREE unlinked sources
+         (line stroke, text fill, the marker path's presentation
+         attributes — one edit would two-tone it). One var each: the seats
+         read --ogtMargin through calc() (canvas px of the 960×1280 sheet,
+         --ogtMx/--ogtMy are its two percentage forms), the gradients read
+         --ogtGuide, line + marker + label read --ogtArrow / --ogtArrowW.
+         The band split (480) and gutter (24) stay literals inside the
+         calcs — the bench's ogt-band-split row owns the split. */
+      --ogtMargin: 40;
+      --ogtMx: calc(var(--ogtMargin) / 960 * 100%);
+      --ogtMy: calc(var(--ogtMargin) / 1280 * 100%);
+      --ogtGuide: #999;
+      --ogtArrow: #fff;
+      --ogtArrowW: 1;
     }
     #og-tpl .ogt-guide {
-      position: absolute; inset: 3.125% 4.1667%; pointer-events: none;
+      position: absolute; inset: var(--ogtMy) var(--ogtMx); pointer-events: none;
       /* the sheets' 8/8 dash at 2× = 4/4 here, drawn per edge so every
          browser dashes alike */
       background:
-        repeating-linear-gradient(90deg, #999 0 4px, transparent 4px 8px) top / 100% 1px no-repeat,
-        repeating-linear-gradient(90deg, #999 0 4px, transparent 4px 8px) bottom / 100% 1px no-repeat,
-        repeating-linear-gradient(180deg, #999 0 4px, transparent 4px 8px) left / 1px 100% no-repeat,
-        repeating-linear-gradient(180deg, #999 0 4px, transparent 4px 8px) right / 1px 100% no-repeat;
+        repeating-linear-gradient(90deg, var(--ogtGuide) 0 4px, transparent 4px 8px) top / 100% 1px no-repeat,
+        repeating-linear-gradient(90deg, var(--ogtGuide) 0 4px, transparent 4px 8px) bottom / 100% 1px no-repeat,
+        repeating-linear-gradient(180deg, var(--ogtGuide) 0 4px, transparent 4px 8px) left / 1px 100% no-repeat,
+        repeating-linear-gradient(180deg, var(--ogtGuide) 0 4px, transparent 4px 8px) right / 1px 100% no-repeat;
     }
     #og-tpl .ogt-tile {
       position: absolute; overflow: hidden; border-radius: 3px; background: #eee;
       box-shadow: 5px 5px 2px rgba(0,0,0,.25);   /* the sheets' 10/10/4 at 2× */
     }
     #og-tpl .ogt-tile img { width: 100%; height: 100%; object-fit: cover; display: block; background: #fff; }
-    #og-tpl .ogt-hero    { left: 4.1667%; top: 3.125%;    width: 43.333%; height: 53.4375%; }  /* 416×684 */
-    #og-tpl .ogt-a       { left: 50%;     top: 3.125%;    width: 45.833%; height: 25.78125%; } /* 440×330 */
-    #og-tpl .ogt-b       { left: 50%;     top: 30.78125%; width: 45.833%; height: 25.78125%; } /* y 394 */
-    #og-tpl .ogt-profile { left: 4.1667%; top: 66.8%;     width: 91.667%; height: 28.4%; }     /* 880×364, foot at 95.2% — the shadow clears the guide */
+    /* seats in canvas px of the 960×1280 sheet, margin-relative: hero 416×684
+       at (40,40) · a/b 440×330 at x 480, y 40 / 394 (= margin + 330 + 24) ·
+       strip at y 752 (= margin + 712) · profile 880×364 at y 855
+       (= margin + 815; its height 444 − 2·margin keeps the foot 21 inside
+       the guide). The hero's 684 = two tiles + the 24 gutter, margin-free. */
+    #og-tpl .ogt-hero    { left: var(--ogtMx); top: var(--ogtMy); width: calc((480 - 24 - var(--ogtMargin)) / 960 * 100%); height: 53.4375%; }
+    #og-tpl .ogt-a       { left: 50%; top: var(--ogtMy); width: calc((960 - 480 - var(--ogtMargin)) / 960 * 100%); height: 25.78125%; }
+    #og-tpl .ogt-b       { left: 50%; top: calc((var(--ogtMargin) + 354) / 1280 * 100%); width: calc((960 - 480 - var(--ogtMargin)) / 960 * 100%); height: 25.78125%; }
+    #og-tpl .ogt-profile { left: var(--ogtMx); top: calc((var(--ogtMargin) + 815) / 1280 * 100%); width: calc((960 - 2 * var(--ogtMargin)) / 960 * 100%); height: calc((444 - 2 * var(--ogtMargin)) / 1280 * 100%); }
     #og-tpl .ogt-strip {
-      position: absolute; left: 4.1667%; top: 58.75%; width: 91.667%;
+      position: absolute; left: var(--ogtMx); top: calc((var(--ogtMargin) + 712) / 1280 * 100%); width: calc((960 - 2 * var(--ogtMargin)) / 960 * 100%);
       display: grid; grid-template-columns: repeat(3, 1fr); column-gap: 2.727%;
       /* equal thirds, not the photo grid's 416/188/228: a truck spec is the
          longest string on the sheet and the aligned split starved it (three
@@ -2196,13 +2220,14 @@
     }
     #og-tpl .ogt-strip .l {
       font-family: var(--mono); font-weight: 700; font-size: 1.77cqw; line-height: 1.3;
-      letter-spacing: .2em; text-transform: uppercase; color: #767676;
+      letter-spacing: .22em; text-transform: uppercase; color: #767676;   /* .22em = the sitewide mono label voice (C21 find: it tracked .2em, a drift) */
     }
     #og-tpl .ogt-strip .v { font-size: 2.3cqw; line-height: 1.25; margin-top: .55cqw; color: #111; }
     #og-tpl .ogt-strip .v:empty::before { content: "\2014"; color: #c4c4c4; }   /* an unfilled seat reads as a dash */
     #og-tpl .ogt-arrow { position: absolute; inset: 0; width: 100%; height: 100%; pointer-events: none; overflow: visible; }
-    #og-tpl .ogt-arrow line { stroke: #fff; stroke-width: 1; }
-    #og-tpl .ogt-arrow text { fill: #fff; font-family: var(--disp); font-size: 2.1cqw; text-anchor: middle; dominant-baseline: middle; }
+    #og-tpl .ogt-arrow line { stroke: var(--ogtArrow); stroke-width: var(--ogtArrowW); }
+    #og-tpl .ogt-arrow marker path { stroke: var(--ogtArrow); stroke-width: var(--ogtArrowW); fill: none; }
+    #og-tpl .ogt-arrow text { fill: var(--ogtArrow); font-family: var(--disp); font-size: 2.1cqw; text-anchor: middle; dominant-baseline: middle; }
     #og-tpl .ogt-arrow[hidden] { display: none; }
     /* .live restated: the deck's own `.lbnb.live { display:block }` sits
        later in source — the [data-lb] + .live form out-specs it so the
@@ -6293,7 +6318,7 @@
             <svg class="ogt-arrow" id="ogt-arrow" aria-hidden="true">
               <defs>
                 <marker id="ogt-ah" markerWidth="8" markerHeight="8" refX="7" refY="4" orient="auto-start-reverse" markerUnits="userSpaceOnUse">
-                  <path d="M1,1 L7,4 L1,7" fill="none" stroke="#fff" stroke-width="1" />
+                  <path d="M1,1 L7,4 L1,7" />
                 </marker>
               </defs>
               <line id="ogt-al" marker-start="url(#ogt-ah)" />

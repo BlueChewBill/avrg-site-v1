@@ -7040,10 +7040,17 @@
     /* ========= the j-cards: meta + renderers =========
        from j-cards-white/black (vault repo). Demo states and placeholder
        dims ride along, same as the j pages. */
+    /* THE CUTOUTS ARE WEBP (2026-09-05, Dylan's "go" on the audit's weight
+       find): the 139 card cutouts were ~300×900 px PNGs at 400–520 KB each
+       (photo noise defeats PNG) — 16 MB of a 19 MB desktop home boot. WebP
+       q90 with lossless alpha is ~65–90 KB per file and pixel-indistinguishable
+       at grid, lb and 4× detail (his eyeball on HS 16 + OG 07). The PNGs
+       left the repo; new cutouts land as .webp (board-batch skill step 4).
+       build_context.py mirrors this law. Safari 14+ / iOS 14+ paint alpha WebP. */
     const CUT = b => {
       const cv = CANVA[STEM(b)];
-      return cv ? "site/img/cards/canva/" + cv + ".png"
-                : "site/img/cards/cuts/" + b.thumb.split("/").pop().replace(/\.jpg$/, "") + "-cut.png";
+      return cv ? "site/img/cards/canva/" + cv + ".webp"
+                : "site/img/cards/cuts/" + b.thumb.split("/").pop().replace(/\.jpg$/, "") + "-cut.webp";
     };
     /* the underside: the canva pair's OTHER face (a few hs boards show
        their -bottom as the card front — the flip shows whichever face the
@@ -7053,7 +7060,7 @@
       const cv = CANVA[STEM(b)];
       if (!cv) return null;
       return "site/img/cards/canva/" + (cv.endsWith("-top")
-        ? cv.replace(/-top$/, "-bottom") : cv.replace(/-bottom$/, "-top")) + ".png";
+        ? cv.replace(/-top$/, "-bottom") : cv.replace(/-bottom$/, "-top")) + ".webp";
     };
     const CARDNM = { originals: "Original", "hand-shaped": "Shaped", classic: "Classic", resale: "Resale" };
     const JDIMS = {

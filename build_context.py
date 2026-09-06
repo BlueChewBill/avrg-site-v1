@@ -67,11 +67,12 @@ def stem(b):
 
 
 def cut(b):
-    """The live page's CUT law: canva cutout, else the originals Vision cut."""
+    """The live page's CUT law: canva cutout, else the originals Vision cut.
+    WebP since 2026-09-05 (the cutouts went .png -> .webp; mirrors index.html's CUT/BOT)."""
     cv = CANVA.get(stem(b))
     if cv:
-        return f"site/img/cards/canva/{cv}.png"
-    return "site/img/cards/cuts/" + b["thumb"].split("/")[-1].replace(".jpg", "") + "-cut.png"
+        return f"site/img/cards/canva/{cv}.webp"
+    return "site/img/cards/cuts/" + b["thumb"].split("/")[-1].replace(".jpg", "") + "-cut.webp"
 
 
 def bot(b):
@@ -79,7 +80,7 @@ def bot(b):
     if not cv:
         return None
     other = cv.replace("-top", "-bottom") if cv.endswith("-top") else cv.replace("-bottom", "-top")
-    return f"site/img/cards/canva/{other}.png"
+    return f"site/img/cards/canva/{other}.webp"
 
 
 def invref(b):
@@ -88,7 +89,7 @@ def invref(b):
     m = re.match(r"^([a-z]+)([\d.]+)-", cv or "")
     ref = f"{m.group(1).upper()} {m.group(2)}" if m else b.get("ref", "")
     return re.sub(r"(\s)(\d+)", lambda x: x.group(1) + x.group(2).zfill(2), ref)
-canva_files = len(list((ROOT / "site/img/cards/canva").glob("**/*.png")))
+canva_files = len(list((ROOT / "site/img/cards/canva").glob("**/*.webp")))
 
 ANCHORS = [
     ("JCARDS (framev3 template)", r"const JCARDS = \{", "the ONE CARD markup — every card on the site prints from JCARDS[CARD]; CARD is pinned to \"framev3\""),

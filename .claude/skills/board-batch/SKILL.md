@@ -31,10 +31,14 @@ hand-shaped), both run by dispatched Opus implementers. Ruling history
 3. **Name so `sources/` sorts LAST.** Continue the existing naming in the
    collection folder so the new files sort after everything present. A
    loose image = a single-photo board; a subfolder = one board, many angles.
-4. **Crop the cutouts straight from the alpha PNGs** — no re-masking. They
-   land in `site/img/cards/cuts/` (originals) or as the CANVA pair in
-   `site/img/cards/canva/` (one top + one bottom per board; the canva
-   folder ships only what the live `CANVA` map points at).
+4. **Crop the cutouts straight from the alpha PNGs** — no re-masking — then
+   **encode each as WebP** (`cwebp -q 90 -alpha_q 100 -m 6 in.png -o out.webp`;
+   the repo's cutouts are `.webp` since 2026-09-05 — a 300×900 PNG was 400–520 KB,
+   the WebP ~70 KB, indistinguishable on glass; never commit the PNG). They
+   land in `site/img/cards/cuts/` (originals, `<id>-cut.webp`) or as the CANVA
+   pair in `site/img/cards/canva/` (one top + one bottom per board, `hsNN-top.webp`
+   / `hsNN-bottom.webp`; the canva folder ships only what the live `CANVA` map
+   points at — the map values stay extension-less, `CUT`/`BOT` add `.webp`).
 5. **Add the CANVA rows** in `index.html` (+ an `INVREF` row; a `DIMS_MM`
    line once the board is measured — never guess dims).
 6. `python3 build_site.py` — regenerates `site/img/{thumb,full}` +

@@ -2120,7 +2120,7 @@
        photo grid + read + dims stand down under it (their content is
        baked into the sheet — the zone contract). .lb-product keeps its
        own fv3 rules untouched. */
-    #lb.fv3.og.ogz #og-zone {
+    #lb.fv3.og:is(.ogz, .ogt) #og-zone {
       display: block; position: absolute; left: 100%;
       /* v-centered on the CARD PANEL, not top-aligned like the legacy
          columns (Dylan 2026-08-27). The card element wraps the panel in
@@ -2144,7 +2144,66 @@
        A parent display:none also ends the old thumbs specificity fight
        (the body[data-lb] grid rule can't render inside it) — the
        .lbhead-lesson compound that stood here is no longer needed. */
-    #lb.fv3.og.ogz .lb-rest { display: none; }
+    #lb.fv3.og:is(.ogz, .ogt) .lb-rest { display: none; }
+    /* THE OG TEMPLATE (2026-09-06, Dylan: "go with option 2, template it for
+       the rest") — the zone's second wearer. A board with an OG_TPL row and
+       no OG_SHEETS row renders its sheet LIVE: four photos + three spec
+       strings, in the grammar Claude's OG 06 collide set (lightbox.md, THE
+       OG 06 COLLIDE): the dashed guide, a two-column photo band (hero left,
+       two detail tiles right, bottoms aligned), the spec strip in the
+       .ogclipcap label voice over the site's own sans, the profile
+       full-width at the foot with the length arrow. Geometry is the
+       960×1280 Figma canvas restated in % of the zone box (x/w over 960,
+       y/h over 1280 — the box is 3:4, so both axes scale together); type
+       is cqw of the zone (17/960 → 1.77cqw label = the chip's 8.5px at the
+       480 reference). Baked outranks live: populate checks OG_SHEETS first,
+       so OG 05's hand composition stands. Photo seats take object-fit /
+       object-position per board from the manifest (some boards shoot
+       different angles — Dylan's ruling: whichever photos, as long as
+       profile, trucks and wheels make it in). */
+    #lb.fv3.og.ogt #og-zone-img { display: none; }
+    #lb.fv3.og.ogt #og-tpl { display: block; }
+    #og-tpl {
+      display: none;   /* base: only lb.ogt shows it — under .ogz the sheet img stands alone */
+      position: relative; width: 100%; aspect-ratio: 3 / 4; background: #fff;
+      container-type: inline-size; font-family: var(--disp); color: #111;
+    }
+    #og-tpl .ogt-guide {
+      position: absolute; inset: 3.125% 4.1667%; pointer-events: none;
+      /* the sheets' 8/8 dash at 2× = 4/4 here, drawn per edge so every
+         browser dashes alike */
+      background:
+        repeating-linear-gradient(90deg, #999 0 4px, transparent 4px 8px) top / 100% 1px no-repeat,
+        repeating-linear-gradient(90deg, #999 0 4px, transparent 4px 8px) bottom / 100% 1px no-repeat,
+        repeating-linear-gradient(180deg, #999 0 4px, transparent 4px 8px) left / 1px 100% no-repeat,
+        repeating-linear-gradient(180deg, #999 0 4px, transparent 4px 8px) right / 1px 100% no-repeat;
+    }
+    #og-tpl .ogt-tile {
+      position: absolute; overflow: hidden; border-radius: 3px; background: #eee;
+      box-shadow: 5px 5px 2px rgba(0,0,0,.25);   /* the sheets' 10/10/4 at 2× */
+    }
+    #og-tpl .ogt-tile img { width: 100%; height: 100%; object-fit: cover; display: block; background: #fff; }
+    #og-tpl .ogt-hero    { left: 4.1667%; top: 3.125%;    width: 43.333%; height: 53.4375%; }  /* 416×684 */
+    #og-tpl .ogt-a       { left: 50%;     top: 3.125%;    width: 45.833%; height: 25.78125%; } /* 440×330 */
+    #og-tpl .ogt-b       { left: 50%;     top: 30.78125%; width: 45.833%; height: 25.78125%; } /* y 394 */
+    #og-tpl .ogt-profile { left: 4.1667%; top: 66.8%;     width: 91.667%; height: 28.4%; }     /* 880×364, foot at 95.2% — the shadow clears the guide */
+    #og-tpl .ogt-strip {
+      position: absolute; left: 4.1667%; top: 58.75%; width: 91.667%;
+      display: grid; grid-template-columns: repeat(3, 1fr); column-gap: 2.727%;
+      /* equal thirds, not the photo grid's 416/188/228: a truck spec is the
+         longest string on the sheet and the aligned split starved it (three
+         lines, into the profile). Two lines of value fit the 58.75→66.8% seat. */
+    }
+    #og-tpl .ogt-strip .l {
+      font-family: var(--mono); font-weight: 700; font-size: 1.77cqw; line-height: 1.3;
+      letter-spacing: .2em; text-transform: uppercase; color: #767676;
+    }
+    #og-tpl .ogt-strip .v { font-size: 2.3cqw; line-height: 1.25; margin-top: .55cqw; color: #111; }
+    #og-tpl .ogt-strip .v:empty::before { content: "\2014"; color: #c4c4c4; }   /* an unfilled seat reads as a dash */
+    #og-tpl .ogt-arrow { position: absolute; inset: 0; width: 100%; height: 100%; pointer-events: none; overflow: visible; }
+    #og-tpl .ogt-arrow line { stroke: #fff; stroke-width: 1; }
+    #og-tpl .ogt-arrow text { fill: #fff; font-family: var(--disp); font-size: 2.1cqw; text-anchor: middle; dominant-baseline: middle; }
+    #og-tpl .ogt-arrow[hidden] { display: none; }
     /* .live restated: the deck's own `.lbnb.live { display:block }` sits
        later in source — the [data-lb] + .live form out-specs it so the
        hide wins from up here */
@@ -6217,6 +6276,32 @@
            src is written by populate on demand — no boot cost. -->
       <div id="og-zone">
         <img id="og-zone-img" alt="" />
+        <!-- THE OG TEMPLATE (2026-09-06): the live sheet — engaged by lb.ogt
+             for boards with an OG_TPL row and no baked sheet. populate is the
+             one writer (srcs on demand, the clip-gate philosophy). -->
+        <div id="og-tpl" aria-label="the board's sheet">
+          <div class="ogt-guide" aria-hidden="true"></div>
+          <figure class="ogt-tile ogt-hero"><img id="ogt-hero" alt="" /></figure>
+          <figure class="ogt-tile ogt-a"><img id="ogt-a" alt="" /></figure>
+          <figure class="ogt-tile ogt-b"><img id="ogt-b" alt="" /></figure>
+          <div class="ogt-strip">
+            <div><div class="l">Dimensions</div><div class="v" id="ogt-dims"></div></div>
+            <div><div class="l">Trucks</div><div class="v" id="ogt-trucks"></div></div>
+            <div><div class="l">Wheels</div><div class="v" id="ogt-wheels"></div></div>
+          </div>
+          <figure class="ogt-tile ogt-profile"><img id="ogt-profile" alt="" />
+            <svg class="ogt-arrow" id="ogt-arrow" aria-hidden="true">
+              <defs>
+                <marker id="ogt-ah" markerWidth="8" markerHeight="8" refX="7" refY="4" orient="auto-start-reverse" markerUnits="userSpaceOnUse">
+                  <path d="M1,1 L7,4 L1,7" fill="none" stroke="#fff" stroke-width="1" />
+                </marker>
+              </defs>
+              <line id="ogt-al" marker-start="url(#ogt-ah)" />
+              <line id="ogt-ar" marker-end="url(#ogt-ah)" />
+              <text id="ogt-len"></text>
+            </svg>
+          </figure>
+        </div>
       </div>
       <div class="lb-rest">
         <div class="lb-thumbs" id="lb-thumbs"></div>
@@ -7153,13 +7238,70 @@
        the spread's photo-grid right column. Add a line as each export
        lands — the sheet never repeats the card's dims/AVAILABLE/WANT. */
     const OG_SHEETS = {
-      "OG 05": "site/img/og/og-05-section-c.png",
-      /* OG 06: Claude's layout collide (2026-09-06) — the kit's
-         "SECTION · OG 06 · yellow-blue · CLAUDE'S LAYOUT" frame, seated
-         below Dylan's own OG 06 sheet on the 07 page. Unpicked: swap the
-         path for his export (or drop the line) on his react. */
-      "OG 06": "site/img/og/og-06-section-claude.png"
+      "OG 05": "site/img/og/og-05-section-c.png"
     };
+    /* THE OG TEMPLATE's manifest (2026-09-06, Dylan: "go with option 2,
+       template it for the rest") — one row per original the live sheet
+       dresses: four photo seats (hero / a / b / profile — whichever shots
+       the board has, as long as profile, trucks and wheels make it in;
+       optional hfit/hpos · afit/apos · bfit/bpos · ppos = object-fit /
+       object-position per seat), three spec strings (dims rides the dims
+       grammar; an empty string renders as a dash — Dylan fills), the
+       length label for the profile arrow (empty = no arrow) and an
+       optional arrow triple [x0, x1, y] as fractions of the profile tile
+       (default = the OG 06 collide's seat). Spec words are Dylan's own
+       from the kit's sheets; nothing here is guessed. A ref present in
+       OG_SHEETS never reaches this table (baked outranks live). */
+    const OG_TPL = {
+      "OG 01": { hero: "site/img/full/originals-01-1.jpg", a: "site/img/og/og-01-a.jpg", b: "site/img/og/og-01-b.jpg",
+                 profile: "site/img/full/originals-01-3.jpg", ppos: "50% 76%",
+                 dims: "", trucks: "", wheels: "", len: "" },
+      "OG 02": { hero: "site/img/full/originals-02-1.jpg", a: "site/img/og/og-02-a.jpg", b: "site/img/og/og-02-b.jpg",
+                 profile: "site/img/full/originals-02-3.jpg", ppos: "50% 72%",
+                 dims: "", trucks: "32mm Gen 2 Dynamics \u00b7 raw baseplate", wheels: "Piro \u2018Big Head\u2019 8mm", len: "" },
+      "OG 03": { hero: "site/img/full/originals-03-3.jpg", a: "site/img/og/og-03-a.jpg", b: "site/img/og/og-03-b.jpg",
+                 profile: "site/img/og/og-03-profile.jpg",
+                 dims: "31.5mm \u00d7 89.75mm", trucks: "Gen 1 Dynamics 34mm \u00b7 raw / purple base", wheels: "Folt 7.5mm", len: "89.75 mm" },
+      "OG 04": { hero: "site/img/full/originals-04-1.jpg", a: "site/img/og/og-04-a.jpg", b: "site/img/og/og-04-b.jpg",
+                 profile: "site/img/og/og-04-profile.jpg",
+                 dims: "30.8mm \u00d7 92.35mm", trucks: "Leefia 29mm", wheels: "Apex 60D teak 6.6mm", len: "92.35 mm" },
+      "OG 06": { hero: "site/img/og/og-06-hero.jpg", a: "site/img/og/og-06-a.jpg", b: "site/img/full/originals-06-2.jpg",
+                 profile: "site/img/og/og-06-profile.jpg",
+                 dims: "30.2mm \u00d7 90.4mm", trucks: "", wheels: "light blue 7.5mm", len: "90.4 mm" },
+      "OG 07": { hero: "site/img/full/originals-07-2.jpg", hfit: "contain", a: "site/img/og/og-07-a.jpg", b: "site/img/og/og-07-b.jpg",
+                 profile: "site/img/og/og-07-profile.jpg", ppos: "50% 48%", arrow: [0.08, 0.92, 0.24],
+                 dims: "33mm \u00d7 93.2mm", trucks: "Gen 2 Dynamic 34mm \u00b7 raw / green base", wheels: "Mint Piro Performance 8mm", len: "93.2 mm" }
+    };
+    const ogTplSeat = (id, src, fit, pos) => {
+      const el = document.getElementById(id);
+      if (src) { if (el.getAttribute("src") !== src) el.src = src; }
+      else el.removeAttribute("src");
+      el.style.objectFit = fit || ""; el.style.objectPosition = pos || "";
+    };
+    /* the template writer: seats + strip + arrow. Called by populate with
+       the board's row, or with null to strip every src (a sheeted or
+       sheetless board must not keep the last template's photos warm). */
+    function ogTplWrite(t) {
+      ogTplSeat("ogt-hero", t && t.hero, t && t.hfit, t && t.hpos);
+      ogTplSeat("ogt-a", t && t.a, t && t.afit, t && t.apos);
+      ogTplSeat("ogt-b", t && t.b, t && t.bfit, t && t.bpos);
+      ogTplSeat("ogt-profile", t && t.profile, t && t.pfit, t && t.ppos);
+      const dims = document.getElementById("ogt-dims");
+      dims.innerHTML = (t && t.dims) ? dimsRich(t.dims) : "";
+      document.getElementById("ogt-trucks").textContent = (t && t.trucks) || "";
+      document.getElementById("ogt-wheels").textContent = (t && t.wheels) || "";
+      const svg = document.getElementById("ogt-arrow");
+      if (!t || !t.len) { svg.hidden = true; return; }
+      svg.hidden = false;
+      const [x0, x1, y] = t.arrow || [0.082, 0.924, 0.155];
+      const gap = 0.16, mid = (x0 + x1) / 2, pc = v => (v * 100).toFixed(2) + "%";
+      const al = document.getElementById("ogt-al"), ar = document.getElementById("ogt-ar");
+      al.setAttribute("x1", pc(mid - gap / 2)); al.setAttribute("x2", pc(x0));
+      ar.setAttribute("x1", pc(mid + gap / 2)); ar.setAttribute("x2", pc(x1));
+      for (const l of [al, ar]) { l.setAttribute("y1", pc(y)); l.setAttribute("y2", pc(y)); }
+      const tx = document.getElementById("ogt-len");
+      tx.setAttribute("x", pc(mid)); tx.setAttribute("y", pc(y)); tx.textContent = t.len;
+    }
     /* THE DIMS GRAMMAR (2026-08-29, Dylan: "having even round numbers
        display a .0, so 33.0. mm after each measurement too" — "the
        varying dim lengths in digit count and the mm being the same...
@@ -11314,6 +11456,12 @@
       } else if (ozi.getAttribute("src")) {
         ozi.removeAttribute("src"); ozi.alt = "";
       }
+      /* THE OG TEMPLATE (2026-09-06): the live sheet for boards with an
+         OG_TPL row and no baked sheet — lb.ogt gates the CSS, ogTplWrite
+         is the one writer (srcs land on demand, per open/exchange). */
+      const ogTpl = (!ogSheet && fv3 && c.id === "originals" && OG_TPL[ref]) || null;
+      lb.classList.toggle("ogt", !!ogTpl);
+      ogTplWrite(ogTpl);
       lbCard.classList.toggle("d7f", fv3);
       lbCard.classList.remove("left");
       if (!fv3) lbCard.classList.remove("tset", "stay", "dressed", "redress", "navdraw", "sold");

@@ -11197,7 +11197,7 @@
       lbListBtn.textContent = inLisst(b.id) ? "✓ on the lisst" : "+ add to my lisst";
       lbListBtn.classList.toggle("on", inLisst(b.id));
       const d = b.description || "";
-      lbDesc.textContent = (!d || /^Replace this/m.test(d)) ? cleanDesc(c.description) : d;
+      lbDesc.textContent = (!d || /^(Replace this|DRAFT\b)/m.test(d)) ? cleanDesc(c.description) : d;   /* DRAFT: the Claude-written stand-in (OG 07) leaked to the live lb 2026-09-05 — same fallback as the seed placeholder */
       /* the full spec line, real measurements only — no placeholder ever
          prints here (PH_DIMS stays a card-decode-only demo) */
       const dmm = DIMS_MM[ref];

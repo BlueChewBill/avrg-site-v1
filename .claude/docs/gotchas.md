@@ -210,3 +210,11 @@ During batch 3's verification the pane served a `site/data.js` from BEFORE the p
 ## Residual lean after straightening is PERSPECTIVE keystone, not rotation — don't over-rotate (2026-08-31)
 
 Batch 3's straightening pass rotated every board onto its own silhouette axis (0–3.5°). A few still read as leaning afterwards: that residue is keystone from the shot angle (the two ends of the deck sit at different distances from the lens), so the silhouette's axis and the visual "lean" disagree. Rotating further only tilts the true axis and makes the board look worse from the other end. The cures are a reshoot or a perspective warp — never another degree of rotation.
+
+## A retired element's offsetHeight is 0 — never let a surface fork read a measurement a costume rule can zero (2026-09-05)
+
+`deckGeom` told desktop from phone by the truthiness of `H = lbHead.offsetHeight`. When the counter retired (2026-08-29, `.lbhead { display: none }` on every width), `H` read 0 above 720 too and every fork took the phone's path — the strip sank below the card on desktop for a week and nobody noticed, because the phone costume is a working layout. THE TELL: a desktop surface quietly wearing a phone arrangement after an unrelated retirement. THE FIX SHAPE: forks read the SURFACE (`D = innerWidth > 720`); measurements are only ever the room a thing takes. Record: lightbox.md's THE MINIS COME BACK UP TOP.
+
+## The app's Browser pane goes blank on the lightbox — real Chrome for lb geometry (2026-09-05)
+
+In the desktop app, the in-app Browser pane rendered the shop fine, then painted pure white the moment a lightbox opened (the rAF-wedge family; `#lb-card .panel` also measured its 232 START size mid-transition, the frozen-transition tell). The chrome-devtools MCP's real Chrome measured and shot everything correctly. So: pane for the shop/home/phone-emulation screenshots, real Chrome for anything inside `#lb`. Two mechanics learned with it: `take_screenshot`'s `filePath` must sit INSIDE the workspace root (the scratchpad is refused) — `.shots/` in the repo is gitignored for exactly this; and `new_page` tabs share the window, so `resize_page` once and every tab is 1440×900. Kill the MCP Chrome when done (the Dock-relaunch gotcha above).

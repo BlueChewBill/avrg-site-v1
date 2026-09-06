@@ -1,50 +1,40 @@
-# Handoff — AVRG site v1 — 2026-08-29 (evening, second session)
-
-> **2026-09-02:** the /doctor session's CLAUDE.md trim was reviewed with Dylan and landed as `d6b6910` — bench + batch procedure now live in `.claude/skills/`, the dated history in `.claude/docs/log.md` (not deleted), `site/data.js` never-hand-edit rule restored. Everything below is the 2026-08-29 handoff and still current for the site work.
-
-> Dylan, at goodnight: "tell the next guy i said hi." Hi. /salute
-
-> (The old vault→v1 porting recipe + the closed A/B trip log live in this file's git history — CLAUDE.md still points here for them.)
+# Handoff — AVRG site v1 — 2026-09-05 (the audit walk + the chip bake)
 
 ## Where we are
 
-THE SLUGGISH-SUN HUNT is closed and everything is pushed (`b59080c`-era, tree should be clean after the wrap commit): the sun had been drowning since 08-28 — 655ebac's `.panel:hover` reword out-specified the `.suntrack` transition mute, so every per-frame sun write restarted the .94s hover glide in every browser. Dylan's screenshots cracked it; the mute is armored; his verdict on the healed engine: **"thats the feel."** Same session: the link-preview meta pass landed (og:/twitter: + composed `site/media/og-share.png` — the Sunday-critical item is DONE), the inventory went honest (CL 06/08/16/19 MIA→SOLD via `JGONE`; the inception demo lies CL 05 "Sold"/HS 02 "Pending" came out), CL 03/12/26 got measured, and the board backlog was re-counted at 48 (19 CL + 29 HS undocumented). CLAUDE.md's Where-things-stand has the one-liner; lightbox.md owns the sun record; two new gotchas (the specificity-tie landmine + synthetic-events-can't-see-:hover).
+Everything on v1 is pushed and live at avrg.cards (main = origin = the served page, byte-identical at wrap). The day was an audit walk Dylan asked for while he calipered boards, and it closed a lot: the OG 07 DRAFT line off the live lb, the empty RESALE section out of shop-all, accessibility 89 → 96, THE CUTOUTS GO WEBP (card art 54 → 15 MB on disk, the desktop home boot 19 → ~5 MB), tail · nose on the dims line's second row, the desktop minis strip back up top (a regression from the counter's retirement), and the add chip's round 7 — corner mark tucked under the chip, then his pick off two collides, **B + tight, baked and pushed**: the chip is the ref pill's 26px box at every width, word 11px, the card glyph redrawn to the bar mini's recipe. Records are in the owning docs (log.md's 2026-09-05 entry lists them all). Tree is clean except this wrap's docs commit.
 
-**The sun-feel thread is settled by his ruling:** the engine is healed and any residual taste adjustment he'll do himself "with the bench tuning later." The `?sun=`/`?grow=`/`?hud=` collide plumbing is still IN the file (param-gated, verified inert on the bare URL) — it retires whenever he declares the boundary question dead; don't strip it unprompted.
+**In flight at wrap:** a `bench-cartographer` agent was charting the NEW `chip-word-size` dial in CompUI (`.d7f .fc-list { font-size }` + the `.ft` line-height coupling; ticket text is in this session's transcript, the spec is in cards.md's THE BAKE entry). It commits in CompUI on its own; CompUI is NOT pushed (Dylan's call — two local commits ahead: the two chip rows re-baked at 0bfc82d, plus the cartographer's when it lands). If the next session finds CompUI's `pilot/manifest/avrg.json` without a `chip-word-size` row, the agent didn't finish: re-issue the ticket (the bench-charting skill has the shape; the numbers are 4.7414cqw shipped, range 3.5–6, coupling to the 13px `.ft` line, consumer lb-chips).
 
 ## Next task
 
-**HIS LIST, two items, desktop first:**
+No task was named at wrap. Dylan is mid-dims: **the dims backlog** is the live thread — 42 of 71 boards with no `DIMS_MM` line (all 7 OG, HS 25–46, CL 55–63 + the four solds) and 18 with width+length only (list by ref in open-threads.md's THE AUDIT WALK). His type-in lands in `DIMS_MM` in `index.html` (keyed by padded ref, `[w, l]` or `[w, l, tail, nose]` in mm) — then `build_context.py`, parse check, commit. Done = the refs he dictates print in the lb dims line (row 1 width × length, row 2 tail · nose).
 
-1. **Another pass on the "add" chip** — the `.fstack` mini-card glyph on `.fc-list` (cards.md's THE ADD CHIP redesign, three reacts deep: flat EMPTY mini card in the fv3 dress). No spec given at wrap — open by getting his react/direction, then build variants (his three-react refinement pattern: ship each react fast, he converges). Remember: the class/const names are a kept lie (`.fstack`/`STACKSVG` — bench anchors point at them, don't rename).
-
-2. **A new desktop dropdown from the top-left AVRG bar logo** — for now ONE entry: **media**, doing exactly what clicking the home-page spine video does today (`openVlb` — `#vlb`, the one true full-screen modal, z 7000). Then **re-present that clicked view more like the card lightbox: the playing video gets FLANKERS of the other videos** (today `#vlb` has poster thumbs in `#vlb-thumbs`; he wants the lb's neighbour grammar instead — flanking videos beside the hero). Check what the bar logo's click currently does (header-bar.md) before hanging a dropdown off it, and rhyme the dropdown with the existing drop grammar rather than inventing a new one. This is likely the long-waited home for the vault's `videos/web/` riding clips (open-threads line ~30) — but only the three shipped clips are in `site/media/` today; more clips = his export call, ask before hauling vault media.
-
-Done for (2) = the dropdown opens on the logo on desktop 941+, media entry opens `#vlb`, and `#vlb` shows the hero video with the other clips as flankers in the lb language — his react round included.
+If he opens on something else, the candidates in his weight order are in open-threads.md's audit addendum: the originals copy (OG 02–06 empty; type into `sources/originals/NN-slug/*.txt`, rebuild), the two home contrast greys (taste), the leftover URL switches, the share tags, the logo media dropdown (never started).
 
 ## Read these, skip the rest
 
-- `.claude/docs/header-bar.md` — the bar + the drop grammar before touching the logo seat.
-- `.claude/docs/lightbox.md` — THE VIDEO LIGHTBOX section (the `#vlb` machinery: `VIDEOS` table, `clipEls`, the cover-slot-is-the-spine-video law, open/close FLIP) + the LB DECK/flanker grammar it should start rhyming with. THE SUN WAS DROWNING IN THE HOVER GLIDE if any sun work comes up.
-- `.claude/docs/cards.md` — THE ADD CHIP section for task 1.
-- `.claude/docs/gotchas.md` — before ANY browser verification. New this session: synthetic events never set `:hover` (hover-gated bugs need real CDP input), and kill the chrome-devtools MCP's Chrome when verification wraps (it hijacks Dylan's Dock relaunch).
-- `git log --oneline -20` — tonight's story.
+- `.claude/docs/open-threads.md` — THE AUDIT WALK section + its addendum: the open list, in his order, with the dims refs.
+- `.claude/docs/cards.md` — THE ADD CHIP COLLIDE IS UP → round 7b → THE BAKE: the chip's current numbers and why (26 box, 11px word, 22px glyph on a 13 seat, the tight recipe). Read before touching the chip or `STACKSVG`.
+- `.claude/docs/lightbox.md` — the three 2026-09-05 entries at the foot: the DRAFT filter, the dims second row, THE MINIS COME BACK UP TOP (the `D` flag in `deckGeom` — don't "simplify" it back to `H`).
+- `.claude/docs/gotchas.md` — the two new ones at the foot: a retired element's offsetHeight is 0; the app's Browser pane blanks on the lightbox (real Chrome for lb geometry, screenshots into `.shots/`).
+- `.claude/skills/board-batch/SKILL.md` step 4 — cutouts are `.webp` now; a PNG dropped in `site/img/cards/` is invisible to the page.
 
-Everything else is NOT needed until a task leads there. Re-run `build_context.py` after any index.html change.
+Everything else is NOT needed until a task leads there. Re-run `build_context.py` after any `index.html` change; parse-check before any browser look.
 
 ## Context that isn't in the code
 
-- **Push cadence tonight was per-drop on his word ("push it") — that grant ended with the session; pushes are his call again.**
-- **The meta-tag wing LANDED after goodnight** — CompUI `771142a`, census 147→168: the `link-meta` wing, 21 locked rows, a new tier 4 minted ("the document head, nothing on the stage to drive"). The full record + the share image's measured recipe now live in **k-core.md's THE LINK-PREVIEW CARD** (the recipe's only durable home — the compose script wasn't kept). Cartographer finds parked there for Dylan: the shadow's crescent outside the frame (charm or 10px-low, his call), the near-house throw ratio, missing `twitter:site`/`og:locale`/`twitter:image:alt` (twitter:site needs his X handle), and a bench-side `bakeText()` UTC date quirk (evening bakes stamp tomorrow — flagged, not fixed). Also learned: **CompUI has a GitHub remote now** (CLAUDE.md updated); local commits sit ahead of it, pushing CompUI is Dylan's call.
-- **The share card is composed, not shot** — white ground, inverted line logo, HS 04's painted `-bottom` face (hs2/3/4 lead with `-bottom` as the card front), hard offset shadow, hairline frame. Recipe in commit a5a3522's message. If Dylan wants a different board on it, it's a re-render, and DM apps cache previews (re-scrape via opengraph.xyz after changes).
-- **Dylan's feel reports are precise instruments** — this session's whole arc. When his glass and your probes disagree, the glass wins; go hunting for what the probe can't express. (Saved to memory too.)
-- **The identity migration is chartered but parked** (open-threads Misc queue): filename-derived board ids, the originals' NN-prefix playbook generalized, byte-identical data.js diff as acceptance. **Do it BEFORE the 48-board batch.** His framing: not urgent.
-- **The 48-board batch**: additions sort LAST (safe by the ordering law); per-board site cost is one CANVA line + one dims line + a cutout pair; he shoots in increments, any size drop is valid.
-- Caliper list still open: HS 10/15/18 tail/nose, originals if ever.
+- **His reads today, verbatim where it matters:** "the two lines are fine. in fact. we should move tail and nose measurements to sit on the second row universally" · "remove the restock foot note" (read as the whole empty section — a heading with nothing under it read worse; the fork is in home-shop.md, one-line flip back) · "pixels are off on the inner edge of the card. add reads small. chip is too tall. im open to suggestions beyond the design it is now" · "see if we can get the card in the chip to read more like a blank mini. with its hair line inner frame and space around the dot. understandable if its to tight" · "b and tight. bake it and push".
+- **The chip's box law now:** 26 = padding 13 + a 13px line; BOTH the word (line-height 13) and the glyph (22 drawn, −4.5/−4.5 margins) bleed inside that line. Changing either seat number breaks the ref-pill parity he just picked.
+- **The WebP batch is done, and future batches must encode** — the board-batch skill's step 4 says so; `CUT`/`BOT` and `build_context.py` spell `.webp`, the `CANVA` map values never carry an extension.
+- **Push cadence today:** he said "push" three times (both repos with CompUI's CLAUDE.md; "bake it and push"). That grant ended with the session — pushes are his call again. CompUI is never pushed by a session.
+- **Verification tooling this session:** the desktop app's Browser pane worked for the shop and phone emulation but painted white on the lightbox; the chrome-devtools MCP's real Chrome did all lb measurement (kill it at the end — done at wrap). Synthetic click chains (`pointerdown → click` dispatched at the card centre) open the lb reliably; `:hover` still needs real input.
+- **Two one-liners on his word** (not done, noted in open-threads): the phone's dockDress writes plain `ADD` vs desktop's `ADD +`; the strip sits ~29px higher than the 08-19 layout now that the counter's air is gone — unjudged by him.
+- **The a11y items left on the home** (video note `#a1a1a1`, band subtitles `#939393`) are design greys — taste, likely charted; I left them alone on purpose.
 
 ## Parked / later
 
-- The sun wake-boundary question (accept vs `?sun=4` vs warm ring, grow size) — HIS bench-tuning territory now; collide plumbing stays until he calls it.
-- The weekend big three minus what closed: og sheets ×6 export+wire (Figma material mostly composed) · the 48-board batch (ORDERING LAW; identity migration first) · spark tag language + touch surfacing (the DM conversation).
-- +List on-state border accent · stack-seat optics (Sunday-dispatch taste calls, still unjudged).
-- The deckmark cleanup chip (own session, #picon `.deckmark` caveat) · the cosmetic code cleanups · Safari pass proper · iPad (lowest).
+- The originals' remaining asset ends (six og sheets, three Vision-cut cards, the stand-in clip, og phone lb) — unchanged, open-threads.
+- The identity migration before the 48-board batch — unchanged.
+- The `?sun=`/`?grow=`/`?hud=` collide plumbing stays by his ruling; `?msgfx=` and `?rowmax=`/`?rowgap=` are unbaked 08-05 knobs, retire on his word.
+- The maker's mark in the lb and its touch surfacing; the share tags (`twitter:site` needs his X handle).

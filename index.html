@@ -1004,6 +1004,7 @@
     margin: 12px auto 0; text-align: center;
     font-family: var(--mono); font-size: 10px; font-weight: 700;
     letter-spacing: .2em; text-transform: uppercase;
+    white-space: pre-line;   /* the writer's "\n" IS the row break: tail · nose always sit on row 2 (2026-09-05) */
   }
   .lb-dims:empty { display: none; }
   .lb-product {
@@ -11235,8 +11236,16 @@
       /* the full spec line, real measurements only — no placeholder ever
          prints here (PH_DIMS stays a card-decode-only demo) */
       const dmm = DIMS_MM[ref];
+      /* TAIL + NOSE TAKE THE SECOND ROW, UNIVERSALLY (2026-09-05, Dylan:
+         "move tail and nose measurements to sit on the second row
+         universally (when they have those dims)"). Was one string that
+         wrapped wherever the width put it; now a "\n" splits the read and
+         .lb-dims renders it with white-space: pre-line. Row 1 = width ×
+         length, row 2 = tail · nose; a two-value board keeps row 1 alone
+         over the constant two-row reserve (min-height 2.8em), so the card
+         row never re-centres either way. */
       dimsWrite(lbDims, dmm
-        ? dimsStr(dmm) + (dmm.length > 2 ? " — tail " + dimsNum(dmm[2]) + "mm · nose " + dimsNum(dmm[3]) + "mm" : "")
+        ? dimsStr(dmm) + (dmm.length > 2 ? "\ntail " + dimsNum(dmm[2]) + "mm · nose " + dimsNum(dmm[3]) + "mm" : "")
         : "");
       lbCount.textContent = (k + 1) + " / " + c.boards.length + " — " + dispTitle(c);
       /* the deck header: the board's own TAG plus the collection size, one

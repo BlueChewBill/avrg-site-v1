@@ -7210,7 +7210,7 @@
        (the ordering law) and rides the board-batch session if ever. */
     const JPEND = {};
     const JGONE = { "CL 06": 1, "CL 08": 1, "CL 16": 1, "CL 19": 1 };
-    const PH_DIMS = { "OG 01": "33.5mm × 97.5mm" };   /* the demo string rides the dims grammar */
+    const PH_DIMS = { "OG 01": "29.7mm × 94.1mm" };   /* the demo string rides the dims grammar — OG 01's REAL number since 2026-09-08 (was a 33.5 × 97.5 stand-in that contradicted the og sheet) */
     /* REAL MEASUREMENTS (Dylan, 2026-08-13) — keyed by padded inventory ref,
        [width, length, tailWidth, noseWidth] in mm. Width is the widest point;
        tail/nose (optional) are the widths at each end — Dylan: "too much
@@ -7280,10 +7280,10 @@
     const OG_TPL = {
       "OG 01": { hero: "site/img/full/originals-01-1.jpg", a: "site/img/og/og-01-a.jpg", b: "site/img/og/og-01-b.jpg",
                  profile: "site/img/full/originals-01-3.jpg", ppos: "50% 76%",
-                 dims: "", trucks: "", wheels: "", len: "" },
+                 dims: "29.7mm \u00d7 94.1mm", trucks: "Leefia 29mm", wheels: "Piro Performance Minis \u00b7 white / black outer", len: "94.1 mm" },
       "OG 02": { hero: "site/img/full/originals-02-1.jpg", a: "site/img/og/og-02-a.jpg", b: "site/img/og/og-02-b.jpg",
                  profile: "site/img/full/originals-02-3.jpg", ppos: "50% 72%",
-                 dims: "", trucks: "32mm Gen 2 Dynamics \u00b7 raw baseplate", wheels: "Piro \u2018Big Head\u2019 8mm", len: "" },
+                 dims: "31.7mm \u00d7 91.6mm", trucks: "32mm Gen 2 Dynamics \u00b7 raw baseplate", wheels: "Piro \u2018Big Head\u2019 8mm", len: "91.6 mm" },
       "OG 03": { hero: "site/img/full/originals-03-3.jpg", a: "site/img/og/og-03-a.jpg", b: "site/img/og/og-03-b.jpg",
                  profile: "site/img/og/og-03-profile.jpg",
                  dims: "31.5mm \u00d7 89.75mm", trucks: "Gen 1 Dynamics 34mm \u00b7 raw / purple base", wheels: "Folt 7.5mm", len: "89.75 mm" },
@@ -7292,7 +7292,7 @@
                  dims: "30.8mm \u00d7 92.35mm", trucks: "Leefia 29mm", wheels: "Apex 60D teak 6.6mm", len: "92.35 mm" },
       "OG 06": { hero: "site/img/og/og-06-hero.jpg", a: "site/img/og/og-06-a.jpg", b: "site/img/full/originals-06-2.jpg",
                  profile: "site/img/og/og-06-profile.jpg",
-                 dims: "30.2mm \u00d7 90.4mm", trucks: "", wheels: "light blue 7.5mm", len: "90.4 mm" },
+                 dims: "30.2mm \u00d7 90.4mm", trucks: "Leefia 32mm", wheels: "Blue Abstract 7.5mm", len: "90.4 mm" },
       "OG 07": { hero: "site/img/full/originals-07-2.jpg", hfit: "contain", a: "site/img/og/og-07-a.jpg", b: "site/img/og/og-07-b.jpg",
                  profile: "site/img/og/og-07-profile.jpg", ppos: "50% 48%", arrow: [0.08, 0.92, 0.24],
                  dims: "33mm \u00d7 93.2mm", trucks: "Gen 2 Dynamic 34mm \u00b7 raw / green base", wheels: "Mint Piro Performance 8mm", len: "93.2 mm" }

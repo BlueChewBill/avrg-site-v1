@@ -9,7 +9,7 @@
 ## Facts
 
 <!-- GEN:BEGIN — written by build_context.py, do not hand-edit this block -->
-*Derived 2026-09-06 · commit cdfd2ea · index.html 17565 lines*
+*Derived 2026-09-08 · commit 7e30b31 · index.html 17565 lines*
 
 **The card in numbers**
 - Boards it draws: originals 7 · hand-shaped 36 · classic 28 · resale 0 — 71 total

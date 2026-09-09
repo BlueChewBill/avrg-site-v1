@@ -1825,12 +1825,21 @@
      the chip back; no pop on the way out. The glyph bleeds 4.5px into
      the padding with 2px of air, and 6% of 22 is 1.3 — inside the air,
      no clip against the chip's overflow:hidden. `@media (hover: hover)`
-     keeps the phone out; the card's own hover still draws the seat. */
+     keeps the phone out; the card's own hover still draws the seat.
+     THE POP IS AN ARRIVAL, NOT A STATE (same day, the cartographer's
+     find, Dylan: "fix the pop, deferring to you here"): on :hover the
+     keyframe died with the hover, so a fast in-out mid-pop snapped the
+     contents to 1 in one frame while the chip eased home — the flick.
+     Now the chip's pointerover (mouse only, the .fl arrival listener by
+     the chip click handler) lands `.popping`, the class runs the
+     keyframe, and animationend takes the class off — the pop always
+     completes and settles whether or not the cursor stayed. The grow is
+     still the hover state; only the overshoot became an event. */
   .d7f .fc-list .ft { word-spacing: -.5em; }
   @media (hover: hover) {
     .d7f .fc-list.d7f-cta { transition: transform .18s ease; transform-origin: bottom right; }
     .d7f .fc-list.d7f-cta:hover { transform: scale(1.06); }
-    .d7f .fc-list.d7f-cta:hover .fl { animation: chippop .42s ease both; transform-origin: center; }
+    .d7f .fc-list.d7f-cta.popping .fl { animation: chippop .42s ease both; transform-origin: center; }
   }
   @keyframes chippop {
     0%   { transform: scale(1); }
@@ -16236,6 +16245,21 @@
         bayCatchShut();   /* nothing seated — no landing will consume the flag */
     }
 
+    /* THE POP ARRIVES (2026-09-08): the add chip's overshoot is a class
+       the cursor's arrival lands and animationend lifts, so a hover-out
+       mid-pop can't cut it (the :hover keyframe flicked — see the CSS at
+       the .fc-list block). Mouse only: touch fires pointerover on the
+       tap, and the phone has no hover grow for the pop to ride. A
+       child-to-child crossing inside the chip is not an arrival. */
+    document.addEventListener("pointerover", e => {
+      if (e.pointerType !== "mouse") return;
+      const chip = e.target.closest && e.target.closest(".fc-list.d7f-cta");
+      if (!chip || (e.relatedTarget && chip.contains(e.relatedTarget))) return;
+      chip.classList.add("popping");
+    });
+    document.addEventListener("animationend", e => {
+      if (e.animationName === "chippop") { const c = e.target.closest(".fc-list.d7f-cta"); if (c) c.classList.remove("popping"); }
+    });
     /* +List on belt/grid fv3 cards: capture phase, so the card's own
        "open the lightbox" click never sees it. The lightbox chip keeps
        its element handler (skipped by id here). */

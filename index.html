@@ -1798,6 +1798,41 @@
   .d7f .fc-list .fl { display: inline-flex; align-items: center; justify-content: space-between; gap: 5px; gap: 2.1552cqw; }
   /* an empty .ft drops out entirely so the gap arithmetic stays honest */
   .d7f .fc-list .ft:empty { display: none; }
+  /* THE CHIP IS A BUTTON (2026-09-08, Dylan: "tighten the gap between
+     'add' and the addition symbol. and give the chip some kind of breathe
+     or grow, glint, whatever you think would be best, to indicate -this
+     is a button- when hovered").
+     (1) THE GAP: the word is ONE string, "ADD +", and its space is a full
+     mono cell (.612em) with tracking either side — word-spacing pulls the
+     cell in without touching the tracking or any writer (the scramble
+     still writes plain text; ✓ and the phone's bare ADD have no space).
+     (2) THE BREATHE is the house press grammar — the bay-close / lb-nav
+     TIGHTEN: the black seat insets around the glyphs, which never move or
+     recolour. `inset`, NOT a transform — the ::before's transform belongs
+     to chipwipe (forwards) and a transition there would be fought. The
+     ring is proportional (2px at the 232 reference; px line first per the
+     ONE CARD SPEC). The hover is the CHIP's own, not the card's: the
+     card's hover DRAWS the seat, the chip's says press — so it reads on
+     the grid, the belts and the lb alike (d7f-cta is the button class).
+     THE TIGHTEN IS CORNER-ANCHORED — top and left only. The chip tucks
+     1px under the frame line at the card's bottom-right and covers the
+     red corner mark (.cbr); a uniform ring (the bay-close's) pulls the
+     seat off both, and the first real-Chrome shot showed the red mark
+     peeking out under the seat with a white sliver against the frame
+     line — the very seam the 2026-09-05 tuck closed. So the seat breathes
+     in toward the corner it is pinned to, and the frame edge stays sealed.
+     COLLIDE SWITCH (retires on his pick): ?chipfx=a — the uniform ring
+     (shows the seam) · ?chipfx=c — grow (scale 1.06 off the pinned
+     corner, the seat untouched). */
+  .d7f .fc-list .ft { word-spacing: -.3em; }
+  @media (hover: hover) {
+    .d7f .fc-list.d7f-cta::before { transition: top .24s ease, right .24s ease, bottom .24s ease, left .24s ease; }
+    .d7f .fc-list.d7f-cta:hover::before { inset: 2px 0 0 2px; inset: .8621cqw 0 0 .8621cqw; transition-duration: .18s; }
+    body[data-chipfx="a"] .d7f .fc-list.d7f-cta:hover::before { inset: 2px; inset: .8621cqw; }
+    body[data-chipfx="c"] .d7f .fc-list.d7f-cta:hover::before { inset: 0; }
+    body[data-chipfx="c"] .d7f .fc-list.d7f-cta { transition: transform .18s ease; transform-origin: bottom right; }
+    body[data-chipfx="c"] .d7f .fc-list.d7f-cta:hover { transform: scale(1.06); }
+  }
   /* THE CHIP COMES DOWN TO THE REF PILL'S BOX — B BAKED (2026-09-05, his
      pick off the round-7 A/B/C collide: "b and tight. bake it"; supersedes
      the F bake of 2026-08-30). The LAYOUT seat is a 13px line (22px drawn
@@ -12181,6 +12216,8 @@
          ?sun=23  both at once. */
     const sunQS = new URLSearchParams(location.search);
     const SUNV = sunQS.get("sun") || "";
+    /* ?chipfx=a|c — the add chip's press-grammar collide (2026-09-08, CSS-only costumes at the .fc-list block; retires on his pick) */
+    if (sunQS.get("chipfx")) document.body.dataset.chipfx = sunQS.get("chipfx");
     if (SUNV.includes("2")) SUN.liftEase = .09;
     const sunWarmOn = SUNV.includes("3");
     let sunWarm = false;

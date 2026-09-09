@@ -768,9 +768,16 @@
      law read in reverse. It rides .d7f (the dress's own :hover owner,
      so fills/decodes latch too, not just the lift) and only under the
      lifted surfaces; .d7f's container-type already anchors the abs
-     pseudo. Covers the -4px (.scard) and -3px (.bay-item) lifts. */
+     pseudo. Covered the -4px (.scard) and -3px (.bay-item) lifts at 7.
+     THE APRON MUST REACH AT LEAST AS FAR AS THE LIFT (2026-09-09, the
+     cartographer's find on the BENCH BAKE that took grid-lift to -9: the
+     7px apron let the 9px lift outrun it and the 2026-08-06 spazz came
+     back — 10–12 enter/leave pairs with the cursor parked .5–2px under a
+     card's rest edge). 12 clears it with 3 to spare (cured every park on
+     the served stage); height keeps the 2px overlap into the card. The
+     law, on both bench rows: hover-killzone ≥ |grid-lift|. */
   @media (hover: hover) {
-    :is(.scard, .bay-item) .d7f:hover::after { content: ""; position: absolute; left: 0; right: 0; bottom: -7px; height: 9px; }
+    :is(.scard, .bay-item) .d7f:hover::after { content: ""; position: absolute; left: 0; right: 0; bottom: -12px; height: 14px; }
   }
   .restock {
     max-width: 420px; margin: 38px auto 0; padding: 40px 20px;
@@ -2748,8 +2755,10 @@
   /* THE BOARD LIFT (2026-08-08 evening, Dylan: "half way through [the
      fill + inner-edge draw] the board starts to lift slowly to light
      box inspection's extra height and shadow") — the desktop hover
-     grow's RESTING translation for a cursorless screen: same 1.07 and
-     the same deeper throw as the (hover:hover) rule above, but arriving
+     grow's RESTING translation for a cursorless screen: 1.07 — the grid
+     card's own hover grow until the 2026-09-09 bake took THAT to 1.2;
+     this mirror and the lb's SUN.grow 1.08 are the lb's own world and
+     stayed — with the same deeper throw as the (hover:hover) rule above, but arriving
      as a state, on its own slow ease, half way through the dress
      (dockDress arms it at 440ms — see the token there). The var
      composes with --face, so the flip carousel is untouched. */

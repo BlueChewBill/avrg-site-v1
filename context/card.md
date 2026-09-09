@@ -9,14 +9,14 @@
 ## Facts
 
 <!-- GEN:BEGIN — written by build_context.py, do not hand-edit this block -->
-*Derived 2026-09-08 · commit a7714fd · index.html 17618 lines*
+*Derived 2026-09-08 · commit 34e262a · index.html 17618 lines*
 
 **The card in numbers**
 - Boards it draws: originals 7 · hand-shaped 36 · classic 28 · resale 0 — 71 total
 - Accents (per collection, ride in as `--acc`): originals `#e84a27` · hand-shaped `#4a9eff` · classic `#f5c842` · resale `#8b5cf6`
 - Real dims in `DIMS_MM`: 36 boards (CL 15, HS 14, OG 7) — the rest fall back to `PH_DIMS`/blank
 - Cutout art shipped: 136 files under `site/img/cards/canva/` · `CANVA` map entries: 68
-- Dress spec: 141 `.d7f` selector references in the page CSS · 160 `cqw` declarations (the ONE CARD SPEC container math)
+- Dress spec: 141 `.d7f` selector references in the page CSS · 161 `cqw` declarations (the ONE CARD SPEC container math)
 
 **Where it's drawn — anchor names, not line numbers** (line cited = at derivation; ANCHOR-SEARCH the name, the line is just a hint)
 - `JCARDS (framev3 template)` (index.html:7559) — the ONE CARD markup — every card on the site prints from JCARDS[CARD]; CARD is pinned to "framev3"

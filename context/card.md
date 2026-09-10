@@ -9,7 +9,7 @@
 ## Facts
 
 <!-- GEN:BEGIN — written by build_context.py, do not hand-edit this block -->
-*Derived 2026-09-09 · commit f1ccc5f · index.html 17722 lines*
+*Derived 2026-09-09 · commit fe8e636 · index.html 17724 lines*
 
 **The card in numbers**
 - Boards it draws: originals 7 · hand-shaped 36 · classic 28 · resale 0 — 71 total
@@ -19,23 +19,23 @@
 - Dress spec: 148 `.d7f` selector references in the page CSS · 171 `cqw` declarations (the ONE CARD SPEC container math)
 
 **Where it's drawn — anchor names, not line numbers** (line cited = at derivation; ANCHOR-SEARCH the name, the line is just a hint)
-- `JCARDS (framev3 template)` (index.html:7636) — the ONE CARD markup — every card on the site prints from JCARDS[CARD]; CARD is pinned to "framev3"
-- `jmeta` (index.html:7475) — shapes a data.js board into card meta (acc, ref, dims, cutouts)
-- `cardInner / renderColPage` (index.html:8470) — collection-page grids (.scard slots)
-- `bindScards` (index.html:8454) — grid slot wiring: click/keyboard -> openLb
-- `renderLisst` (index.html:8802) — YOUR PICKS page cards (one producer for both dresses: YOUR PICKS on the dock side, My Lisst on desktop)
-- `renderBay` (index.html:13677) — draws the drawer/bay shelf cards — the shelf's producer (flyToBay is only the flight)
-- `the shop conveyor` (index.html:12959) — home belt cards (recycler owns their visibility)
-- `flyToBay` (index.html:16312) — card -> drawer flight
-- `setFlip / flipStage` (index.html:16901) — the flip system (chip = the hidden-face mini)
-- `faceSync + FACE` (index.html:7606) — face memory: cards inherit the last-seen side
-- `lockCardScale` (index.html:8437) — grid render law: 232px then transform-down
-- `migrateHole` (index.html:11768) — lb exchange re-seats the grid hole on every landing
-- `cardDressOn / cardDressOff` (index.html:7065) — the hover decode pair: name<->dims, ref<->AVRG, status in/out — display is a TEXT WRITE, never CSS
-- `stayLand / dockDress` (index.html:7038) — the static text lands (no hover to earn a decode) — note: stayLand resolves dims||name, so THE LB CARD ALREADY RESTS ON DIMS on desktop
-- `DRESS_TEXTS` (index.html:6982) — the four text slots the dress systems own (.fc-ref .ft, .nmt, .sttxt, .fc-list .ft)
-- `DIMS_MM` (index.html:7342) — hand-authored real dims (data.js is generated, so these live in-page)
-- `CANVA / INVREF` (index.html:7193) — cutout map + canonical inventory refs (the jref/refOf law)
+- `JCARDS (framev3 template)` (index.html:7638) — the ONE CARD markup — every card on the site prints from JCARDS[CARD]; CARD is pinned to "framev3"
+- `jmeta` (index.html:7477) — shapes a data.js board into card meta (acc, ref, dims, cutouts)
+- `cardInner / renderColPage` (index.html:8472) — collection-page grids (.scard slots)
+- `bindScards` (index.html:8456) — grid slot wiring: click/keyboard -> openLb
+- `renderLisst` (index.html:8804) — YOUR PICKS page cards (one producer for both dresses: YOUR PICKS on the dock side, My Lisst on desktop)
+- `renderBay` (index.html:13679) — draws the drawer/bay shelf cards — the shelf's producer (flyToBay is only the flight)
+- `the shop conveyor` (index.html:12961) — home belt cards (recycler owns their visibility)
+- `flyToBay` (index.html:16314) — card -> drawer flight
+- `setFlip / flipStage` (index.html:16903) — the flip system (chip = the hidden-face mini)
+- `faceSync + FACE` (index.html:7608) — face memory: cards inherit the last-seen side
+- `lockCardScale` (index.html:8439) — grid render law: 232px then transform-down
+- `migrateHole` (index.html:11770) — lb exchange re-seats the grid hole on every landing
+- `cardDressOn / cardDressOff` (index.html:7067) — the hover decode pair: name<->dims, ref<->AVRG, status in/out — display is a TEXT WRITE, never CSS
+- `stayLand / dockDress` (index.html:7040) — the static text lands (no hover to earn a decode) — note: stayLand resolves dims||name, so THE LB CARD ALREADY RESTS ON DIMS on desktop
+- `DRESS_TEXTS` (index.html:6984) — the four text slots the dress systems own (.fc-ref .ft, .nmt, .sttxt, .fc-list .ft)
+- `DIMS_MM` (index.html:7344) — hand-authored real dims (data.js is generated, so these live in-page)
+- `CANVA / INVREF` (index.html:7195) — cutout map + canonical inventory refs (the jref/refOf law)
 
 **Environments** (each is a producer above): collection grids · home belts · the lightbox card · drawer/bay shelves · flights · YOUR PICKS · the blank card (`.scard.indeck` costume) — the add chip's phone-only costume went universal 2026-08-29, so there is no dock-gated card dress left
 

@@ -4080,15 +4080,17 @@
     min-width: 1px;
   }
   .bdm-sheet .lnb:focus { background: rgba(0, 0, 0, .05); }
-  /* THE TAG PRINTS AT REST (2026-08-11, Dylan: "'HS 06' is black text
-     normally... give the send button room to read like a button") — the
-     standing black chips competed with the send, which is now the
-     stage's ONLY resting black box. Attention fills the tag: cursor on
-     the tag, its dealt card hovered (.caret rides the same class the
-     invitation caret uses), or the caret in its line (.editing, rewired
-     — the toggle had died in an earlier rework) wipes the black chip in
-     LEFT→RIGHT; leaving drains it DOWNWARD. Padding is unchanged from
-     the chip era so the fill lands with zero reflow. */
+  /* THE TAG IS A BLACK CHIP AT REST AGAIN (2026-09-10, Dylan: "lets change
+     the letters row labels to match" — the drawer head's chips and the
+     copied line's). This REVERSES the 2026-08-11 print-at-rest ruling
+     ("'HS 06' is black text normally... give the send button room to
+     read like a button"), on his word, with the copied line and the head
+     already wearing chips. THE ATTENTION WIPE SURVIVES, INVERTED: cursor
+     on the tag, its dealt card hovered (.caret rides the same class the
+     invitation caret uses), or the caret in its line (.editing) wipes a
+     WHITE fill in LEFT→RIGHT and the word goes black; leaving drains it
+     DOWNWARD. Same keyframes, same axes, same zero-reflow padding — only
+     the two colours swapped. */
   .bdm-sheet .lntag {
     /* a grid item in the rail now: the .5em right margin was the gap to its
        own text and the sheet's column-gap owns that; align-self keeps the
@@ -4098,7 +4100,7 @@
     display: inline-block; position: relative;
     font-family: var(--mono); font-size: .84em; font-weight: 700;
     letter-spacing: .12em; text-transform: uppercase;
-    color: #000; padding: 1px 5px;
+    background: #000; color: #fff; padding: 1px 5px;
     overflow: hidden;   /* the exit drains down OUT of the box */
     user-select: none; cursor: default; white-space: nowrap;
   }
@@ -4115,7 +4117,7 @@
      fill rule in source: at equal specificity the drain must win the
      one frame both apply. */
   .bdm-sheet .lntag::before {
-    content: ""; position: absolute; inset: 0; background: #000; z-index: 0;
+    content: ""; position: absolute; inset: 0; background: #fff; z-index: 0;
     transform: scaleX(0); transform-origin: left center;
   }
   @keyframes tagfill { from { transform: scaleX(0); } to { transform: scaleX(1); } }
@@ -4127,7 +4129,7 @@
   :is(.bdm-sheet .lntag:hover, .bdm-sheet .ln.caret .lntag, .bdm-sheet .lntag.editing)::before {
     animation: tagfill .22s cubic-bezier(.3, .9, .3, 1) forwards;
   }
-  :is(.bdm-sheet .lntag:hover, .bdm-sheet .ln.caret .lntag, .bdm-sheet .lntag.editing) > span { color: #fff; }
+  :is(.bdm-sheet .lntag:hover, .bdm-sheet .ln.caret .lntag, .bdm-sheet .lntag.editing) > span { color: #000; }
   .bdm-sheet .lntag.left::before { animation: tagdrop .24s ease forwards; }
   /* THE NO (his spec: an error noise plus a slight jostle pointing at the
      empty field). The site's first negative voice, so it is deliberately

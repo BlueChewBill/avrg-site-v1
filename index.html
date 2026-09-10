@@ -8809,7 +8809,11 @@
          copied-send flow at the bottom. The offer input and the desktop
          composer's letter line share ONE string (bdmComments — the
          same-string law), so the two surfaces can never disagree about a
-         board's ask. Desktop keeps My Lisst exactly as it was. */
+         board's ask. Desktop keeps My Lisst exactly as it was.
+         THE DESKTOP BRANCHES (M false) ARE DEAD SINCE 2026-09-10 — route()
+         redirects desktop #my-lisst to the drawer stage before this is
+         ever called above 940; the M ? : forks below are left standing,
+         unreachable, for the port to trim. */
       const M = dockActive();
       /* THE PHONE'S GRID RUNS NEWEST-FIRST (2026-08-15, his react: "it does
          read off. can we flip the deal order to match the minis"). The
@@ -9699,7 +9703,27 @@
       document.body.classList.remove("pxleave");
       if (!lb.hidden) closeLb(true);
       if (!vlb.hidden) closeVlb(true);
-      const id = (location.hash || "").replace(/^#/, "");
+      let id = (location.hash || "").replace(/^#/, "");
+      /* THE DESKTOP MY LISST IS RETIRED (2026-09-10, Dylan: "the my list
+         page is an artifact that is existing between screen sizes ...
+         retire it, route desktop #my-lisst to the drawer stage"). Above
+         940 the deck IS the drawer: no desktop door ever led here (the
+         bar's stack toggles the bay, the picon and the nav tab are
+         phone-only), so the desktop costume was reachable only by a
+         typed hash, a shared phone link, or a resize across 940 mid-page.
+         Now that hash lands HOME with the drawer pulled out to its stage
+         — the same place the deck lives everywhere else on desktop. The
+         hash is REPLACED, not routed: a refresh must come back to home,
+         not to a page that no longer exists, and replaceState fires no
+         hashchange so this route runs once. The phone side is untouched
+         (YOUR PICKS is the deck there). renderLisst's desktop branches
+         are dead from here — left in place, unreachable, like the losing
+         card treatments (the port trims them). */
+      let stageWanted = false;
+      if (id === "my-lisst" && !dockActive()) {
+        history.replaceState(null, "", location.pathname + location.search);
+        id = ""; stageWanted = true;
+      }
       const i = COLLECTIONS.findIndex(c => c.id === id);
       /* the picks page wears an opaque bar — see body.on-picks in the CSS */
       document.body.classList.toggle("on-picks", id === "my-lisst");
@@ -9758,6 +9782,12 @@
          the top of the page with the grid already at its final geometry.
          Every landing rect the deal measures depends on that. */
       if (picksArriving) playPicksDeal();
+      /* the retired desktop My Lisst's heir: the drawer pulls out to its
+         stage once the home page has painted (a 0-timeout, not rAF — the
+         intro's own law; bayOut measures the shelves, so they must be
+         laid out first). An empty deck just opens the case: there is
+         nothing to deal onto the stage, and the empty drawer says so. */
+      if (stageWanted) setTimeout(() => { if (myLisst.length) bayOut(); else openBay(); }, 0);
       /* every jump lands as COLLECTIONS — the relay's door-state law:
          scroll is at 0 now (TRUE only since the instant landing above),
          so all boundaries re-arm and the name is earned again by
@@ -16173,8 +16203,12 @@
       }
       applyDeckHoles();
       /* the lisst page wears a different costume per side (YOUR PICKS vs
-         My Lisst, react round 6) — a crossing mid-page must re-dress it */
-      if (location.hash.replace(/^#/, "") === "my-lisst") renderLisst();
+         My Lisst, react round 6) — a crossing mid-page must re-dress it.
+         SINCE 2026-09-10 the desktop costume is retired: crossing UP out
+         of YOUR PICKS re-routes, which lands home with the drawer's
+         stage out (route's my-lisst redirect); crossing DOWN still
+         re-dresses in place. */
+      if (location.hash.replace(/^#/, "") === "my-lisst") { if (dockActive()) renderLisst(); else route(); }
     });
 
     /* ========= flights: the bay flight engine =========

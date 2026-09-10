@@ -495,11 +495,19 @@
   @keyframes rowin { from { clip-path: inset(0 100% 0 0); opacity: .4; } to { clip-path: inset(0 0 0 0); opacity: 1; } }
 
   /* ---- the split ---- */
+  /* BENCH BAKE 2026-09-10 (Dylan's index, the home-layout wing): the split
+     opens up — cap 1440 → 1770 (at 1920 the page was a centred 1440 box
+     with 233px of dead margin a side and three bands stacked in 1080 tall),
+     spine 324 → 328, column gap clamp(28, 3.4vw, 52) → a flat 140, top air
+     clamp(22, 3.6vh, 44) → 33. FLAT PX ON PURPOSE: his 1920 and 1440
+     indexes read the SAME numbers, so a clamp would be fitting one point.
+     Both desktop windows take these (the 941–1260 spine collapsed onto
+     the base; see that block). */
   .split {
-    display: grid; grid-template-columns: 324px 1fr;
-    gap: 0 clamp(28px, 3.4vw, 52px);
-    max-width: 1440px; margin: 0 auto;
-    padding: clamp(22px, 3.6vh, 44px) clamp(18px, 3vw, 40px) 0;
+    display: grid; grid-template-columns: 328px 1fr;
+    gap: 0 140px;
+    max-width: 1770px; margin: 0 auto;
+    padding: 33px clamp(18px, 3vw, 40px) 0;
   }
   .spine { align-self: start; }
 
@@ -510,7 +518,12 @@
      IS the ground story now (white on dark, ink on light — the invert
      filter retired with the PNG). height:auto resolves off the viewBox
      ratio, so the box keeps the artwork's own proportion. */
-  .masthead svg { width: 150px; height: auto; margin: 0 auto; display: block; }
+  /* BENCH BAKE 2026-09-10: 150 → 264 — "the logo should land larger on the
+     home page along with its rotating tag lines". The landing FLIPs off the
+     mark's real rect (verified by the cartographer at 150/260/400: same
+     posed width, same centre, then home onto the driven seat), so the ride
+     needed nothing. The phone's 188 is its own seat, untouched. */
+  .masthead svg { width: 264px; height: auto; margin: 0 auto; display: block; }
   #logo-draw path { fill: none; stroke: currentColor; stroke-linecap: round; stroke-linejoin: round; }
   /* THE STATIC MARK — WebKit's dead-clock dress (2026-08-28, the Safari
      blank-mark fix). Both engines start the SMIL document clock at the
@@ -526,8 +539,14 @@
      starts mid-static the natural replay cannot re-blank the mark. */
   #logo-draw.smil-dead path { opacity: 1 !important; stroke-dashoffset: 0 !important; }
   /* fixed two-line box: swapping taglines never moves what's below.
-     sits low, near the video, rather than tight under the logo */
-  .tick { margin-top: clamp(36px, 8vh, 96px); line-height: 1.8; height: 36px; transition: opacity .45s ease; }
+     BENCH BAKE 2026-09-10 — the tick becomes the mark's PARTNER on desktop:
+     18px (was the shared .label's 10), .18em (was .22), and it rides 4px
+     under the mark (was the sits-low clamp(36px, 8vh, 96px)). THE BOX LAW
+     HOLDS: height = size × 1.8 × 2 lines = 64.8, so a swap still moves
+     nothing below. Scoped to the tick alone — .label dresses chips and bar
+     words site-wide and is not touched. The phone restores its own 10 /
+     .22em / 36 / 26px seat in the ≤940 block. */
+  .tick { margin-top: 4px; font-size: 18px; letter-spacing: .18em; line-height: 1.8; height: 64.8px; transition: opacity .45s ease; }
   .tick.out { opacity: 0; }
   .masthead .mono {
     margin-top: 14px;
@@ -590,17 +609,20 @@
 
   /* ---- shop column: conveyor shelves ---- */
   .shop { min-width: 0; }
-  section.band { padding: 0 0 clamp(26px, 4vh, 44px); }
+  /* BENCH BAKE 2026-09-10: band air clamp(26px, 4vh, 44px) → 10 (the belt
+     came down 356 → 304 in the same index; the rhythm is tighter and the
+     wider shop carries it) */
+  section.band { padding: 0 0 10px; }
   .bandhead {
     display: flex; align-items: center; gap: 32px; flex-wrap: wrap;
     /* indented off the belt's left edge so the titles don't spotlight the
        boundary the shelf fade is there to soften */
-    padding: 2px 4px 0 112px;
+    padding: 2px 4px 0 60px;   /* BENCH BAKE 2026-09-10: 112 → 60 */
   }
   .band h2 {
     font-family: "Satoshi", var(--disp);
     font-weight: 900; text-transform: uppercase; letter-spacing: -0.02em; line-height: 1.05;
-    font-size: clamp(22px, 2.3vw, 30px);
+    font-size: 32.5px;   /* BENCH BAKE 2026-09-10: clamp(22px, 2.3vw, 30px) → 32.5 flat */
     cursor: pointer; -webkit-tap-highlight-color: transparent;
   }
   .bandsub { font-size: 12px; letter-spacing: .16em; }
@@ -1166,9 +1188,11 @@
 
   /* narrower desktops: slim the fixed columns, smaller cards, keep ~3 visible */
   @media (max-width: 1260px) and (min-width: 941px) {
-    .split { grid-template-columns: 284px 1fr; }
+    /* BENCH BAKE 2026-09-10: this window's own spine (284) and mark (72)
+       COLLAPSED onto the base 328 / 264 — the bench drives one knob across
+       both desktop windows, so that is what he tuned against. Unjudged on a
+       real 941–1260 glass; the cards' 140 stays. */
     .belt { --cardW: 140px; --beltH: 286px; }
-    .masthead svg { width: 72px; }
   }
 
   /* ================= mobile: tiles instead of belts ================= */
@@ -1178,7 +1202,7 @@
     /* the decode rides close under the logo on the phone (2026-08-16, his
        screenshot arrow: "move the decode up more towards the logo") — the
        desktop keeps the sits-low clamp */
-    .tick { margin-top: 26px; }
+    .tick { margin-top: 26px; font-size: 10px; letter-spacing: .22em; height: 36px; }   /* the phone's own seat, pre-bake values, restated since the base went 18/.18em/64.8 (2026-09-10) */
     /* the landed logo grows 25% on the phone (2026-08-16 react: "increase
        the size it lands at on completion / sit on the home page by 25%")
        — 188 = 150 × 1.25 whole-pixeled. The intro pose MEASURES this seat
@@ -1936,10 +1960,7 @@
   .d7f .sttxt { min-height: 1em; }
 
   /* treatments are taller than the photo card — give the belt room */
-  body:not([data-card="photo"]) .belt { --beltH: 356px; }
-  @media (max-width: 1260px) and (min-width: 941px) {
-    body:not([data-card="photo"]) .belt { --beltH: 306px; }
-  }
+  body:not([data-card="photo"]) .belt { --beltH: 304px; }   /* BENCH BAKE 2026-09-10: 356 → 304 (was 306 @ 941–1260, collapsed onto the one number) */
 
   /* belt proportion pass: slots are ~2/3 of the 262px j card, so the
      furniture (chips, refs, statuses, paddings) scales by the same factor —

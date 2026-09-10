@@ -1066,42 +1066,20 @@
     border: 2.5px dashed var(--bone); border-radius: 14px; opacity: .5;
   }
   .lisst-card { position: relative; }
+  /* the picks page's remove ✕ — ONE rule since 2026-09-10 (the desktop
+     My Lisst's round disc retired with that page): the case's own square
+     chip (the .bay-x language), off the card's TOP-LEFT corner, the seat
+     the phone landed 2026-08-16 on his word. The bench's red arm
+     (.benched) rides below. */
   .lisst-remove {
-    position: absolute; top: -10px; right: -10px; z-index: 3;
-    width: 30px; height: 30px; border-radius: 50%;
-    font-family: var(--mono); font-size: 13px; font-weight: 700; line-height: 1;
+    position: absolute; top: -8px; left: -8px; z-index: 3;
+    width: 22px; height: 22px; border-radius: 0;
+    background: #fff; color: #000; border: 1.5px solid #000;
+    font-family: var(--mono); font-size: 11px; font-weight: 700; line-height: 1;
     transition: transform .15s ease;
   }
   .lisst-remove:hover { transform: scale(1.12); }
-  .inq {
-    max-width: 460px; margin: clamp(36px, 6vh, 60px) auto 0; padding: 0 20px;
-    text-align: left;
-  }
-  .inq-head { text-align: center; }
-  .inq-sub { margin-top: 10px; text-align: center; font-size: 12.5px; font-style: italic; color: var(--hint); }
-  .inq label {
-    display: block; margin: 18px 0 7px;
-    font-family: var(--mono); font-size: 9.5px; font-weight: 700;
-    letter-spacing: .2em; text-transform: uppercase; color: var(--soft);
-  }
-  .inq input, .inq select, .inq textarea {
-    width: 100%; background: transparent; color: var(--bone);
-    border: 2px solid; border-radius: 8px;
-    font-family: var(--disp); font-size: 14px; padding: 12px 13px;
-    transition: border-color .15s ease;
-  }
-  .inq input:focus, .inq select:focus, .inq textarea:focus { outline: none; }
-  .inq select { -webkit-appearance: none; appearance: none; cursor: pointer; }
-  .inq textarea { resize: vertical; min-height: 90px; }
-  .inq-send {
-    display: block; margin: 24px auto 0;
-    background: transparent;
-    border: 2px solid; border-radius: 8px; padding: 13px 22px;
-    transition: background .15s ease, color .15s ease;
-  }
-  .inq-status { margin-top: 14px; text-align: center; font-size: 13px; color: var(--soft); min-height: 1.4em; }
-  .inq-or { margin-top: 26px; text-align: center; }
-  .inq-or .dm-mini { margin-top: 10px; }
+  /* (.inq — the desktop inquiry form — retired 2026-09-10 with the desktop My Lisst page; picks.md) */
   .lb-cta-ask { color: var(--bone); }
   .lb-dm-btn {
     flex: 0 0 auto; background: transparent;
@@ -4929,19 +4907,10 @@
     .lisst-card .fc-list::before { transform-origin: right center; animation: chipwipe .76s ease -.76s forwards; }
     .lisst-card .fchip :is(.ft, .fstack) { color: #fff; transition: none; }
     .lisst-card .inframe::before, .lisst-card .inframe::after { height: calc(50% - 6px); height: calc(50% - 2.5862cqw); }
-    /* the remove ✕ wears the CASE's own square down here (round 4, his
-       screenshot — the .bay-x chip, "square chip in the card's angular
-       language"), landed TOP-LEFT on his word; the desktop My Lisst
-       keeps its disc. THREE CLASSES DEEP on purpose: the light-ground
-       disc override (body.light .lisst-remove, later in source) sits at
-       two — a two-class rule here loses that tie silently on the
-       forced-light phone. */
-    .shelfgrid .lisst-card .lisst-remove {
-      top: -8px; left: -8px; right: auto;
-      width: 22px; height: 22px; border-radius: 0;
-      background: #fff; color: #000; border: 1.5px solid #000;
-      font-size: 11px; box-shadow: none;
-    }
+    /* (the remove ✕'s square-chip override folded into the base
+       .lisst-remove rule 2026-09-10 — the desktop disc it overrode is
+       gone, and with it the light-ground disc rule and the three-class
+       tie that rule forced) */
     /* THE BENCH (2026-08-16 round 7): first ✕ = set aside, red ✕ = gone.
        The card's ART dims (.d7f, never the scard — parent opacity would
        take the armed ✕ down with it); the offer box slides off toward
@@ -5828,15 +5797,8 @@
   body.light .lb-dm-btn:hover { background: #000; color: #fff; }
   body.light .lb-nav { background: #000; color: #fff; box-shadow: 0 8px 28px rgba(0, 0, 0, .2); }
   body.light .lb-count { color: #767676; }
-  body.light .lisst-remove { background: #000; color: #fff; box-shadow: 0 4px 14px rgba(0, 0, 0, .25); }
 
-  /* inquiry form */
-  body.light .inq-head { color: #000; }
-  body.light .inq input, body.light .inq select, body.light .inq textarea { border-color: rgba(0, 0, 0, .35); }
-  body.light .inq input:focus, body.light .inq select:focus, body.light .inq textarea:focus { border-color: #000; }
-  body.light .inq select option { background: #f5f5f5; color: #111; }
-  body.light .inq-send { color: #000; border-color: #000; }
-  body.light .inq-send:hover { background: #000; color: #fff; }
+  /* (inquiry form light rules retired 2026-09-10 with the form) */
 
   /* mobile tiles */
   body.light .tile .tframe { background: #eee9df; }
@@ -6788,7 +6750,7 @@
        wired. DM buttons are excluded — they wear the glitch (CSS) instead;
        lb-list-btn is excluded because its label changes state on click. */
     const canHover = matchMedia("(hover: hover)").matches;
-    const HOVER_DECODE = ".tab, .colnav-btn, .inq-send";
+    const HOVER_DECODE = ".tab, .colnav-btn";   /* .inq-send retired 2026-09-10 with the inquiry form */
     /* filled in by the card-decode block below when the page can hover;
        no-ops otherwise, so callers never need to check */
     let cardDressOn = () => {}, cardDressOff = () => {};
@@ -8802,19 +8764,22 @@
        picked boards + one inquiry about all of them. The deal ceremony
        that fills it is the block below. */
     function renderLisst() {
-      /* YOUR PICKS (react round 6): on the dock side this page IS the
-         DECK — where the phone holds, prices and sends its picks.
-         Collections-style masthead +
-         the same 2-wide shelfgrid, an OFFER row under each card, and the
-         copied-send flow at the bottom. The offer input and the desktop
-         composer's letter line share ONE string (bdmComments — the
-         same-string law), so the two surfaces can never disagree about a
-         board's ask. Desktop keeps My Lisst exactly as it was.
-         THE DESKTOP BRANCHES (M false) ARE DEAD SINCE 2026-09-10 — route()
-         redirects desktop #my-lisst to the drawer stage before this is
-         ever called above 940; the M ? : forks below are left standing,
-         unreachable, for the port to trim. */
-      const M = dockActive();
+      /* YOUR PICKS (react round 6): this page IS the DECK — where the
+         phone holds, prices and sends its picks. Collections-style
+         masthead + the same 2-wide shelfgrid, an OFFER row under each
+         card, and the copied-send flow at the bottom. The offer input and
+         the desktop composer's letter line share ONE string (bdmComments
+         — the same-string law), so the two surfaces can never disagree
+         about a board's ask.
+         PHONE ONLY SINCE 2026-09-10 (Dylan: "the my list page is an
+         artifact that is existing between screen sizes ... retire it"):
+         route() redirects desktop #my-lisst to the drawer stage, and the
+         old desktop costume — My Lisst's grid, the long .inq inquiry
+         form (splitforms), the DM-the-lisst link, the colnav foot, the
+         one-tap disc ✕ — was TRIMMED on his "feel free to trim" (every
+         `M ? :` fork collapsed onto the phone side). The 940 crossing
+         re-routes rather than re-dressing, so nothing above 940 can
+         reach here. */
       /* THE PHONE'S GRID RUNS NEWEST-FIRST (2026-08-15, his react: "it does
          read off. can we flip the deal order to match the minis"). The
          ceremony deals off the TOP of the header stack, and the stack is
@@ -8826,9 +8791,9 @@
          down and then back up again. The stack itself is NOT flipped —
          newest-on-top is what makes pickCatch's landing read as the
          confirmation of an add, and that costs more than it would buy.
-         Desktop keeps myLisst order, and every string (refs, tags, the
-         send letter) still reads in myLisst order on both surfaces. */
-      const order = M ? [...myLisst].reverse() : myLisst;
+         Every string (tags, the send letter) still reads in myLisst
+         order. */
+      const order = [...myLisst].reverse();
       const entries = order.map(id => BOARD_INDEX[id]);
       /* the offer row rides a WRAPPER CELL beside the card, never inside
          it — lockCardScale clamps the scard's height to the scaled card
@@ -8838,24 +8803,16 @@
          descendant query both survive the extra layer. */
       const cards = entries.length
         ? '<div class="shelfgrid">' + entries.map(({ c, ci, b, k }) =>
-            (M ? '<div class="pick-cell">' : '') +
+            '<div class="pick-cell">' +
             '<div class="scard lisst-card" data-ci="' + ci + '" data-k="' + k + '" role="button" tabindex="0">' +
               '<button class="lisst-remove" type="button" data-id="' + b.id + '" title="Remove from lisst" aria-label="Remove from lisst">✕</button>' +
               cardInner(b, k, DUAL[c.id], c) +
             '</div>' +
-            (M ? '<div class="pick-ask"><span class="pa-l label">OFFER</span>' +
-                 '<input class="pick-in" data-id="' + b.id + '" maxlength="80" ' +
-                 'aria-label="Your offer for ' + esc(jref(c, b, k)) + '"></div></div>' : '')
+            '<div class="pick-ask"><span class="pa-l label">OFFER</span>' +
+              '<input class="pick-in" data-id="' + b.id + '" maxlength="80" ' +
+              'aria-label="Your offer for ' + esc(jref(c, b, k)) + '"></div></div>'
           ).join("") + '</div>'
         : '<div class="lisst-empty label">Nothing on the lisst yet — open a board and hit “+ add to my lisst”</div>';
-      const refs = myLisst.map(lisstLabel);
-      const dmLisst = refs.length
-        ? '<div class="inq-or"><span class="label" style="color:var(--soft)">reddit person?</span><br>' +
-          '<a class="dm-mini label" target="_blank" rel="noopener" href="' +
-            composeUrl("Interested in " + refs.join(", "),
-              "hey! interested in these from the AVRG site: " + refs.join(", ") + " → " + siteUrl()) +
-          '">DM the lisst →</a></div>'
-        : "";
       /* the phone's bottom block: the letter's manifest line, the copy
          press, and the paste doors (revealed by the press — bdmCopy must
          ride the real gesture, the popup-jail family). The letter itself
@@ -8871,7 +8828,7 @@
         const s = document.querySelector(sel + " svg");
         return s ? s.outerHTML : "";
       };
-      const picksSend = M && tags.length
+      const picksSend = tags.length
         ? '<div class="picks-send" id="picks-send">' +
             /* the takeover's headline: pops on the press, slow-fades out
                while the doors hold — the h2 register, sendmode order -3 */
@@ -8927,14 +8884,12 @@
           /* the SEND TAKEOVER's collapse target (2026-08-13): on the dock
              side everything above the message box wraps so one element can
              fade to white and ride up off the screen when the press lands */
-          (M ? '<div class="picks-above" id="picks-above">' : '') +
-          /* the phone's masthead rides a full-width sticky WRAPPER so it
-             can pin under the topbar while the ceremony walks the page
-             down (see .picks-mast) — the h2 alone is an inline-block and
-             would let the cards scroll past either side of it. Desktop
-             keeps the bare h2: My Lisst has no ceremony and no pin. */
-          (M ? '<div class="picks-mast"><h2>Your <span class="hl">Picks</span></h2></div>'
-             : '<h2>My <span class="hl">Lisst</span></h2>') +
+          '<div class="picks-above" id="picks-above">' +
+          /* the masthead rides a full-width sticky WRAPPER so it can pin
+             under the topbar while the ceremony walks the page down (see
+             .picks-mast) — the h2 alone is an inline-block and would let
+             the cards scroll past either side of it. */
+          '<div class="picks-mast"><h2>Your <span class="hl">Picks</span></h2></div>' +
           /* .colpage-links used to sit here — the launch-day trim retired
              the class and its CSS and pulled the block from renderColPage,
              but MISSED this second producer (2026-08-15). Unstyled, the two
@@ -8942,40 +8897,17 @@
              ruling applies here: the drop and the foot's home mark carry
              the wayfinding, so the block goes rather than gets re-dressed. */
           cards +
-          (M ? '</div>' : '') +
-          (M ? picksSend : '<div class="inq">' +
-            '<h3 class="inq-head label" style="font-size:12px">Send one message about ' + (refs.length ? "the lisst" : "anything") + '</h3>' +
-            '<p class="inq-sub">' + (refs.length ? "your picks ride along automatically: " + esc(refs.join(", ")) : "no picks attached — just say hi") + '</p>' +
-            '<form id="inq-form">' +
-              /* same voice as the composer's letter — this is the long form of
-                 the identical message, so it cannot ask in a different one */
-              '<label for="inq-name">my name / alias</label>' +
-              '<input id="inq-name" name="name" type="text" autocomplete="name" placeholder="optional">' +
-              '<label for="inq-method">msg me at</label>' +
-              '<select id="inq-method" name="preferred_method">' +
-                '<option value="email">Email</option>' +
-                '<option value="reddit">Reddit</option>' +
-                '<option value="instagram">Instagram</option>' +
-              '</select>' +
-              '<label for="inq-handle">my handle</label>' +
-              '<input id="inq-handle" name="contact" type="text" required placeholder="address or handle">' +
-              '<label for="inq-msg">Message</label>' +
-              '<textarea id="inq-msg" name="message" placeholder="optional"></textarea>' +
-              '<button class="inq-send label" type="submit">Send it →</button>' +
-              '<p class="inq-status" id="inq-status"></p>' +
-            '</form>' +
-            dmLisst +
-          '</div>') +
-          /* no colnav on the phone's picks page (2026-08-12 tidy react:
-             "remove the buttons on the bottom for originals ect") — the
-             page ends on the send ceremony; collections live behind the
-             back-link and the AVRG menu. Desktop keeps its footer nav. */
-          (M ? "" : colnavHtml()) +
+          '</div>' +
+          picksSend +
+          /* no colnav here (2026-08-12 tidy react: "remove the buttons on
+             the bottom for originals ect") — the page ends on the send
+             ceremony; collections live behind the back-link and the AVRG
+             menu. */
         '</section>';
       /* the fully-decoded dress's TEXT half: land the status word
          statically — rest IS the landed state (the deck's dress law), so
          no scramble replays on a page render */
-      if (M) colpage.querySelectorAll(".lisst-card .sttxt").forEach(st => {
+      colpage.querySelectorAll(".lisst-card .sttxt").forEach(st => {
         st.textContent = st.dataset.txt || "";
       });
       /* dims land statically with the status word (2026-08-16, the mobile
@@ -8993,8 +8925,7 @@
          red ✕ removes for real, riding the whole cell off the card's
          own side of the screen before the re-render reflows the grid.
          The accidental-remove guard is the point ("finding the card
-         again on mobile might be difficult"). Desktop keeps the one-tap
-         disc — there is no bench markup up there. */
+         again on mobile might be difficult"). */
       const cellGoL = cell => {
         const r = cell.getBoundingClientRect();
         return r.left + r.width / 2 < innerWidth / 2;
@@ -9018,7 +8949,6 @@
         btn.addEventListener("click", e => {
           e.stopPropagation();
           const id = btn.dataset.id;
-          if (!M) { toggleLisst(id); renderBay(); renderLisst(); return; }
           const cell = btn.closest(".pick-cell");
           const card = btn.closest(".lisst-card");
           if (!benched.has(id)) { benchSet(id, card, cell, true); buzz(8); return; }
@@ -9043,13 +8973,11 @@
          pair = no flip, the originals/resale reshoot interim) and walks
          the drawn caret to this card's own offer box. A tap on the offer
          BOX (frame, label) walks the caret without flipping — the box is
-         offer furniture, not the board. Desktop My Lisst keeps the
-         lightbox; M is the fork, as ever. The flip is squash-swap-expand
+         offer furniture, not the board. The flip is squash-swap-expand
          on the independent `scale` property (transform stays
          lockCardScale's), and each card's other face is WARMED at render
          so the swap never shows a loading face. */
       colpage.querySelectorAll(".lisst-card").forEach(s => {
-        const go = () => openLb(+s.dataset.ci, +s.dataset.k, s);
         const cell = s.closest(".pick-cell");
         const ask = cell && cell.querySelector(".pick-ask");
         const inn = s.closest(".colpage-inner");
@@ -9094,24 +9022,22 @@
             }, 180);
           }, 140);
         };
-        if (M) {
-          const bp = BOT(COLLECTIONS[+s.dataset.ci].boards[+s.dataset.k]);
-          if (bp) { const warm = new Image(); warm.src = bp; }
-          if (ask) ask.addEventListener("click", walkCaret);   /* a box tap names the box */
-        }
-        s.addEventListener("click", M ? flipCaret : go);
+        const bp = BOT(COLLECTIONS[+s.dataset.ci].boards[+s.dataset.k]);
+        if (bp) { const warm = new Image(); warm.src = bp; }
+        if (ask) ask.addEventListener("click", walkCaret);   /* a box tap names the box */
+        s.addEventListener("click", flipCaret);
         s.addEventListener("keydown", e => {
           /* the offer input lives inside the card — a typed space must
              not read as the card's open key */
           if (e.target.closest(".pick-in")) return;
-          if (e.key === "Enter" || e.key === " ") { e.preventDefault(); if (M) flipCaret(); else go(); }
+          if (e.key === "Enter" || e.key === " ") { e.preventDefault(); flipCaret(); }
         });
       });
       /* mid-visit re-renders keep the bench dressed (a red-✕ removal
          re-renders this page; the other benched picks must come back
          benched). Same synchronous pass as the innerHTML above, so the
          classes land before first paint and nothing animates. */
-      if (M) [...benched].forEach(id => {
+      [...benched].forEach(id => {
         if (!myLisst.includes(id)) { benched.delete(id); return; }
         const btn2 = colpage.querySelector('.lisst-remove[data-id="' + id + '"]');
         if (!btn2) return;
@@ -9211,32 +9137,6 @@
         sendUnlock();
         renderLisst();
         window.scrollTo({ top: 0, left: 0, behavior: "instant" });   /* smooth html would glide the way back — see route() */
-      });
-      const form = document.getElementById("inq-form");
-      const status = document.getElementById("inq-status");
-      if (form) form.addEventListener("submit", async e => {
-        e.preventDefault();
-        if (/^PASTE-/.test(SPLITFORMS_KEY)) {
-          status.textContent = "form isn’t wired up yet — use the DM button for now";
-          return;
-        }
-        const data = Object.fromEntries(new FormData(form).entries());
-        data.access_key = SPLITFORMS_KEY;
-        data.lisst = refs.join(", ") || "none";
-        data.subject = "AVRG inquiry — " + (refs.length ? refs.join(", ") : "general");
-        data.page = siteUrl();
-        status.textContent = "sending…";
-        try {
-          const r = await fetch("https://splitforms.com/api/submit", {
-            method: "POST",
-            headers: { "Content-Type": "application/json", "Accept": "application/json" },
-            body: JSON.stringify(data)
-          });
-          if (r.ok) { status.textContent = "sent — talk soon ✓"; form.reset(); }
-          else { status.textContent = "something broke — try the DM button instead"; }
-        } catch (err) {
-          status.textContent = "something broke — try the DM button instead";
-        }
       });
     }
 
@@ -9852,7 +9752,8 @@
     const PREFIX = { originals: "OG", "hand-shaped": "HS", classic: "CL", resale: "RS" };
 
     /* ---- my lisst: localStorage cart ---- */
-    const SPLITFORMS_KEY = "eca3f906ba5346fd894c65220f38baa8";
+    /* (SPLITFORMS_KEY retired 2026-09-10 with the desktop inquiry form —
+       the site's one form; every message rides the clipboard now) */
     const LIST_KEY = "avrg-lisst";
     const BOARD_INDEX = {};
     COLLECTIONS.forEach((c, ci) => c.boards.forEach((b, k) => { BOARD_INDEX[b.id] = { c, ci, b, k }; }));
@@ -13328,11 +13229,11 @@
        bdmMissing/bdmNope's tombstone at bdmHref, "a reddit DM has no
        required field, so nothing can arrive half-addressed". Its gesture
        half (.bdm-prev.nope + @keyframes envNope) is orphaned in the CSS
-       for the same reason. The site's one live required field is the
-       lisst page's #inq-handle, which rejects through the browser's own
-       validation bubble — giving THAT a voice would be a new sound on a
-       new surface, a design call, and he has parked it. The voice keeps
-       its seat until there is a no to say. */
+       for the same reason. (The site's one required field, the desktop
+       lisst page's #inq-handle, retired 2026-09-10 with that page — the
+       browser's own validation bubble was its voice, and giving it one of
+       ours was parked as a design call anyway.) The voice keeps its seat
+       until there is a no to say. */
     function kbonk() {
       if (!sndOk("bonk")) return;
       try {

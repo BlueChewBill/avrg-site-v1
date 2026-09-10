@@ -73,6 +73,7 @@ A live tuning UI over THIS page — sliders and wells bound to the real site's v
 - The lb selected-state accent is deliberate — ask before removing.
 - **The scroll relay SLEEPS** — `RELAY_ON = false` in the relay IIFE; the one switch gates both the CSS (`body.relayon`) and the machine. Parked, not bailed on. Do not wake it without his word.
 - **A site change that touches a charted bench param isn't done until the bench knows** — the change-with-charting law; procedure in the `bench-charting` skill.
+- **Breakpoint pairs are `max-width: N` / `min-width: N.02`, never N / N+1** — the crack between them is real (a fractional viewport matches neither and the bare base paints). Record: [gotchas.md](.claude/docs/gotchas.md) THE 940/941 CRACK.
 
 ## Where things stand
 

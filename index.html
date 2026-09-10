@@ -1200,8 +1200,10 @@
     .split { display: flex; flex-direction: column; gap: 0; padding-top: 26px; }
     .shop { display: none; }
     /* the decode rides close under the logo on the phone (2026-08-16, his
-       screenshot arrow: "move the decode up more towards the logo") — the
-       desktop keeps the sits-low clamp */
+       screenshot arrow: "move the decode up more towards the logo"). The
+       desktop's sits-low clamp RETIRED with the 2026-09-10 bake — the
+       desktop tick sits 4px under the mark now, bigger; this block is the
+       phone's own seat, restated in full so the base can move without it */
     .tick { margin-top: 26px; font-size: 10px; letter-spacing: .22em; height: 36px; }   /* the phone's own seat, pre-bake values, restated since the base went 18/.18em/64.8 (2026-09-10) */
     /* the landed logo grows 25% on the phone (2026-08-16 react: "increase
        the size it lands at on completion / sit on the home page by 25%")

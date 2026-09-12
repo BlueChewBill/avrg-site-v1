@@ -9,7 +9,7 @@
 ## Facts
 
 <!-- GEN:BEGIN — written by build_context.py, do not hand-edit this block -->
-*Derived 2026-09-11 · commit 63318ff · index.html 18032 lines*
+*Derived 2026-09-11 · commit 51f63a2 · index.html 18054 lines*
 
 **The card in numbers**
 - Boards it draws: originals 7 · hand-shaped 36 · classic 28 · resale 0 — 71 total
@@ -26,8 +26,8 @@
 - `renderLisst` (index.html:8875) — YOUR PICKS page cards (one producer for both dresses: YOUR PICKS on the dock side, My Lisst on desktop)
 - `renderBay` (index.html:13728) — draws the drawer/bay shelf cards — the shelf's producer (flyToBay is only the flight)
 - `the shop conveyor` (index.html:13009) — home belt cards (recycler owns their visibility)
-- `flyToBay` (index.html:16571) — card -> drawer flight
-- `setFlip / flipStage` (index.html:17170) — the flip system (chip = the hidden-face mini)
+- `flyToBay` (index.html:16593) — card -> drawer flight
+- `setFlip / flipStage` (index.html:17192) — the flip system (chip = the hidden-face mini)
 - `faceSync + FACE` (index.html:7679) — face memory: cards inherit the last-seen side
 - `lockCardScale` (index.html:8510) — grid render law: 232px then transform-down
 - `migrateHole` (index.html:11814) — lb exchange re-seats the grid hole on every landing

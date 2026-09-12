@@ -14280,7 +14280,13 @@
          not a cycle. */
       if (bayIdleArmed && !baySlam) {
         bayIdleArmed = false;
-        if (++bayIdle >= 3 || GOOF === "slam") { bayIdle = 0; if (baySlamGo()) return; }
+        if (++bayIdle >= 3 || GOOF === "slam") {
+          bayIdle = 0;
+          /* ONCE A SESSION: a spent slam never re-arms this tab; the force
+             switch bypasses the ledger and never spends it. baySlamGo's
+             false (nothing to slam) spends nothing either. */
+          if ((GOOF === "slam" || !goofSeen.has("slam")) && baySlamGo()) { if (GOOF !== "slam") goofSpend("slam"); return; }
+        }
       }
       unOut();   /* a shut drawer cannot stay pulled out */
       bayWindT = null;   /* an explicit close drains normally, no hold */
@@ -16301,14 +16307,30 @@
        reads as a whip rather than a roll. Every goof flight multiplies
        its own dur by (GOOF_SPEED * GOOF_SLOW). */
     const GOOF_SPEED = .7, GOOF_TURNS = 4;
-    let goofAdds = 0, goofLast = false;
+    /* ONCE A SESSION (Dylan, after the push: "make sure that the drawer
+       slam doesnt happen in the same session. same with the card
+       animation") — each goof plays at most once per tab session. The
+       ledger is sessionStorage, not a page variable, so a refresh in the
+       same tab can't re-arm it, and not localStorage, so tomorrow's
+       visit gets its own shot. The force switches bypass the ledger
+       (they never write it either — a review never spends the visit's
+       one go). */
+    const GOOF_KEY = "avrg-k-goof";
+    const goofSeen = new Set();
+    try { (sessionStorage.getItem(GOOF_KEY) || "").split(",").filter(Boolean).forEach(k => goofSeen.add(k)); } catch (e) {}
+    function goofSpend(kind) {
+      goofSeen.add(kind);
+      try { sessionStorage.setItem(GOOF_KEY, [...goofSeen].join(",")); } catch (e) {}
+    }
+    let goofAdds = 0;
     function goofToss() {
       if (reduced) return false;
       if (GOOF === "toss") return true;
-      if (++goofAdds < 2) return false;
-      if (goofLast) { goofLast = false; return false; }
-      goofLast = Math.random() < 1 / 6;
-      return goofLast;
+      if (goofSeen.has("toss")) return false;   /* this session's one toss is spent */
+      if (++goofAdds < 2) return false;           /* never the first add */
+      if (Math.random() >= 1 / 6) return false;
+      goofSpend("toss");
+      return true;
     }
     /* the tracer: a pinch of glitter per frame at the fly's centre, each
        fleck its own hue, drifting down and out as it fades (CSS .glit);

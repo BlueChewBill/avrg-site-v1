@@ -4690,13 +4690,24 @@
      left — swings, and settles 13° off; the next real add swings it
      back (a keyframe, not a transition: an animation-held value never
      hands off to a transition on class removal — the softout lesson) */
-  .bar-script.knocked { transform-origin: 4px 4px; animation: knock 1.1s cubic-bezier(.25, .9, .35, 1.15) forwards; }
+  /* THE SWING OUTLIVES THE SLAM (Dylan's react to the first cut: "slow
+     down the minis swing so that the animation is happening still well
+     after the slam") — 1.1s → 3.6s, a decaying pendulum: the first drop
+     is quick (the bang's own energy, .28s to the far swing), then six
+     ever-smaller swings about the 13° rest, each leg ease-in-out so the
+     stack hangs at the ends of its arcs. The quake is over by .55s; the
+     counter is still on its second swing. */
+  .bar-script.knocked { transform-origin: 4px 4px; animation: knock 3.6s ease-out forwards; }
   .bar-script.righted { transform-origin: 4px 4px; animation: unknock .5s cubic-bezier(.3, 1.4, .5, 1) forwards; }
   @keyframes knock {
-    0%   { transform: rotate(0); }
-    35%  { transform: rotate(21deg); }
-    60%  { transform: rotate(9deg); }
-    80%  { transform: rotate(15deg); }
+    0%   { transform: rotate(0);     animation-timing-function: ease-out; }
+    8%   { transform: rotate(24deg); animation-timing-function: ease-in-out; }
+    22%  { transform: rotate(3deg);  animation-timing-function: ease-in-out; }
+    38%  { transform: rotate(21deg); animation-timing-function: ease-in-out; }
+    54%  { transform: rotate(7deg);  animation-timing-function: ease-in-out; }
+    70%  { transform: rotate(17deg); animation-timing-function: ease-in-out; }
+    84%  { transform: rotate(10deg); animation-timing-function: ease-in-out; }
+    94%  { transform: rotate(14.5deg); animation-timing-function: ease-in-out; }
     100% { transform: rotate(13deg); }
   }
   @keyframes unknock { from { transform: rotate(13deg); } to { transform: rotate(0); } }
@@ -13480,7 +13491,7 @@
       fly.style.zIndex = 6650;
       const goof = goofToss();   /* THE TOSS rides the phone flight too — spin + glitter, silent (THE GATE) */
       bayFlight(fly, sr, getEnd,
-        { dur: PICK_TUNE.dur * (goof ? GOOF_SLOW : 1), hook: PICK_TUNE.hook,
+        { dur: PICK_TUNE.dur * (goof ? GOOF_SPEED * GOOF_SLOW : 1), hook: PICK_TUNE.hook,
           ease: PICK_TUNE.ease, liftCap: PICK_TUNE.liftCap, goof },
         () => {
           fly.remove();
@@ -16283,6 +16294,13 @@
        flight is a blur to the eye and to a screenshot); inert unless a
        goof is forced */
     const GOOF_SLOW = GOOF ? (parseFloat(new URLSearchParams(location.search).get("goofslow")) || 1) : 1;
+    /* THE TOSS's two knobs (Dylan's react to the first cut: "speed the
+       toss up"): the flick runs at GOOF_SPEED of its path's plain clock
+       (chip .68s → .48s, drag .5 → .35, phone .92 → .64) and turns
+       GOOF_TURNS times — four now, on the shorter clock, so the spin
+       reads as a whip rather than a roll. Every goof flight multiplies
+       its own dur by (GOOF_SPEED * GOOF_SLOW). */
+    const GOOF_SPEED = .7, GOOF_TURNS = 4;
     let goofAdds = 0, goofLast = false;
     function goofToss() {
       if (reduced) return false;
@@ -16471,7 +16489,7 @@
            under the fly. This transform is bayFlight's own to write;
            the goof rides in it rather than on a CSS transition (the
            snap0 law: the fly node's transform IS the flight). */
-        const spin = opts.goof ? 1080 * e : 0;
+        const spin = opts.goof ? GOOF_TURNS * 360 * e : 0;
         const rot = 5 * Math.sin(Math.PI * e) + (opts.endRot || 0) * e + spin;
         fly.style.transform = "translate(" + (px - sx).toFixed(1) + "px," + (py - sy).toFixed(1) + "px) scale(" + sc.toFixed(3) + ") rotate(" + rot.toFixed(2) + "deg)";
         if (opts.goof && t < .97) glitAt(px, py, sr.width * sc, (parseInt(fly.style.zIndex, 10) || 6500) - 10);
@@ -16563,7 +16581,7 @@
          pluck is seamless; the source stays hovered under it). */
       const { fly, rest } = buildFly(cardEl, ci, b, k, id);
       const goof = goofToss();   /* THE TOSS — the chip add is the one flick that can go wrong */
-      const gdur = SEAT_TUNE.dur * (goof ? GOOF_SLOW : 1);   /* the review slow-mo rides the forced toss only */
+      const gdur = SEAT_TUNE.dur * (goof ? GOOF_SPEED * GOOF_SLOW : 1);   /* the flick's quicker clock; the review slow-mo rides the forced toss only */
       if (goof) kkazoo(gdur);   /* desktop only by THE GATE; ends as the card lands, the seat's click is the touchdown */
       if (!seatFly(id, fly, rest, sr, { dur: gdur, after: bayCatchShut, goof }))
         bayCatchShut();   /* nothing seated — no landing will consume the flag */
@@ -17029,7 +17047,9 @@
              keeps its open-catch-shut untouched ("thats the right call").
              A user-locked drawer never arms the flag either way. */
           const lbShut = () => { if (lb.hidden) bayCatchShut(); };
-          const seating = seatFly(d.id, d.fly, d.rest, vr, { dur: DRAG_TUNE.addDur, after: lbShut });
+          const goof = goofToss();   /* THE TOSS rides the lb's hand-throw too */
+          if (goof) kkazoo(DRAG_TUNE.addDur * GOOF_SPEED);
+          const seating = seatFly(d.id, d.fly, d.rest, vr, { dur: DRAG_TUNE.addDur * (goof ? GOOF_SPEED * GOOF_SLOW : 1), after: lbShut, goof });
           if (!seating) { d.fly.remove(); lbShut(); }
           d.src.style.visibility = "";   /* clean baseline — the exchange
             re-hides for the flight and reveals the NEW hero (or closeLb,
@@ -17081,7 +17101,12 @@
           t.textContent = "✓";
         });
         bayCatchOpen();   /* the drag add borrows a shut deck too (the deck's manners) */
-        if (!seatFly(d.id, d.fly, d.rest, vr, { dur: DRAG_TUNE.addDur, after: bayCatchShut })) { d.fly.remove(); bayCatchShut(); }
+        /* THE TOSS rides the hand's throw too (Dylan's react to the first
+           cut: "not just the chip add toss") — the release into the case
+           is the other flick that can go wrong */
+        const goof = goofToss();
+        if (goof) kkazoo(DRAG_TUNE.addDur * GOOF_SPEED);
+        if (!seatFly(d.id, d.fly, d.rest, vr, { dur: DRAG_TUNE.addDur * (goof ? GOOF_SPEED * GOOF_SLOW : 1), after: bayCatchShut, goof })) { d.fly.remove(); bayCatchShut(); }
         /* the class-based hole (applyDeckHoles ran inside seatFly's
            renderBay) holds the slot hidden; the inline hide retires */
         d.src.style.visibility = "";

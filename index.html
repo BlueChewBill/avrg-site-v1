@@ -9683,6 +9683,7 @@
       /* the menu never lists the page you're on: home's own row hides
          while home is showing (body.on-home gates the CSS) */
       document.body.classList.toggle("on-home", !home.hidden);
+      gcHit(colpage.hidden ? "/home" : "/" + id);   /* the tally's one pageview writer — see THE TALLY */
       lockCardScale();   /* after visibility settles — hidden grids measure 0 */
       applyDeckHoles();  /* fresh renders don't know which boards the deck holds */
       /* THE STACK REPOPULATES ON THE WAY OUT — his rule: "a move anywhere
@@ -9942,6 +9943,8 @@
     function toggleLisst(id) {
       myLisst = inLisst(id) ? myLisst.filter(x => x !== id) : myLisst.concat(id);
       lisstSave(); lisstTab();
+      /* the tally counts the ADD only — a removal is curation, not interest */
+      if (inLisst(id)) { const x = BOARD_INDEX[id]; gcHit("pick/" + jref(x.c, x.b, x.k), true); }
     }
     const lbDesc = document.getElementById("lb-desc");
     const lbDims = document.getElementById("lb-dims");
@@ -11794,6 +11797,10 @@
          inspection. unOut is a no-op when it isn't out. */
       if (!dockActive()) unOut();
       populate(ci, k);
+      /* the tally: a deliberate open counts — neighbour steps and shuffles
+         inside the sheet don't (populate re-runs for those; this seat is
+         the door, not the walk) */
+      gcHit("board/" + jref(COLLECTIONS[ci], COLLECTIONS[ci].boards[k], k), true);
       lb.hidden = false;
       /* THE SHEET OPENS AT ITS OWN TOP (2026-08-17, his live framing catch:
          card top cut under the bar, chrome overlapped). The sheet is
@@ -15524,6 +15531,7 @@
        row the cards vacated decodes "your message about … has been
        copied", and the flipped envelope says where to paste it. */
     function bdmCopy(skip) {
+      gcHit("send/copy", true);   /* the ONE copy pathway — desktop send and the phone takeover both land here (re-presses re-count; a retry is still intent) */
       const txt = bdmText(skip);
       const legacy = () => {
         try {
@@ -17619,6 +17627,47 @@
     if (document.fonts && document.fonts.ready) document.fonts.ready.then(sizeBarWord);
     let mszT = 0;
     addEventListener("resize", () => { clearTimeout(mszT); mszT = setTimeout(sizeBarWord, 120); });
+
+    /* ===================== THE TALLY (2026-08-19; PORTED 2026-09-11) =====
+       GoatCounter — avrg.goatcounter.com. Landed in the vault three days
+       AFTER v1 was copied out and never crossed until Dylan's Reddit-post
+       prep found the live site counting nothing (an Explore agent found
+       it in the vault's k-home-dual.html, commit 2cf2eeb). gcHit is the
+       ONE counter door: pageviews ride route() (boot + every hash move,
+       so the SPA's pages count under readable names instead of one file
+       path — no_onload keeps count.js from double-writing the boot), and
+       events mark the funnel's beats: board/<ref> (lightbox opened),
+       pick/<ref> (added to the lisst), send/copy. (The vault's send/form
+       beat has no seat here — the inquiry form left with THE TRIM.)
+       GC_ON gates everything to the published hosts — localhost, the LAN
+       ride-along and the pane never count (count.js skips local hosts
+       itself; the gate is ours to hold). count.js arrives async, so a
+       beat that fires before it lands queues instead of vanishing. A
+       `?ref=reddit` on a shared link is read by count.js as the referrer
+       (the Reddit app strips the real one); the router keeps
+       location.search on its replaceState, and nothing in the page reads
+       `ref`. This block must run BEFORE route()'s boot call below (gcHit
+       hoists, its consts don't — the TDZ law). */
+    const GC_ON = /github\.io$|avrg\.(website|cards)$/.test(location.hostname);
+    let gcQ = [];
+    function gcHit(path, event) {
+      if (!GC_ON) return;
+      const p = { path: path, event: !!event };
+      const g = window.goatcounter;
+      if (g && g.count) g.count(p); else gcQ.push(p);
+    }
+    if (GC_ON) {
+      window.goatcounter = { no_onload: true };   /* route() is the one pageview writer */
+      const s = document.createElement("script");
+      s.async = true;
+      s.src = "https://gc.zgo.at/count.js";
+      s.dataset.goatcounter = "https://avrg.goatcounter.com/count";
+      s.addEventListener("load", () => {
+        const g = window.goatcounter;
+        if (g && g.count) { gcQ.forEach(p => g.count(p)); gcQ = []; }
+      });
+      document.head.appendChild(s);
+    }
 
     route();
 

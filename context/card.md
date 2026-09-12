@@ -9,7 +9,7 @@
 ## Facts
 
 <!-- GEN:BEGIN — written by build_context.py, do not hand-edit this block -->
-*Derived 2026-09-11 · commit 5734ca4 · index.html 17694 lines*
+*Derived 2026-09-11 · commit 70f6c88 · index.html 17743 lines*
 
 **The card in numbers**
 - Boards it draws: originals 7 · hand-shaped 36 · classic 28 · resale 0 — 71 total
@@ -24,13 +24,13 @@
 - `cardInner / renderColPage` (index.html:8469) — collection-page grids (.scard slots)
 - `bindScards` (index.html:8453) — grid slot wiring: click/keyboard -> openLb
 - `renderLisst` (index.html:8801) — YOUR PICKS page cards (one producer for both dresses: YOUR PICKS on the dock side, My Lisst on desktop)
-- `renderBay` (index.html:13645) — draws the drawer/bay shelf cards — the shelf's producer (flyToBay is only the flight)
-- `the shop conveyor` (index.html:12927) — home belt cards (recycler owns their visibility)
-- `flyToBay` (index.html:16284) — card -> drawer flight
-- `setFlip / flipStage` (index.html:16873) — the flip system (chip = the hidden-face mini)
+- `renderBay` (index.html:13652) — draws the drawer/bay shelf cards — the shelf's producer (flyToBay is only the flight)
+- `the shop conveyor` (index.html:12934) — home belt cards (recycler owns their visibility)
+- `flyToBay` (index.html:16292) — card -> drawer flight
+- `setFlip / flipStage` (index.html:16881) — the flip system (chip = the hidden-face mini)
 - `faceSync + FACE` (index.html:7605) — face memory: cards inherit the last-seen side
 - `lockCardScale` (index.html:8436) — grid render law: 232px then transform-down
-- `migrateHole` (index.html:11736) — lb exchange re-seats the grid hole on every landing
+- `migrateHole` (index.html:11739) — lb exchange re-seats the grid hole on every landing
 - `cardDressOn / cardDressOff` (index.html:7064) — the hover decode pair: name<->dims, ref<->AVRG, status in/out — display is a TEXT WRITE, never CSS
 - `stayLand / dockDress` (index.html:7037) — the static text lands (no hover to earn a decode) — note: stayLand resolves dims||name, so THE LB CARD ALREADY RESTS ON DIMS on desktop
 - `DRESS_TEXTS` (index.html:6981) — the four text slots the dress systems own (.fc-ref .ft, .nmt, .sttxt, .fc-list .ft)

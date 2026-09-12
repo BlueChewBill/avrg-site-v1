@@ -120,3 +120,13 @@ Five things that cost real time here, worth knowing before the next pass:
 - **A mute button.** Promised since 2026-08-01, still unbuilt. When it lands it writes `SND_KEY`; nothing else needs to change.
 - **Per-ground sound sets** were parked with the ground switcher and died with the dark ground (2026-08-20). One light ground, one sound set.
 - **T2's landing variants** left a `TODO(T1)` in the `?land=` CSS block — "the draw's touchdown wants a sound". That is a NEW trigger on a new surface, not a re-timing; it needs a beat chosen and Dylan's ear, and it must respect the phone rule (the landing variants are desktop-scoped already).
+
+## THE GOOFS' voices (2026-09-11)
+
+Three new voices in the kit, all through `sndOk` (so all desktop-only by THE GATE) — record in deck-drawer.md THE GOOFS.
+
+| beat | voice | where | when it fires |
+|---|---|---|---|
+| the toss's flick | `kkazoo(dur)` | `flyToBay` | at launch, when `goofToss()` said yes — a sawtooth + octave square through a tanh waveshaper and a sweeping bandpass, 9Hz vibrato, pitch up through the lift and drooping into the landing, sized to the flight so it ENDS as the card lands. **Deliberately a second voice on one gesture:** the seat's `landBeat` click is still the touchdown, a designed pair like the composer's seal + stamp (~the flight apart). `pickCatch` never calls it — the phone is silent |
+| the slam's wind-up | `kwind(.55)` | `baySlamGo` | phase 1 — seven triangle ticks closing in and rising, the ratchet under `#bay.winding` |
+| the slam | `kbang` | `baySlamLand` | the drawer's 0-crossing at the slam rate — a .22s filtered noise slap over a 120→36Hz sine drop; kthunk's big brother |

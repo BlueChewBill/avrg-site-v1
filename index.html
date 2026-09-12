@@ -4640,6 +4640,69 @@
   .bay-fly.held .fc-list::before { transform-origin: right center; animation: chipwipe .76s ease -.76s forwards; }
   .bay-fly.held .fchip :is(.ft, .fstack) { color: #fff; transition: none; }
   .bay-fly.held .fc-list .fstack { opacity: 1; transition: none; }
+  /* ===================== THE GOOFS (2026-09-11) — see the JS block by
+     SEAT_TUNE. The toss's glitter tracer, the drawer's wind-up + slam,
+     the page quake and the knocked deck counter. All stand down under
+     reduced motion (the JS never fires them; the keyframes are gated
+     too, belt and braces). */
+  .glit {
+    position: fixed; pointer-events: none;
+    width: var(--s); height: var(--s);
+    margin: calc(var(--s) / -2) 0 0 calc(var(--s) / -2);
+    border-radius: 50%;
+    background: hsl(var(--h) 100% 62%);
+    box-shadow: 0 0 6px hsl(var(--h) 100% 70%);
+    animation: glitfall .7s ease-out forwards;
+  }
+  .glit.star { border-radius: 0; box-shadow: none; clip-path: polygon(50% 0, 62% 38%, 100% 50%, 62% 62%, 50% 100%, 38% 62%, 0 50%, 38% 38%); }
+  @keyframes glitfall {
+    from { opacity: 1; transform: translate(0, 0) scale(1) rotate(0); }
+    to   { opacity: 0; transform: translate(var(--dx), var(--dy)) scale(.2) rotate(180deg); }
+  }
+  /* the wind-up: the whole case pulls a further 24px out and trembles;
+     the class leaves as the slam starts, so the case also snaps the 24
+     back in the slam's first frame */
+  #bay.winding { animation: baywind .62s cubic-bezier(.4, 0, .8, .4) both; }
+  @keyframes baywind {
+    0%   { transform: translateX(0); }
+    60%  { transform: translateX(-18px); }
+    70%  { transform: translate(-20px, 1px); }
+    80%  { transform: translate(-23px, -1px); }
+    90%  { transform: translate(-21px, 1px); }
+    100% { transform: translateX(-24px); }
+  }
+  /* the quake: every top-level surface jolts on its OWN transform — a
+     transform on body/html would re-root the fixed bar and drawer to the
+     document box (a scrolled page would fling them off-screen) */
+  body.quake > :is(.topbar, #home, #colpage, #bay, #lb) { animation: quake .55s cubic-bezier(.36, .07, .19, .97) both; }
+  @keyframes quake {
+    0%, 100% { transform: translate(0, 0); }
+    10% { transform: translate(-9px, 2px); }
+    20% { transform: translate(8px, -3px); }
+    30% { transform: translate(-7px, 3px); }
+    40% { transform: translate(6px, -2px); }
+    50% { transform: translate(-4px, 2px); }
+    60% { transform: translate(3px, -1px); }
+    70% { transform: translate(-2px, 1px); }
+    80% { transform: translate(1px, 0); }
+  }
+  /* the knocked counter hangs from its top-left corner — the one nail
+     left — swings, and settles 13° off; the next real add swings it
+     back (a keyframe, not a transition: an animation-held value never
+     hands off to a transition on class removal — the softout lesson) */
+  .bar-script.knocked { transform-origin: 4px 4px; animation: knock 1.1s cubic-bezier(.25, .9, .35, 1.15) forwards; }
+  .bar-script.righted { transform-origin: 4px 4px; animation: unknock .5s cubic-bezier(.3, 1.4, .5, 1) forwards; }
+  @keyframes knock {
+    0%   { transform: rotate(0); }
+    35%  { transform: rotate(21deg); }
+    60%  { transform: rotate(9deg); }
+    80%  { transform: rotate(15deg); }
+    100% { transform: rotate(13deg); }
+  }
+  @keyframes unknock { from { transform: rotate(13deg); } to { transform: rotate(0); } }
+  @media (prefers-reduced-motion: reduce) {
+    .glit, #bay.winding, body.quake > *, .bar-script.knocked, .bar-script.righted { animation: none; }
+  }
   .bay-fly.held .inframe::before, .bay-fly.held .inframe::after { height: calc(50% - 6px); height: calc(50% - 2.5862cqw); }
   /* seating: the real shelf item exists (hidden) from the moment the
      flight launches — the flight lands on its measured rect, then the
@@ -9943,8 +10006,9 @@
     function toggleLisst(id) {
       myLisst = inLisst(id) ? myLisst.filter(x => x !== id) : myLisst.concat(id);
       lisstSave(); lisstTab();
+      bayIdle = 0; bayIdleArmed = false;   /* THE SLAM: a deck change is what the drawer was for — the idle count restarts */
       /* the tally counts the ADD only — a removal is curation, not interest */
-      if (inLisst(id)) { const x = BOARD_INDEX[id]; gcHit("pick/" + jref(x.c, x.b, x.k), true); }
+      if (inLisst(id)) { const x = BOARD_INDEX[id]; gcHit("pick/" + jref(x.c, x.b, x.k), true); deckRight(); }
     }
     const lbDesc = document.getElementById("lb-desc");
     const lbDims = document.getElementById("lb-dims");
@@ -13414,9 +13478,10 @@
          7000); desktop flights keep their rung. Ladder updated in
          CLAUDE.md. */
       fly.style.zIndex = 6650;
+      const goof = goofToss();   /* THE TOSS rides the phone flight too — spin + glitter, silent (THE GATE) */
       bayFlight(fly, sr, getEnd,
-        { dur: PICK_TUNE.dur, hook: PICK_TUNE.hook,
-          ease: PICK_TUNE.ease, liftCap: PICK_TUNE.liftCap },
+        { dur: PICK_TUNE.dur * (goof ? GOOF_SLOW : 1), hook: PICK_TUNE.hook,
+          ease: PICK_TUNE.ease, liftCap: PICK_TUNE.liftCap, goof },
         () => {
           fly.remove();
           answer();
@@ -13968,6 +14033,11 @@
        THIS, and the tick chases it — smoothing notchy detents into a
        glide — then PARKS there. A half-wound deck is a resting state. */
     let bayWindT = null;
+    /* THE SLAM's state (see THE GOOFS by SEAT_TUNE): bayIdle counts
+       explicit open→close cycles with no deck change between (toggleLisst
+       zeroes it); bayIdleArmed is set by a real open and consumed by the
+       close; baySlam is 0 idle · 1 winding · 2 slamming. */
+    let bayIdle = 0, bayIdleArmed = false, baySlam = 0;
     /* set by an explicit close (arrow / background click / Esc): the
        proximity motor stays dead until the pointer leaves the trigger
        zone once — otherwise the shut immediately re-creeps open under
@@ -14101,9 +14171,11 @@
         }
       }
       if (reduced) rate *= 60;   /* no slow theater under reduced motion */
+      if (baySlam === 2) rate = -1 / .09;   /* THE SLAM: shut in 90ms, whatever the close clock says */
       const bayWasShut = bayP === 0;
       bayP = Math.min(1, Math.max(0, bayP + rate * dt));
       if (bayClosing && bayP === 0) bayClosing = false;
+      if (baySlam === 2 && bayP === 0) baySlamLand();   /* the door meets the frame */
       /* THE DECK OPENS AT THE TOP (Dylan, 2026-08-03): the column keeps
          its scroll while shut, so a reopen replayed a half-cut card
          under the head. The 0-crossing is the one invisible moment —
@@ -14186,10 +14258,19 @@
       bayWindT = null;   /* an explicit open takes the drawer off the wind hold */
       bayClosing = false; bayRearm = false; bayLocked = true; bayPosedP = -1;
       if (transient) return;
+      bayIdleArmed = true;   /* THE SLAM counts real opens only — a catch-open is the add's, not the hand's */
       bayShutAfterLanding = false;   /* a real open cancels the auto-shut */
       shopRoom(true);
     }
     function closeBay() {
+      /* THE SLAM: the third idle cycle hands the close to the machine;
+         baySlamGo returns false when there is nothing to slam and the
+         plain close runs. A slam's own phase-2 close (baySlam = 2) is
+         not a cycle. */
+      if (bayIdleArmed && !baySlam) {
+        bayIdleArmed = false;
+        if (++bayIdle >= 3 || GOOF === "slam") { bayIdle = 0; if (baySlamGo()) return; }
+      }
       unOut();   /* a shut drawer cannot stay pulled out */
       bayWindT = null;   /* an explicit close drains normally, no hold */
       bayLocked = false; bayClosing = true; bayRearm = true; bayPosedP = -1;
@@ -16174,6 +16255,174 @@
       liftMax: 120,    /* arc height ceiling (lift scales with distance) */
       pickup: .07      /* early "picked up" grow, fades over the ride */
     };
+    /* ===================== THE GOOFS (2026-09-11) =====================
+       Dylan, the last session before the Reddit post: "i wanted to add
+       some character to the site ... something goofy." Two easter eggs,
+       both hidden delights with visible twins (the plain flight and the
+       plain drawer do the same jobs in the open — open-threads' rule).
+       THE TOSS — a chip add's flight, once in a while, spins like a bad
+       flick with a rainbow glitter tracer and (desktop only — the phone
+       is silent, THE GATE) a kazoo. Never the first add (the first
+       flight teaches the grammar), ~1 in 6 after, never twice running.
+       Chip adds only: a drag already has the card in hand, and the lb
+       arc is an inspection's exit, not a flick.
+       THE SLAM — the third explicit open→close of the drawer with no
+       deck change between: the drawer winds up (pulls further out and
+       trembles, a ratchet), slams shut at the slam rate with a bang,
+       the page quakes, and the bar's deck counter is knocked askew to
+       hang from one corner until the next real add rights it. Desktop
+       only (the phone's deck is a page, not a drawer; his nav-drop
+       swing was the other candidate — "lots of moving pieces there").
+       ?goof=toss / ?goof=slam force them for review — a random beat
+       can't be reviewed by waiting. Both stand down under reduced
+       motion. No vibration on the phone: the workaround was tried and
+       iOS reserves haptics for apps (sounds.md, HAPTICS). */
+    const GOOF = new URLSearchParams(location.search).get("goof") || "";
+    /* review-only slow-mo: ?goof=toss&goofslow=6 stretches the forced
+       flight ×6 so the spin and the tracer can be looked at (a .68s
+       flight is a blur to the eye and to a screenshot); inert unless a
+       goof is forced */
+    const GOOF_SLOW = GOOF ? (parseFloat(new URLSearchParams(location.search).get("goofslow")) || 1) : 1;
+    let goofAdds = 0, goofLast = false;
+    function goofToss() {
+      if (reduced) return false;
+      if (GOOF === "toss") return true;
+      if (++goofAdds < 2) return false;
+      if (goofLast) { goofLast = false; return false; }
+      goofLast = Math.random() < 1 / 6;
+      return goofLast;
+    }
+    /* the tracer: a pinch of glitter per frame at the fly's centre, each
+       fleck its own hue, drifting down and out as it fades (CSS .glit);
+       z rides one rung under the fly so the card leads its own trail */
+    function glitAt(x, y, r, z) {
+      for (let i = 0; i < 2; i++) {
+        const g = document.createElement("i");
+        g.className = "glit" + (Math.random() < .3 ? " star" : "");
+        const a = Math.random() * Math.PI * 2, d = Math.random() * r * .5;
+        g.style.left = (x + Math.cos(a) * d).toFixed(1) + "px";
+        g.style.top = (y + Math.sin(a) * d).toFixed(1) + "px";
+        g.style.zIndex = z;
+        g.style.setProperty("--h", Math.round(Math.random() * 360));
+        g.style.setProperty("--s", (3 + Math.random() * 5).toFixed(1) + "px");
+        g.style.setProperty("--dx", ((Math.random() - .5) * 48).toFixed(0) + "px");
+        g.style.setProperty("--dy", (16 + Math.random() * 40).toFixed(0) + "px");
+        g.addEventListener("animationend", () => g.remove(), { once: true });
+        document.body.appendChild(g);
+      }
+    }
+    /* THE KAZOO — a sawtooth + an octave square through a soft waveshaper
+       (the membrane buzz) and a sweeping bandpass (the mouth), vibrato
+       from a 9Hz LFO; the pitch glides up through the lift and droops
+       into the landing. It ends as the card lands — the seat's click is
+       still the touchdown, a designed pair like the composer's seal +
+       stamp. Rides sndOk like every voice. */
+    function kkazoo(sec) {
+      if (!sndOk("kazoo")) return;
+      try {
+        const c = kctx(), t = c.currentTime, d = Math.max(.35, sec || .6);
+        const o = c.createOscillator(), o2 = c.createOscillator(), lfo = c.createOscillator();
+        const lg = c.createGain(), g2 = c.createGain(), g = c.createGain();
+        const ws = c.createWaveShaper(), bp = c.createBiquadFilter();
+        o.type = "sawtooth"; o2.type = "square"; lfo.type = "sine";
+        [[o, 1], [o2, 2.01]].forEach(([x, m]) => {
+          x.frequency.setValueAtTime(230 * m, t);
+          x.frequency.exponentialRampToValueAtTime(540 * m, t + d * .55);
+          x.frequency.exponentialRampToValueAtTime(320 * m, t + d);
+        });
+        lfo.frequency.value = 9; lg.gain.value = 16;
+        lfo.connect(lg); lg.connect(o.frequency); lg.connect(o2.frequency);
+        const curve = new Float32Array(257);
+        for (let i = 0; i < 257; i++) curve[i] = Math.tanh((i / 128 - 1) * 3);
+        ws.curve = curve;
+        bp.type = "bandpass"; bp.Q.value = 2.2;
+        bp.frequency.setValueAtTime(900, t);
+        bp.frequency.exponentialRampToValueAtTime(2300, t + d * .5);
+        bp.frequency.exponentialRampToValueAtTime(1100, t + d);
+        g.gain.setValueAtTime(.0001, t);
+        g.gain.exponentialRampToValueAtTime(.08, t + .04);
+        g.gain.setValueAtTime(.08, t + d * .8);
+        g.gain.exponentialRampToValueAtTime(.0001, t + d);
+        g2.gain.value = .35;
+        o.connect(ws); o2.connect(g2).connect(ws);
+        ws.connect(bp).connect(g).connect(c.destination);
+        [o, o2, lfo].forEach(x => { x.start(t); x.stop(t + d + .02); });
+      } catch (e) { /* a silent flick */ }
+    }
+    /* THE WIND — a ratchet: seven triangle ticks closing in and rising */
+    function kwind(sec) {
+      if (!sndOk("wind")) return;
+      try {
+        const c = kctx(), t = c.currentTime, d = sec || .55, n = 7;
+        for (let i = 0; i < n; i++) {
+          const at = t + d * Math.pow(i / n, .7), o = c.createOscillator(), g = c.createGain();
+          o.type = "triangle";
+          o.frequency.setValueAtTime(260 + i * 55, at);
+          o.frequency.exponentialRampToValueAtTime(140 + i * 30, at + .03);
+          g.gain.setValueAtTime(.0001, at);
+          g.gain.exponentialRampToValueAtTime(.07, at + .004);
+          g.gain.exponentialRampToValueAtTime(.0001, at + .04);
+          o.connect(g).connect(c.destination); o.start(at); o.stop(at + .05);
+        }
+      } catch (e) { /* a silent wind */ }
+    }
+    /* THE BANG — a filtered noise slap over a deep sine drop: kthunk's big
+       brother, the door meeting the frame */
+    function kbang() {
+      if (!sndOk("bang")) return;
+      try {
+        const c = kctx(), t = c.currentTime;
+        const len = Math.round(c.sampleRate * .22), buf = c.createBuffer(1, len, c.sampleRate), d = buf.getChannelData(0);
+        for (let i = 0; i < len; i++) d[i] = (Math.random() * 2 - 1) * Math.pow(1 - i / len, 3);
+        const n = c.createBufferSource(); n.buffer = buf;
+        const lp = c.createBiquadFilter(); lp.type = "lowpass";
+        lp.frequency.setValueAtTime(3200, t); lp.frequency.exponentialRampToValueAtTime(260, t + .2);
+        const ng = c.createGain(); ng.gain.setValueAtTime(.4, t); ng.gain.exponentialRampToValueAtTime(.001, t + .22);
+        n.connect(lp).connect(ng).connect(c.destination); n.start(t);
+        const o = c.createOscillator(), g = c.createGain(); o.type = "sine";
+        o.frequency.setValueAtTime(120, t); o.frequency.exponentialRampToValueAtTime(36, t + .26);
+        g.gain.setValueAtTime(.45, t); g.gain.exponentialRampToValueAtTime(.001, t + .34);
+        o.connect(g).connect(c.destination); o.start(t); o.stop(t + .36);
+      } catch (e) { /* a silent slam */ }
+    }
+    /* THE SLAM's machine: closeBay hands off here on the third idle cycle
+       (or ?goof=slam). Phase 1 holds the drawer open and winds
+       (#bay.winding — the pull-out tremble + the ratchet); phase 2 is a
+       real closeBay with baySlam = 2, which bayTick reads as the slam
+       rate and answers at the 0-crossing with baySlamLand. Returns false
+       when there is nothing to slam (reduced, the phone, a drawer barely
+       open, a slam already running) so closeBay proceeds as the plain
+       close it was. State lives with the bay's other lets. */
+    function baySlamGo() {
+      if (reduced || dockActive() || bayP < .6 || baySlam) return false;
+      baySlam = 1;
+      bayWindT = null; bayClosing = false; bayLocked = true;   /* hold it open for the wind */
+      bay.classList.add("winding");
+      kwind(.55);
+      setTimeout(() => {
+        bay.classList.remove("winding");
+        bay.classList.add("slamming");
+        baySlam = 2;
+        closeBay();
+      }, 620);
+      return true;
+    }
+    function baySlamLand() {
+      baySlam = 0;
+      bay.classList.remove("slamming");
+      kbang();
+      document.body.classList.add("quake");
+      setTimeout(() => document.body.classList.remove("quake"), 700);
+      const bs = document.getElementById("bar-script");
+      if (bs) { bs.classList.remove("righted"); bs.classList.add("knocked"); }
+    }
+    /* the next real add rights the counter — a swing back, not a snap */
+    function deckRight() {
+      const bs = document.getElementById("bar-script");
+      if (!bs || !bs.classList.contains("knocked")) return;
+      bs.classList.remove("knocked"); bs.classList.add("righted");
+      bs.addEventListener("animationend", () => bs.classList.remove("righted"), { once: true });
+    }
     function bayFlight(fly, sr, getEnd, opts, onLand) {
       fly.classList.add("bay-fly");
       fly.style.left = sr.left + "px"; fly.style.top = sr.top + "px";
@@ -16186,7 +16435,11 @@
       const t0 = performance.now(), dur = opts.dur * 1000;
       let drained = false;
       (function frame(now) {
-        const t = Math.min(1, (now - t0) / dur);
+        /* clamped at 0 too (2026-09-11, THE TOSS's find): a rAF timestamp
+           can precede the t0 taken in the click's task by a frame, and a
+           negative t gives a negative e — invisible under the 5° wobble,
+           a 100° backward flick under the toss's 1080 */
+        const t = Math.min(1, Math.max(0, (now - t0) / dur));
         /* opts.ease/liftCap: the PHONE flight's shape knobs (2026-08-22,
            the pickfly pass; PICK_TUNE at pickCatch) — absent, everything
            below is the desktop flight it always was. A softer ease slows
@@ -16212,8 +16465,16 @@
         const py = u * u * sy + 2 * u * e * cy + e * e * end.y;
         const s1 = end.h / sr.height;
         const sc = 1 + (s1 - 1) * e + SEAT_TUNE.pickup * Math.sin(Math.PI * Math.min(1, e / .5)) * u;
-        const rot = 5 * Math.sin(Math.PI * e) + (opts.endRot || 0) * e;
+        /* THE TOSS (opts.goof): three full turns riding the eased clock —
+           fast off the hand, square at the seat (1080 lands on a
+           multiple of 360) — and a fleck of glitter per frame one rung
+           under the fly. This transform is bayFlight's own to write;
+           the goof rides in it rather than on a CSS transition (the
+           snap0 law: the fly node's transform IS the flight). */
+        const spin = opts.goof ? 1080 * e : 0;
+        const rot = 5 * Math.sin(Math.PI * e) + (opts.endRot || 0) * e + spin;
         fly.style.transform = "translate(" + (px - sx).toFixed(1) + "px," + (py - sy).toFixed(1) + "px) scale(" + sc.toFixed(3) + ") rotate(" + rot.toFixed(2) + "deg)";
+        if (opts.goof && t < .97) glitAt(px, py, sr.width * sc, (parseInt(fly.style.zIndex, 10) || 6500) - 10);
         if (!drained && t >= .55 && opts.drain) { drained = true; opts.drain(); }
         if (t < 1) requestAnimationFrame(frame);
         else { fly.remove(); onLand(); }
@@ -16240,7 +16501,7 @@
         const tr = item.getBoundingClientRect();
         return { x: tr.left + tr.width / 2, y: tr.top + tr.height / 2 - 9, h: tr.height };
       };
-      bayFlight(fly, sr, getEnd, { dur: opts.dur, drain: rest }, () => {
+      bayFlight(fly, sr, getEnd, { dur: opts.dur, drain: rest, goof: opts.goof }, () => {
         /* re-query: a renderBay may have rebuilt the shelves mid-flight */
         const seated = bay.querySelector('.bay-item.preseat[data-id="' + id + '"]');
         pendingSeat.delete(id);
@@ -16301,7 +16562,10 @@
          shadows its own (buildFly copies text state so a mid-decode
          pluck is seamless; the source stays hovered under it). */
       const { fly, rest } = buildFly(cardEl, ci, b, k, id);
-      if (!seatFly(id, fly, rest, sr, { dur: SEAT_TUNE.dur, after: bayCatchShut }))
+      const goof = goofToss();   /* THE TOSS — the chip add is the one flick that can go wrong */
+      const gdur = SEAT_TUNE.dur * (goof ? GOOF_SLOW : 1);   /* the review slow-mo rides the forced toss only */
+      if (goof) kkazoo(gdur);   /* desktop only by THE GATE; ends as the card lands, the seat's click is the touchdown */
+      if (!seatFly(id, fly, rest, sr, { dur: gdur, after: bayCatchShut, goof }))
         bayCatchShut();   /* nothing seated — no landing will consume the flag */
     }
 

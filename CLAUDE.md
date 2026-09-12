@@ -78,4 +78,5 @@ A live tuning UI over THIS page — sliders and wells bound to the real site's v
 ## Where things stand
 
 - **History:** dated entries from the founding copy (2026-08-16) through the board batches (2026-08-31) live in [log.md](.claude/docs/log.md); the launch record (avrg.cards bound, `avrg.website` 301, vault private, the og stand-in clip still shipping) is there.
+- **2026-09-11, the Reddit prep:** GoatCounter is LIVE (`gcHit`, the one counter door; record k-core.md THE TALLY — PORTED), and THE GOOFS ship — the card toss + the drawer slam, once per tab session, reviewable with `?goof=toss` / `?goof=slam` (+ `goofslow=N`); record deck-drawer.md THE GOOFS.
 - **Still open / parked:** see [open-threads.md](.claude/docs/open-threads.md) — the intro tweak + decode-timing threads, thread 2 (home collection cards), thread 3's desktop half, waking the relay, the ORIGINALS RETHINK, the iPad tweaks (lowest priority, unenumerated), sound, the browser-compat sweep.

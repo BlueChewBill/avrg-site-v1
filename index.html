@@ -4178,7 +4178,12 @@
      .pi legs beneath it) for the same reason — a polygon edge sitting
      exactly on a line eats half of it. */
   .bdm-fold { pointer-events: none; }
-  .bdm-fold polygon { fill: #fff; }
+  /* THE PAPER GRAIN (2026-09-13): the flaps ARE the envelope, so the
+     grain rides their fill — url(#paperpat) is the tile paperInit() builds
+     at boot; #fff is the SVG2 fallback for a browser that can't reach it.
+     The letter sheet under them stays flat white on purpose: the texture
+     arrives with the first flap, "the second it becomes an envelope". */
+  .bdm-fold polygon { fill: url(#paperpat) #fff; }
   .bdm-fold path { fill: none; stroke: #000; }
   /* the weight hierarchy, and the parity rule that keeps it crisp: an
      envelope's outline is a CUT EDGE (3), its seams are paper over paper
@@ -4288,7 +4293,8 @@
   /* the back is pure CSS geometry — a 3px border on the integer-locked
      box rasters as crisp as the front's svg silhouette, and a resize
      refit after the flip has nothing to redraw */
-  .bdm-back { display: none; position: absolute; inset: 0; z-index: 4; box-sizing: border-box; background: #fff; border: 3px solid #000; }
+  .bdm-back { display: none; position: absolute; inset: 0; z-index: 4; box-sizing: border-box; background: #fff; border: 3px solid #000;
+    background-image: var(--paper-tile, none); }   /* the same grain as the flaps, by CSS (paperInit) */
   .bdm-prev.flipped .bdm-back { display: flex; flex-direction: column; align-items: center; justify-content: center; gap: calc(16px * var(--envk, 1)); }
   .bdm-prev.flipped :is(.bdm-fold, .bdm-seal, .bdm-body, .bdm-pline, .pdot) { display: none; }
   /* the POSTAGE STAMP: the wax seal's own mark in the stamp's seat — a
@@ -4306,7 +4312,12 @@
   .bb-stamp img { width: 74%; height: auto; }
   /* the addressee line — content, so it scales with the paper (--envk),
      like the letter did on the front */
-  .bb-line { font-size: calc(13px * var(--envk, 1)); letter-spacing: .12em; color: #000; }
+  .bb-line { font-size: calc(13px * var(--envk, 1)); letter-spacing: .12em; color: #000;
+    display: flex; align-items: center; gap: calc(9px * var(--envk, 1)); }
+  /* the addressee IS the mark (2026-09-13, Dylan: "send to: AVRG @" where
+     AVRG is the logo) — the drawn mark's own path, static, bare (no ring),
+     cropped to its ink; stroke dress = #logo-draw's, sized to the line */
+  .bb-mark { height: calc(22px * var(--envk, 1)); width: auto; fill: none; stroke: currentColor; stroke-width: 30; stroke-linecap: round; stroke-linejoin: round; }
   .bb-chans { display: flex; gap: calc(30px * var(--envk, 1)); }
   .bb-chan { display: flex; flex-direction: column; align-items: center; gap: calc(7px * var(--envk, 1)); text-decoration: none; }
   /* the chip is the drawer grammar: black soft square, white glyph, and
@@ -6657,7 +6668,7 @@
                CONTACT so this markup can never disagree with data.js. -->
           <div class="bdm-back">
             <span class="bb-stamp" aria-hidden="true"><span><img src="site/img/logo-line-white.png" alt=""></span></span>
-            <span class="bb-line label" id="bb-line">paste it to me here</span>
+            <span class="bb-line label"><span id="bb-line">send to:</span><svg class="bb-mark" viewBox="215 257 473 558" role="img" aria-label="AVRG"><path d="M335 754 L354 285 L505 787 L472 348 L640 315 L488 558 L659 754 L660 525 L243 605"/></svg><span aria-hidden="true">@</span></span>
             <div class="bb-chans">
               <a class="bb-chan" id="bb-reddit" target="_blank" rel="noopener" href="#">
                 <span class="bbq"><svg class="bbrand" viewBox="0 0 256 256" aria-hidden="true"><path d="M248,104a32,32,0,0,0-52.94-24.19c-16.75-8.9-36.76-14.28-57.66-15.53l5.19-31.17,17.72,2.72a24,24,0,1,0,2.87-15.74l-26-4a8,8,0,0,0-9.11,6.59L121.2,64.16c-21.84.94-42.82,6.38-60.26,15.65a32,32,0,0,0-42.59,47.74A59,59,0,0,0,16,144c0,21.93,12,42.35,33.91,57.49C70.88,216,98.61,224,128,224s57.12-8,78.09-22.51C228,186.35,240,165.93,240,144a59,59,0,0,0-2.35-16.45A32.16,32.16,0,0,0,248,104ZM184,24a8,8,0,1,1-8,8A8,8,0,0,1,184,24Zm40.13,93.78a8,8,0,0,0-3.29,10A43.58,43.58,0,0,1,224,144c0,16.53-9.59,32.27-27,44.33C178.67,201,154.17,208,128,208s-50.67-7-69-19.67C41.59,176.27,32,160.53,32,144a43.75,43.75,0,0,1,3.14-16.17,8,8,0,0,0-3.27-10A16,16,0,1,1,52.94,94.59a8,8,0,0,0,10.45,2.23l.36-.22C81.45,85.9,104.25,80,128,80h0c23.73,0,46.53,5.9,64.23,16.6l.42.25a8,8,0,0,0,10.39-2.26,16,16,0,1,1,21.07,23.19ZM88,144a16,16,0,1,1,16-16A16,16,0,0,1,88,144Zm96-16a16,16,0,1,1-16-16A16,16,0,0,1,184,128Zm-16.93,44.25a8,8,0,0,1-3.32,10.82,76.18,76.18,0,0,1-71.5,0,8,8,0,1,1,7.5-14.14,60.18,60.18,0,0,0,56.5,0A8,8,0,0,1,167.07,172.25Z"/></svg></span>
@@ -14391,6 +14402,34 @@
     const bdmSheet = document.getElementById("bdm-sheet");
     const bdmPline = document.getElementById("bdm-pline");
     const bdmSend = document.getElementById("bdm-send");
+    /* THE PAPER GRAIN (2026-09-13, Dylan: "use the textured white ... on the
+       envelope from the first fold pullouts in the animation forward — the
+       second it becomes an envelope it gets the paper-like texture").
+       ONE recipe, rendered once: a fractal-noise tile written as an SVG
+       data-URI, handed to the flap polygons through <pattern id="paperpat">
+       (an SVG fill cannot read a CSS image) and to the flipped back face
+       through --paper-tile (a CSS background cannot read an SVG pattern).
+       Two doors, one tile — retune here, never in the CSS. gain/lift are
+       the noise's linear map (out = gain·in + lift, clamped): noise sits
+       around .5, so lift+gain/2 is the paper's mean white (~.96 = 245). */
+    const PAPER_TUNE = { tile: 240, freq: .95, oct: 4, seed: 7, gain: .3, lift: .81 };
+    (function paperInit() {
+      const P = PAPER_TUNE, T = P.tile;
+      const fn = (c) => '<feFunc' + c + ' type="linear" slope="' + P.gain + '" intercept="' + P.lift + '"/>';
+      const svg = '<svg xmlns="http://www.w3.org/2000/svg" width="' + T + '" height="' + T + '">' +
+        '<filter id="g" x="0" y="0" width="100%" height="100%" color-interpolation-filters="sRGB">' +
+        '<feTurbulence type="fractalNoise" baseFrequency="' + P.freq + '" numOctaves="' + P.oct + '" seed="' + P.seed + '" stitchTiles="stitch"/>' +
+        '<feColorMatrix type="saturate" values="0"/>' +
+        '<feComponentTransfer>' + fn("R") + fn("G") + fn("B") + '<feFuncA type="table" tableValues="1 1"/></feComponentTransfer>' +
+        '</filter><rect width="' + T + '" height="' + T + '" filter="url(#g)"/></svg>';
+      const uri = "data:image/svg+xml," + encodeURIComponent(svg);
+      document.documentElement.style.setProperty("--paper-tile", 'url("' + uri + '")');
+      const w = document.createElement("div");
+      w.innerHTML = '<svg width="0" height="0" style="position:absolute" aria-hidden="true" focusable="false"><defs>' +
+        '<pattern id="paperpat" patternUnits="userSpaceOnUse" width="' + T + '" height="' + T + '">' +
+        '<image href="' + uri + '" width="' + T + '" height="' + T + '"/></pattern></defs></svg>';
+      document.body.appendChild(w.firstChild);
+    })();
     /* (bsMain retired 2026-08-11 — the verb never changes; MAIL IT went
        with the flip and the engulf owns the button's states now) */
     /* THE COPIED LINE's element — a JS-owned child because bdmBuild wipes
@@ -14919,7 +14958,7 @@
       bdmCopied.querySelectorAll("span").forEach(s => { clearInterval(s._dt); s._dt = null; });
       bdmCopied.textContent = "";
       { const bl = document.getElementById("bb-line");
-        if (bl) { clearInterval(bl._dt); bl._dt = null; bl.textContent = "paste it to me here"; } }
+        if (bl) { clearInterval(bl._dt); bl._dt = null; bl.textContent = "send to:"; } }
       bdmUnlockBox();     /* the paper goes back to flex — the lock is the gesture's, not the stage's */
       bdmFoldSettle = null;
       delete bdmSend.dataset.ready;
@@ -15690,7 +15729,7 @@
         /* the addressee line arrives in the house voice; its markup text
            is the static default, so no path can strand the face blank */
         const line = document.getElementById("bb-line");
-        if (line) decodeEl(line, "paste it to me here");
+        if (line) decodeEl(line, "send to:");
         bdmT(() => { if (bdmN === n) bdmPrev.classList.remove("flip2"); }, 300);
       }, 240);
     }
